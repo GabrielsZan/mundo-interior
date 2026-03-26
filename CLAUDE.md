@@ -131,9 +131,10 @@ O repositório remoto é: `https://github.com/GabrielsZan/mundo-interior.git`
 
 #### Lógica de Negócio
 - `src/lib/constants.ts` — `xpToNextLevel()`, `MISSION_XP`, `SKILL_XP_COST`, `STREAK_MILESTONES`
-- `src/lib/supabase.ts` — cliente Supabase (usa env vars)
-- `src/stores/playerStore.ts` — Zustand + persist; `gainXP` com loop de level-up automático
-- `src/stores/missionStore.ts` — Zustand + persist; `completeMission` chama `gainXP`, `resetDailies`
+- `src/lib/supabase.ts` — cliente Supabase nullable (modo local se env vars ausentes)
+- `src/lib/db.ts` — helpers CRUD: `dbFetchPlayer`, `dbUpsertPlayer`, `dbFetchMissions`, `dbInsertMission`, `dbUpdateMission`, `dbDeleteMission`, `dbResetDailyMissions`
+- `src/stores/playerStore.ts` — Zustand + persist; `gainXP` com level-up loop; `loadFromDb`; sync ao Supabase
+- `src/stores/missionStore.ts` — Zustand + persist; `completeMission`, `resetDailies`, `checkDailyReset` (detecta virada de dia), `loadFromDb`; sync ao Supabase
 - `src/hooks/useXP.ts` — progresso derivado (current, needed, percent, level)
 - `src/hooks/useMissions.ts` — filtros por domain/type/completed
 
@@ -146,7 +147,8 @@ O repositório remoto é: `https://github.com/GabrielsZan/mundo-interior.git`
 
 #### App
 - `src/main.tsx` — entry point com StrictMode
-- `src/App.tsx` — `SetupScreen` (onboarding com nome) + `Dashboard` básico (nível, XP bar, domínios)
+- `src/App.tsx` — fluxo auth-aware: loading → `AuthScreen` → `SetupScreen` → `Dashboard`; daily reset no mount
+- `src/features/auth/AuthScreen.tsx` — magic link via Supabase Auth
 - `src/vite-env.d.ts` — tipos para env vars e PWA
 
 **Variáveis de ambiente necessárias:**
@@ -157,25 +159,32 @@ VITE_SUPABASE_ANON_KEY=<chave anon do Supabase>
 
 ---
 
-### Próximos Passos — Fase 1 (Core Loop)
+### Fase 1 — Core Loop COMPLETA ✅ (2026-03-26)
 
-**Prioridade 1 — Feature de Missões (`src/features/missions/`)**
-- [ ] `MissionCard` — card de missão com domain badge, tipo, XP reward, botão completar
-- [ ] `MissionList` — lista filtrada por tipo (abas: Diárias / Principais / Épicas)
-- [ ] `AddMissionModal` — formulário para criar nova missão
-- [ ] `StreakBadge` — exibição do streak da missão com animação de pulso
+**Feature de Missões** ✅
+- `MissionCard`, `MissionList`, `AddMissionModal` — CRUD completo
+- Streak badge com animação de pulso; XP float ao completar; level-up burst
 
-**Prioridade 2 — Dashboard expandido**
-- [ ] Integrar `MissionList` no `Dashboard`
-- [ ] Animação XP float ao completar missão (usar `animations.module.css`)
-- [ ] Animação level-up ao subir de nível
-- [ ] Seção de resumo diário (missões completadas hoje / total)
+**Persistência Supabase** ✅
+- `supabase/migrations/001_initial.sql` — tabelas `players` + `missions` com RLS
+- `src/lib/db.ts` — helpers CRUD null-safe, fire-and-forget
+- `playerStore` + `missionStore` sincronizam ao Supabase em background
 
-**Prioridade 3 — Persistência Supabase**
-- [ ] Migration SQL: tabelas `players`, `missions`
-- [ ] Sincronizar `playerStore` e `missionStore` com Supabase
-- [ ] Auth básica (email/senha ou magic link)
+**Auth** ✅
+- `AuthScreen` com magic link (Supabase Auth)
+- Fluxo: loading → unauthenticated → setup → dashboard
+- Sem env vars = modo local (localStorage apenas)
 
-**Prioridade 4 — Reset de Diárias**
-- [ ] Lógica de detecção de virada de dia
-- [ ] Chamar `resetDailies()` automaticamente na abertura do app
+**Reset de Diárias** ✅
+- `checkDailyReset()` detecta virada de dia via `lastResetDate` (YYYY-MM-DD)
+- Chamado automaticamente no mount do Dashboard
+
+---
+
+### Próximos Passos — Fase 2 (Árvore da Alma)
+
+- [ ] `src/features/skill-tree/` — layout da árvore com 3 tiers por domínio
+- [ ] `SkillNode` — nó de habilidade (locked/unlocked/available)
+- [ ] `SkillTreePage` — tela com filtro de domínio, conexões SVG entre nós
+- [ ] Integrar desbloqueio com `domainXP` do player
+- [ ] Animação `shimmer` ao desbloquear habilidade
