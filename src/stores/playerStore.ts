@@ -10,10 +10,11 @@ interface PlayerState {
   isLoading: boolean
 
   // Actions
-  initPlayer:  (name: string, userId?: string) => void
-  loadFromDb:  (userId: string) => Promise<'loaded' | 'not_found'>
-  gainXP:      (gain: IXPGain) => void
-  resetPlayer: () => void
+  initPlayer:    (name: string, userId?: string) => void
+  loadFromDb:    (userId: string) => Promise<'loaded' | 'not_found'>
+  gainXP:        (gain: IXPGain) => void
+  spendDomainXP: (domain: Domain, amount: number) => void
+  resetPlayer:   () => void
 }
 
 const DEFAULT_DOMAIN_XP: IDomainXP = {
@@ -85,6 +86,17 @@ export const usePlayerStore = create<PlayerState>()(
           xpGeneral:     xpPool,
           xpToNextLevel: threshold,
           domainXP:      newDomainXP,
+        }
+        set({ player: updated })
+        if (userId) dbUpsertPlayer(updated, userId)
+      },
+
+      spendDomainXP: (domain, amount) => {
+        const { player, userId } = get()
+        if (!player || player.domainXP[domain] < amount) return
+        const updated: IPlayer = {
+          ...player,
+          domainXP: { ...player.domainXP, [domain]: player.domainXP[domain] - amount },
         }
         set({ player: updated })
         if (userId) dbUpsertPlayer(updated, userId)

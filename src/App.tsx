@@ -1,8 +1,10 @@
 import { useState, useEffect, useRef } from 'react'
 import { usePlayerStore } from '@/stores/playerStore'
 import { useMissionStore } from '@/stores/missionStore'
+import { useSkillStore } from '@/stores/skillStore'
 import { Button, Card, XPBar, DomainBadge } from '@/components/ui'
 import { MissionList } from '@/features/missions'
+import { SkillTreePage } from '@/features/skill-tree'
 import { AuthScreen } from '@/features/auth/AuthScreen'
 import { useXP } from '@/hooks/useXP'
 import { supabase, isSupabaseConfigured } from '@/lib/supabase'
@@ -58,10 +60,7 @@ function Dashboard() {
   const prevLevel       = useRef(player.level)
   const [levelUp, setLevelUp] = useState(false)
 
-  // Ensure mission store knows the player id (needed for new players after setup)
   useEffect(() => { setPlayerId(player.id) }, [player.id, setPlayerId])
-
-  // Auto-reset dailies if it's a new day
   useEffect(() => { checkDailyReset() }, [checkDailyReset])
 
   useEffect(() => {
@@ -73,7 +72,7 @@ function Dashboard() {
   }, [player.level])
 
   return (
-    <div className="min-h-screen bg-parchment pb-12">
+    <div className="min-h-screen bg-parchment pb-24">
       {/* Header */}
       <header className="bg-white border-b border-parchment-dark px-6 py-4 sticky top-0 z-10">
         <div className="max-w-2xl mx-auto flex items-center justify-between gap-4">
@@ -117,6 +116,37 @@ function Dashboard() {
   )
 }
 
+// ── Bottom Nav ────────────────────────────────────────────────────────────────
+
+type View = 'dashboard' | 'skills'
+
+const NAV_ITEMS: { view: View; label: string; icon: string }[] = [
+  { view: 'dashboard', label: 'Missões',      icon: '📋' },
+  { view: 'skills',    label: 'Habilidades',  icon: '🌳' },
+]
+
+function BottomNav({ view, setView }: { view: View; setView: (v: View) => void }) {
+  return (
+    <nav className="fixed bottom-0 inset-x-0 z-20 bg-white border-t border-parchment-dark">
+      <div className="max-w-2xl mx-auto flex">
+        {NAV_ITEMS.map(({ view: v, label, icon }) => (
+          <button
+            key={v}
+            onClick={() => setView(v)}
+            className={`
+              flex-1 flex flex-col items-center gap-0.5 py-3 text-xs font-semibold transition-colors
+              ${view === v ? 'text-ink' : 'text-ink/30 hover:text-ink/60'}
+            `}
+          >
+            <span className="text-lg leading-none">{icon}</span>
+            <span>{label}</span>
+          </button>
+        ))}
+      </div>
+    </nav>
+  )
+}
+
 // ── Root ──────────────────────────────────────────────────────────────────────
 
 type AuthStatus = 'loading' | 'unauthenticated' | 'authenticated'
@@ -125,11 +155,19 @@ export default function App() {
   const player       = usePlayerStore((s) => s.player)
   const loadFromDb   = usePlayerStore((s) => s.loadFromDb)
   const loadMissions = useMissionStore((s) => s.loadFromDb)
+  const loadSkills   = useSkillStore((s) => s.loadFromDb)
+  const initSkills   = useSkillStore((s) => s.initSkills)
 
   const [authStatus, setAuthStatus] = useState<AuthStatus>(
     isSupabaseConfigured ? 'loading' : 'authenticated'
   )
   const [userId, setUserId] = useState<string | undefined>()
+  const [view,   setView]   = useState<View>('dashboard')
+
+  // Init skills from seed on local mode (runs once)
+  useEffect(() => {
+    if (!isSupabaseConfigured) initSkills()
+  }, [initSkills])
 
   useEffect(() => {
     if (!isSupabaseConfigured || !supabase) return
@@ -139,7 +177,9 @@ export default function App() {
       const result = await loadFromDb(uid)
       if (result === 'loaded') {
         const playerId = usePlayerStore.getState().player?.id
-        if (playerId) await loadMissions(playerId)
+        if (playerId) {
+          await Promise.all([loadMissions(playerId), loadSkills(playerId)])
+        }
       }
       setAuthStatus('authenticated')
     }
@@ -161,7 +201,7 @@ export default function App() {
     })
 
     return () => listener.subscription.unsubscribe()
-  }, [loadFromDb, loadMissions])
+  }, [loadFromDb, loadMissions, loadSkills])
 
   if (authStatus === 'loading') {
     return (
@@ -173,5 +213,12 @@ export default function App() {
 
   if (authStatus === 'unauthenticated') return <AuthScreen />
 
-  return player ? <Dashboard /> : <SetupScreen userId={userId} />
+  if (!player) return <SetupScreen userId={userId} />
+
+  return (
+    <>
+      {view === 'dashboard' ? <Dashboard /> : <SkillTreePage />}
+      <BottomNav view={view} setView={setView} />
+    </>
+  )
 }

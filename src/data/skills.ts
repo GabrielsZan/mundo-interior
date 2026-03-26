@@ -1,0 +1,133 @@
+import type { ISkill } from '@/types'
+import { SKILL_XP_COST } from '@/lib/constants'
+
+const t1 = SKILL_XP_COST[1]
+const t2 = SKILL_XP_COST[2]
+const t3 = SKILL_XP_COST[3]
+
+// ── Mente (Mind) ─────────────────────────────────────────────────────────────
+
+const mindSkills: ISkill[] = [
+  // Tier 1
+  { id: 'mind_foco_basico',       name: 'Foco Básico',          description: 'Mantém a atenção em uma tarefa por períodos curtos.',          domain: 'mind', tier: 1, xpCost: t1, isUnlocked: false, prerequisiteIds: [] },
+  { id: 'mind_leitura_diaria',    name: 'Leitura Diária',       description: 'Hábito de ler ao menos 15 minutos por dia.',                   domain: 'mind', tier: 1, xpCost: t1, isUnlocked: false, prerequisiteIds: [] },
+  { id: 'mind_meditacao',         name: 'Meditação',            description: 'Prática de silêncio e observação da mente.',                   domain: 'mind', tier: 1, xpCost: t1, isUnlocked: false, prerequisiteIds: [] },
+  { id: 'mind_journaling',        name: 'Journaling',           description: 'Escrita reflexiva para clareza mental.',                        domain: 'mind', tier: 1, xpCost: t1, isUnlocked: false, prerequisiteIds: [] },
+  { id: 'mind_atencao_plena',     name: 'Atenção Plena',        description: 'Presença consciente nas atividades do dia.',                   domain: 'mind', tier: 1, xpCost: t1, isUnlocked: false, prerequisiteIds: [] },
+  { id: 'mind_autodisciplina',    name: 'Autodisciplina',       description: 'Capacidade de agir mesmo sem vontade imediata.',               domain: 'mind', tier: 1, xpCost: t1, isUnlocked: false, prerequisiteIds: [] },
+  { id: 'mind_curiosidade',       name: 'Curiosidade Ativa',    description: 'Busca constante por aprender algo novo.',                      domain: 'mind', tier: 1, xpCost: t1, isUnlocked: false, prerequisiteIds: [] },
+
+  // Tier 2
+  { id: 'mind_foco_profundo',     name: 'Foco Profundo',        description: 'Sessões de trabalho intenso sem distrações.',                  domain: 'mind', tier: 2, xpCost: t2, isUnlocked: false, prerequisiteIds: ['mind_foco_basico', 'mind_autodisciplina'] },
+  { id: 'mind_aprendizado_acel',  name: 'Aprendizado Acelerado',description: 'Técnicas para absorver informação mais rapidamente.',          domain: 'mind', tier: 2, xpCost: t2, isUnlocked: false, prerequisiteIds: ['mind_leitura_diaria', 'mind_curiosidade'] },
+  { id: 'mind_gestao_tempo',      name: 'Gestão do Tempo',      description: 'Organização de tarefas para máxima produtividade.',            domain: 'mind', tier: 2, xpCost: t2, isUnlocked: false, prerequisiteIds: ['mind_autodisciplina'] },
+  { id: 'mind_pensamento_critico',name: 'Pensamento Crítico',   description: 'Análise profunda antes de tirar conclusões.',                  domain: 'mind', tier: 2, xpCost: t2, isUnlocked: false, prerequisiteIds: ['mind_leitura_diaria', 'mind_journaling'] },
+  { id: 'mind_metacognicao',      name: 'Metacognição',         description: 'Consciência sobre os próprios processos de pensamento.',       domain: 'mind', tier: 2, xpCost: t2, isUnlocked: false, prerequisiteIds: ['mind_meditacao', 'mind_journaling'] },
+  { id: 'mind_resolvedor',        name: 'Resolução de Problemas',description: 'Abordagem estruturada para desafios complexos.',             domain: 'mind', tier: 2, xpCost: t2, isUnlocked: false, prerequisiteIds: ['mind_pensamento_critico'] },
+  { id: 'mind_memoria',           name: 'Memória Expandida',    description: 'Técnicas de memorização e retenção de conhecimento.',         domain: 'mind', tier: 2, xpCost: t2, isUnlocked: false, prerequisiteIds: ['mind_atencao_plena', 'mind_aprendizado_acel'] },
+
+  // Tier 3
+  { id: 'mind_maestria_intelectual', name: 'Maestria Intelectual', description: 'Domínio profundo em uma ou mais áreas de conhecimento.',  domain: 'mind', tier: 3, xpCost: t3, isUnlocked: false, prerequisiteIds: ['mind_foco_profundo', 'mind_aprendizado_acel'] },
+  { id: 'mind_visao_estrategica', name: 'Visão Estratégica',    description: 'Capacidade de planejar com anos de antecedência.',           domain: 'mind', tier: 3, xpCost: t3, isUnlocked: false, prerequisiteIds: ['mind_gestao_tempo', 'mind_resolvedor'] },
+  { id: 'mind_sintese',           name: 'Síntese do Conhecimento',description: 'Conecta ideias de diferentes áreas criando insights únicos.',domain: 'mind', tier: 3, xpCost: t3, isUnlocked: false, prerequisiteIds: ['mind_metacognicao', 'mind_memoria'] },
+  { id: 'mind_sabedoria_pratica', name: 'Sabedoria Prática',    description: 'Traduz conhecimento em ação e julgamento acurado.',          domain: 'mind', tier: 3, xpCost: t3, isUnlocked: false, prerequisiteIds: ['mind_maestria_intelectual', 'mind_visao_estrategica'] },
+  { id: 'mind_mente_mestra',      name: 'Mente Mestra',         description: 'Estado de flow cognitivo constante e aprendizado perpétuo.',  domain: 'mind', tier: 3, xpCost: t3, isUnlocked: false, prerequisiteIds: ['mind_sintese', 'mind_sabedoria_pratica'] },
+  { id: 'mind_legado_mental',     name: 'Legado do Conhecimento',description: 'Compartilha e multiplica conhecimento com o mundo.',         domain: 'mind', tier: 3, xpCost: t3, isUnlocked: false, prerequisiteIds: ['mind_mente_mestra'] },
+]
+
+// ── Corpo (Body) ──────────────────────────────────────────────────────────────
+
+const bodySkills: ISkill[] = [
+  // Tier 1
+  { id: 'body_movimento_diario',  name: 'Movimento Diário',     description: 'Ao menos 20 minutos de atividade física por dia.',            domain: 'body', tier: 1, xpCost: t1, isUnlocked: false, prerequisiteIds: [] },
+  { id: 'body_hidratacao',        name: 'Hidratação',           description: 'Beber 2L de água por dia consistentemente.',                  domain: 'body', tier: 1, xpCost: t1, isUnlocked: false, prerequisiteIds: [] },
+  { id: 'body_sono_regulado',     name: 'Sono Regulado',        description: 'Horários fixos de dormir e acordar.',                         domain: 'body', tier: 1, xpCost: t1, isUnlocked: false, prerequisiteIds: [] },
+  { id: 'body_alongamento',       name: 'Alongamento',          description: 'Rotina de mobilidade e flexibilidade.',                       domain: 'body', tier: 1, xpCost: t1, isUnlocked: false, prerequisiteIds: [] },
+  { id: 'body_nutricao_basica',   name: 'Nutrição Básica',      description: 'Hábitos alimentares equilibrados e regulares.',               domain: 'body', tier: 1, xpCost: t1, isUnlocked: false, prerequisiteIds: [] },
+  { id: 'body_caminhada',         name: 'Caminhada Intencional',description: 'Caminhar como prática de saúde e clareza mental.',            domain: 'body', tier: 1, xpCost: t1, isUnlocked: false, prerequisiteIds: [] },
+  { id: 'body_respiracao_basica', name: 'Respiração Consciente',description: 'Técnicas simples de controle da respiração.',                 domain: 'body', tier: 1, xpCost: t1, isUnlocked: false, prerequisiteIds: [] },
+
+  // Tier 2
+  { id: 'body_treino_regular',    name: 'Treino Regular',       description: 'Programa de exercícios 3+ vezes por semana.',                 domain: 'body', tier: 2, xpCost: t2, isUnlocked: false, prerequisiteIds: ['body_movimento_diario', 'body_nutricao_basica'] },
+  { id: 'body_resistencia',       name: 'Resistência Muscular', description: 'Força e endurance construídas progressivamente.',             domain: 'body', tier: 2, xpCost: t2, isUnlocked: false, prerequisiteIds: ['body_treino_regular'] },
+  { id: 'body_flexibilidade',     name: 'Flexibilidade Total',  description: 'Amplitude de movimento ampliada em todo o corpo.',            domain: 'body', tier: 2, xpCost: t2, isUnlocked: false, prerequisiteIds: ['body_alongamento', 'body_movimento_diario'] },
+  { id: 'body_energia_sustentada',name: 'Energia Sustentada',   description: 'Níveis de energia estáveis ao longo do dia.',                 domain: 'body', tier: 2, xpCost: t2, isUnlocked: false, prerequisiteIds: ['body_sono_regulado', 'body_hidratacao'] },
+  { id: 'body_respiracao_avanc',  name: 'Respiração Avançada',  description: 'Pranayama e técnicas de controle autonômico.',               domain: 'body', tier: 2, xpCost: t2, isUnlocked: false, prerequisiteIds: ['body_respiracao_basica', 'body_sono_regulado'] },
+  { id: 'body_nutricao_avanc',    name: 'Nutrição Estratégica', description: 'Alimentação alinhada com objetivos e performance.',           domain: 'body', tier: 2, xpCost: t2, isUnlocked: false, prerequisiteIds: ['body_nutricao_basica', 'body_treino_regular'] },
+  { id: 'body_recuperacao',       name: 'Recuperação Ativa',    description: 'Protocolos de descanso para máxima adaptação física.',        domain: 'body', tier: 2, xpCost: t2, isUnlocked: false, prerequisiteIds: ['body_energia_sustentada'] },
+
+  // Tier 3
+  { id: 'body_atletismo',         name: 'Atletismo',            description: 'Performance física de alto nível em alguma modalidade.',      domain: 'body', tier: 3, xpCost: t3, isUnlocked: false, prerequisiteIds: ['body_resistencia', 'body_flexibilidade'] },
+  { id: 'body_vitalidade_plena',  name: 'Vitalidade Plena',     description: 'Energia, saúde e disposição em todos os momentos.',           domain: 'body', tier: 3, xpCost: t3, isUnlocked: false, prerequisiteIds: ['body_energia_sustentada', 'body_nutricao_avanc'] },
+  { id: 'body_corpo_harmonia',    name: 'Corpo em Harmonia',    description: 'Equilíbrio perfeito entre força, flexibilidade e descanso.',  domain: 'body', tier: 3, xpCost: t3, isUnlocked: false, prerequisiteIds: ['body_atletismo', 'body_recuperacao'] },
+  { id: 'body_longevidade',       name: 'Longevidade',          description: 'Hábitos que sustentam saúde robusta por décadas.',            domain: 'body', tier: 3, xpCost: t3, isUnlocked: false, prerequisiteIds: ['body_vitalidade_plena', 'body_respiracao_avanc'] },
+  { id: 'body_mestre_corporal',   name: 'Mestre do Corpo',      description: 'Consciência corporal total e controle preciso do movimento.',  domain: 'body', tier: 3, xpCost: t3, isUnlocked: false, prerequisiteIds: ['body_corpo_harmonia', 'body_longevidade'] },
+  { id: 'body_templo',            name: 'Corpo-Templo',         description: 'O corpo como instrumento sagrado de expressão plena.',        domain: 'body', tier: 3, xpCost: t3, isUnlocked: false, prerequisiteIds: ['body_mestre_corporal'] },
+]
+
+// ── Alma (Soul) ───────────────────────────────────────────────────────────────
+
+const soulSkills: ISkill[] = [
+  // Tier 1
+  { id: 'soul_gratidao',          name: 'Gratidão Diária',      description: 'Prática de reconhecer o que há de bom a cada dia.',           domain: 'soul', tier: 1, xpCost: t1, isUnlocked: false, prerequisiteIds: [] },
+  { id: 'soul_conexao',           name: 'Conexão Social',       description: 'Cultiva relacionamentos significativos e presentes.',          domain: 'soul', tier: 1, xpCost: t1, isUnlocked: false, prerequisiteIds: [] },
+  { id: 'soul_autocompassao',     name: 'Autocompaixão',        description: 'Trata a si mesmo com gentileza nos momentos difíceis.',        domain: 'soul', tier: 1, xpCost: t1, isUnlocked: false, prerequisiteIds: [] },
+  { id: 'soul_proposito',         name: 'Senso de Propósito',   description: 'Clareza sobre o que dá sentido à sua existência.',            domain: 'soul', tier: 1, xpCost: t1, isUnlocked: false, prerequisiteIds: [] },
+  { id: 'soul_escuta_ativa',      name: 'Escuta Ativa',         description: 'Presença total nas conversas, sem julgamentos.',               domain: 'soul', tier: 1, xpCost: t1, isUnlocked: false, prerequisiteIds: [] },
+  { id: 'soul_presenca',          name: 'Presença Plena',       description: 'Habitar o momento presente sem resistência.',                  domain: 'soul', tier: 1, xpCost: t1, isUnlocked: false, prerequisiteIds: [] },
+  { id: 'soul_vulnerabilidade',   name: 'Vulnerabilidade',      description: 'Coragem de se mostrar autenticamente para os outros.',        domain: 'soul', tier: 1, xpCost: t1, isUnlocked: false, prerequisiteIds: [] },
+
+  // Tier 2
+  { id: 'soul_resiliencia',       name: 'Resiliência',          description: 'Capacidade de se recuperar e crescer com adversidades.',      domain: 'soul', tier: 2, xpCost: t2, isUnlocked: false, prerequisiteIds: ['soul_autocompassao', 'soul_presenca'] },
+  { id: 'soul_empatia',           name: 'Empatia Profunda',     description: 'Compreensão genuína do mundo interior dos outros.',            domain: 'soul', tier: 2, xpCost: t2, isUnlocked: false, prerequisiteIds: ['soul_escuta_ativa', 'soul_conexao'] },
+  { id: 'soul_valores_claros',    name: 'Valores Claros',       description: 'Conhecimento profundo dos próprios princípios.',               domain: 'soul', tier: 2, xpCost: t2, isUnlocked: false, prerequisiteIds: ['soul_proposito', 'soul_vulnerabilidade'] },
+  { id: 'soul_cura_interior',     name: 'Cura Interior',        description: 'Processo de integrar feridas e sombras do passado.',          domain: 'soul', tier: 2, xpCost: t2, isUnlocked: false, prerequisiteIds: ['soul_autocompassao', 'soul_vulnerabilidade'] },
+  { id: 'soul_paz_mental',        name: 'Paz Mental',           description: 'Estado de equanimidade diante das circunstâncias.',            domain: 'soul', tier: 2, xpCost: t2, isUnlocked: false, prerequisiteIds: ['soul_presenca', 'soul_gratidao'] },
+  { id: 'soul_limites',           name: 'Limites Saudáveis',    description: 'Define e comunica limites com clareza e amor.',               domain: 'soul', tier: 2, xpCost: t2, isUnlocked: false, prerequisiteIds: ['soul_valores_claros', 'soul_conexao'] },
+  { id: 'soul_perdao',            name: 'Arte do Perdão',       description: 'Libera mágoas e ressente-se do passado.',                     domain: 'soul', tier: 2, xpCost: t2, isUnlocked: false, prerequisiteIds: ['soul_cura_interior'] },
+
+  // Tier 3
+  { id: 'soul_iluminacao',        name: 'Iluminação Pessoal',   description: 'Profunda clareza sobre quem você é e por que está aqui.',    domain: 'soul', tier: 3, xpCost: t3, isUnlocked: false, prerequisiteIds: ['soul_valores_claros', 'soul_paz_mental'] },
+  { id: 'soul_amor_incondicional',name: 'Amor Incondicional',   description: 'Amor que não depende de condições ou retribuição.',           domain: 'soul', tier: 3, xpCost: t3, isUnlocked: false, prerequisiteIds: ['soul_empatia', 'soul_perdao'] },
+  { id: 'soul_sabedoria',         name: 'Sabedoria',            description: 'Integração profunda de experiência, valores e propósito.',   domain: 'soul', tier: 3, xpCost: t3, isUnlocked: false, prerequisiteIds: ['soul_resiliencia', 'soul_iluminacao'] },
+  { id: 'soul_lider_servidor',    name: 'Liderança Servidora',  description: 'Inspira e eleva os outros através do exemplo e presença.',   domain: 'soul', tier: 3, xpCost: t3, isUnlocked: false, prerequisiteIds: ['soul_amor_incondicional', 'soul_limites'] },
+  { id: 'soul_alma_livre',        name: 'Alma Livre',           description: 'Vive com integridade total, sem máscaras ou medos.',         domain: 'soul', tier: 3, xpCost: t3, isUnlocked: false, prerequisiteIds: ['soul_sabedoria', 'soul_lider_servidor'] },
+  { id: 'soul_legado',            name: 'Legado',               description: 'Sua vida se torna uma contribuição que transcende o tempo.', domain: 'soul', tier: 3, xpCost: t3, isUnlocked: false, prerequisiteIds: ['soul_alma_livre'] },
+]
+
+// ── Criação (Creation) ────────────────────────────────────────────────────────
+
+const creationSkills: ISkill[] = [
+  // Tier 1
+  { id: 'creation_criatividade',  name: 'Criatividade Diária',  description: 'Dedica tempo todos os dias para criar algo.',                 domain: 'creation', tier: 1, xpCost: t1, isUnlocked: false, prerequisiteIds: [] },
+  { id: 'creation_expressao',     name: 'Expressão Livre',      description: 'Cria sem julgamento ou filtro interno.',                      domain: 'creation', tier: 1, xpCost: t1, isUnlocked: false, prerequisiteIds: [] },
+  { id: 'creation_prototipagem',  name: 'Prototipagem Rápida',  description: 'Transforma ideias em algo tangível rapidamente.',             domain: 'creation', tier: 1, xpCost: t1, isUnlocked: false, prerequisiteIds: [] },
+  { id: 'creation_brainstorm',    name: 'Brainstorm',           description: 'Geração em quantidade de ideias sem filtro.',                 domain: 'creation', tier: 1, xpCost: t1, isUnlocked: false, prerequisiteIds: [] },
+  { id: 'creation_curadoria',     name: 'Curadoria',            description: 'Seleciona e combina referências para alimentar a criação.',   domain: 'creation', tier: 1, xpCost: t1, isUnlocked: false, prerequisiteIds: [] },
+  { id: 'creation_aprendizado',   name: 'Aprendizado de Ofício',description: 'Estuda e pratica uma habilidade criativa específica.',        domain: 'creation', tier: 1, xpCost: t1, isUnlocked: false, prerequisiteIds: [] },
+  { id: 'creation_publicar',      name: 'Coragem de Publicar',  description: 'Compartilha o trabalho inacabado com o mundo.',              domain: 'creation', tier: 1, xpCost: t1, isUnlocked: false, prerequisiteIds: [] },
+
+  // Tier 2
+  { id: 'creation_projeto',       name: 'Projeto Pessoal',      description: 'Desenvolve um projeto criativo do começo ao fim.',           domain: 'creation', tier: 2, xpCost: t2, isUnlocked: false, prerequisiteIds: ['creation_criatividade', 'creation_prototipagem'] },
+  { id: 'creation_craft',         name: 'Craft Refinado',       description: 'Habilidade técnica que eleva a qualidade do trabalho.',      domain: 'creation', tier: 2, xpCost: t2, isUnlocked: false, prerequisiteIds: ['creation_aprendizado', 'creation_expressao'] },
+  { id: 'creation_consistencia',  name: 'Consistência Criativa',description: 'Cria regularmente mesmo sem inspiração.',                    domain: 'creation', tier: 2, xpCost: t2, isUnlocked: false, prerequisiteIds: ['creation_criatividade', 'creation_publicar'] },
+  { id: 'creation_audiencia',     name: 'Audiência Fiel',       description: 'Constrói conexão genuína com quem aprecia seu trabalho.',   domain: 'creation', tier: 2, xpCost: t2, isUnlocked: false, prerequisiteIds: ['creation_publicar', 'creation_consistencia'] },
+  { id: 'creation_iteracao',      name: 'Cultura da Iteração',  description: 'Melhora continuamente com base em feedback e reflexão.',    domain: 'creation', tier: 2, xpCost: t2, isUnlocked: false, prerequisiteIds: ['creation_projeto', 'creation_craft'] },
+  { id: 'creation_colaboracao',   name: 'Colaboração Criativa', description: 'Co-cria com outros potencializando resultados.',             domain: 'creation', tier: 2, xpCost: t2, isUnlocked: false, prerequisiteIds: ['creation_audiencia'] },
+  { id: 'creation_voz_propria',   name: 'Voz Própria',          description: 'Estilo criativo reconhecível e autêntico.',                  domain: 'creation', tier: 2, xpCost: t2, isUnlocked: false, prerequisiteIds: ['creation_craft', 'creation_brainstorm'] },
+
+  // Tier 3
+  { id: 'creation_obra_prima',    name: 'Obra Prima',           description: 'Cria algo que representa o ápice da sua expressão.',        domain: 'creation', tier: 3, xpCost: t3, isUnlocked: false, prerequisiteIds: ['creation_craft', 'creation_iteracao'] },
+  { id: 'creation_impacto',       name: 'Impacto Cultural',     description: 'Seu trabalho influencia pessoas além do seu círculo.',       domain: 'creation', tier: 3, xpCost: t3, isUnlocked: false, prerequisiteIds: ['creation_audiencia', 'creation_colaboracao'] },
+  { id: 'creation_inovacao',      name: 'Inovação',             description: 'Cria algo genuinamente novo no mundo.',                     domain: 'creation', tier: 3, xpCost: t3, isUnlocked: false, prerequisiteIds: ['creation_voz_propria', 'creation_obra_prima'] },
+  { id: 'creation_maestria',      name: 'Maestria Criativa',    description: 'Domínio completo do seu ofício em todas as dimensões.',     domain: 'creation', tier: 3, xpCost: t3, isUnlocked: false, prerequisiteIds: ['creation_inovacao', 'creation_impacto'] },
+  { id: 'creation_legado',        name: 'Legado Criativo',      description: 'Seu trabalho sobrevive e inspira gerações futuras.',        domain: 'creation', tier: 3, xpCost: t3, isUnlocked: false, prerequisiteIds: ['creation_maestria'] },
+  { id: 'creation_mestre_criador',name: 'Mestre Criador',       description: 'A criação flui como segunda natureza, livre e poderosa.',   domain: 'creation', tier: 3, xpCost: t3, isUnlocked: false, prerequisiteIds: ['creation_legado'] },
+]
+
+export const SKILL_SEED: ISkill[] = [
+  ...mindSkills,
+  ...bodySkills,
+  ...soulSkills,
+  ...creationSkills,
+]

@@ -117,6 +117,29 @@ export async function dbResetDailyMissions(playerId: string): Promise<void> {
   } catch { /* fire-and-forget */ }
 }
 
+// ── Player Skills ────────────────────────────────────────────────────────────
+
+export async function dbFetchUnlockedSkills(playerId: string): Promise<string[]> {
+  if (!supabase) return []
+  try {
+    const { data, error } = await supabase
+      .from('player_skills')
+      .select('skill_id')
+      .eq('player_id', playerId)
+    if (error || !data) return []
+    return data.map((r: Record<string, unknown>) => r.skill_id as string)
+  } catch {
+    return []
+  }
+}
+
+export async function dbUnlockSkill(playerId: string, skillId: string): Promise<void> {
+  if (!supabase) return
+  try {
+    await supabase.from('player_skills').insert({ player_id: playerId, skill_id: skillId })
+  } catch { /* fire-and-forget */ }
+}
+
 function rowToMission(row: Record<string, unknown>): IMission {
   return {
     id:          row.id as string,
