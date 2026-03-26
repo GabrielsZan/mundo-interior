@@ -2,14 +2,17 @@ import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 import type { IPlayer, IDomainXP, Domain, IXPGain } from '@/types'
 import { xpToNextLevel } from '@/lib/constants'
+import { dbFetchPlayer, dbUpsertPlayer } from '@/lib/db'
 
 interface PlayerState {
-  player: IPlayer | null
+  player:    IPlayer | null
+  userId:    string | null
   isLoading: boolean
 
   // Actions
-  initPlayer: (name: string) => void
-  gainXP: (gain: IXPGain) => void
+  initPlayer:  (name: string, userId?: string) => void
+  loadFromDb:  (userId: string) => Promise<'loaded' | 'not_found'>
+  gainXP:      (gain: IXPGain) => void
   resetPlayer: () => void
 }
 
@@ -34,26 +37,41 @@ export const usePlayerStore = create<PlayerState>()(
   persist(
     (set, get) => ({
       player:    null,
+      userId:    null,
       isLoading: false,
 
-      initPlayer: (name) => {
-        set({ player: createDefaultPlayer(name) })
+      initPlayer: (name, userId) => {
+        const uid    = userId ?? get().userId ?? undefined
+        const player = createDefaultPlayer(name)
+        set({ player, userId: uid ?? null })
+        if (uid) dbUpsertPlayer(player, uid)
+      },
+
+      loadFromDb: async (userId) => {
+        set({ isLoading: true, userId })
+        const dbPlayer = await dbFetchPlayer(userId)
+        if (dbPlayer) {
+          set({ player: dbPlayer, isLoading: false })
+          return 'loaded'
+        }
+        // Offline fallback: use persisted local state if present
+        const local = get().player
+        set({ isLoading: false })
+        return local ? 'loaded' : 'not_found'
       },
 
       gainXP: ({ general, domain, domainType }: IXPGain) => {
-        const { player } = get()
+        const { player, userId } = get()
         if (!player) return
 
-        const newXPGeneral = player.xpGeneral + general
-        const newDomainXP  = {
+        const newDomainXP = {
           ...player.domainXP,
           [domainType as Domain]: (player.domainXP[domainType as Domain] ?? 0) + domain,
         }
 
-        // Level-up loop: a single gain can trigger multiple level-ups
-        let level      = player.level
-        let xpPool     = newXPGeneral
-        let threshold  = xpToNextLevel(level)
+        let level     = player.level
+        let xpPool    = player.xpGeneral + general
+        let threshold = xpToNextLevel(level)
 
         while (xpPool >= threshold) {
           xpPool    -= threshold
@@ -61,18 +79,18 @@ export const usePlayerStore = create<PlayerState>()(
           threshold  = xpToNextLevel(level)
         }
 
-        set({
-          player: {
-            ...player,
-            level,
-            xpGeneral:     xpPool,
-            xpToNextLevel: threshold,
-            domainXP:      newDomainXP,
-          },
-        })
+        const updated: IPlayer = {
+          ...player,
+          level,
+          xpGeneral:     xpPool,
+          xpToNextLevel: threshold,
+          domainXP:      newDomainXP,
+        }
+        set({ player: updated })
+        if (userId) dbUpsertPlayer(updated, userId)
       },
 
-      resetPlayer: () => set({ player: null }),
+      resetPlayer: () => set({ player: null, userId: null }),
     }),
     { name: 'mundo-interior-player' }
   )

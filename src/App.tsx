@@ -1,17 +1,22 @@
 import { useState, useEffect, useRef } from 'react'
 import { usePlayerStore } from '@/stores/playerStore'
+import { useMissionStore } from '@/stores/missionStore'
 import { Button, Card, XPBar, DomainBadge } from '@/components/ui'
 import { MissionList } from '@/features/missions'
+import { AuthScreen } from '@/features/auth/AuthScreen'
 import { useXP } from '@/hooks/useXP'
+import { supabase, isSupabaseConfigured } from '@/lib/supabase'
 import styles from '@/features/missions/missions.module.css'
 
-function SetupScreen() {
+// ── Setup ─────────────────────────────────────────────────────────────────────
+
+function SetupScreen({ userId }: { userId?: string }) {
   const initPlayer = usePlayerStore((s) => s.initPlayer)
   const [name, setName] = useState('')
 
   function handleStart(e: React.FormEvent) {
     e.preventDefault()
-    if (name.trim()) initPlayer(name.trim())
+    if (name.trim()) initPlayer(name.trim(), userId)
   }
 
   return (
@@ -42,13 +47,22 @@ function SetupScreen() {
   )
 }
 
-function Dashboard() {
-  const player = usePlayerStore((s) => s.player)!
-  const xp     = useXP()!
+// ── Dashboard ─────────────────────────────────────────────────────────────────
 
-  // Level-up animation
+function Dashboard() {
+  const player          = usePlayerStore((s) => s.player)!
+  const xp              = useXP()!
+  const checkDailyReset = useMissionStore((s) => s.checkDailyReset)
+  const setPlayerId     = useMissionStore((s) => s.setPlayerId)
+
   const prevLevel       = useRef(player.level)
   const [levelUp, setLevelUp] = useState(false)
+
+  // Ensure mission store knows the player id (needed for new players after setup)
+  useEffect(() => { setPlayerId(player.id) }, [player.id, setPlayerId])
+
+  // Auto-reset dailies if it's a new day
+  useEffect(() => { checkDailyReset() }, [checkDailyReset])
 
   useEffect(() => {
     if (player.level > prevLevel.current) {
@@ -103,7 +117,61 @@ function Dashboard() {
   )
 }
 
+// ── Root ──────────────────────────────────────────────────────────────────────
+
+type AuthStatus = 'loading' | 'unauthenticated' | 'authenticated'
+
 export default function App() {
-  const player = usePlayerStore((s) => s.player)
-  return player ? <Dashboard /> : <SetupScreen />
+  const player       = usePlayerStore((s) => s.player)
+  const loadFromDb   = usePlayerStore((s) => s.loadFromDb)
+  const loadMissions = useMissionStore((s) => s.loadFromDb)
+
+  const [authStatus, setAuthStatus] = useState<AuthStatus>(
+    isSupabaseConfigured ? 'loading' : 'authenticated'
+  )
+  const [userId, setUserId] = useState<string | undefined>()
+
+  useEffect(() => {
+    if (!isSupabaseConfigured || !supabase) return
+
+    async function handleSession(uid: string) {
+      setUserId(uid)
+      const result = await loadFromDb(uid)
+      if (result === 'loaded') {
+        const playerId = usePlayerStore.getState().player?.id
+        if (playerId) await loadMissions(playerId)
+      }
+      setAuthStatus('authenticated')
+    }
+
+    supabase.auth.getSession().then(({ data }) => {
+      if (data.session?.user) {
+        handleSession(data.session.user.id)
+      } else {
+        setAuthStatus('unauthenticated')
+      }
+    })
+
+    const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
+      if (session?.user) {
+        handleSession(session.user.id)
+      } else {
+        setAuthStatus('unauthenticated')
+      }
+    })
+
+    return () => listener.subscription.unsubscribe()
+  }, [loadFromDb, loadMissions])
+
+  if (authStatus === 'loading') {
+    return (
+      <div className="min-h-screen bg-parchment flex items-center justify-center">
+        <p className="text-ink/30 font-body text-sm">Carregando...</p>
+      </div>
+    )
+  }
+
+  if (authStatus === 'unauthenticated') return <AuthScreen />
+
+  return player ? <Dashboard /> : <SetupScreen userId={userId} />
 }
