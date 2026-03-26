@@ -8,7 +8,7 @@ interface MissionState {
   missions: IMission[]
 
   // Actions
-  addMission:     (draft: Omit<IMission, 'id' | 'isCompleted' | 'completedAt' | 'streak' | 'createdAt'>) => void
+  addMission:     (draft: Omit<IMission, 'id' | 'isCompleted' | 'completedAt' | 'streak' | 'createdAt' | 'xpGeneral' | 'xpDomain'>) => void
   completeMission:(id: string) => void
   deleteMission:  (id: string) => void
   resetDailies:   () => void  // called at midnight
