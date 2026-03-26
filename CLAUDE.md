@@ -82,3 +82,100 @@ supabase/         → Migrations SQL, seed data
 - Stores Zustand: camelCase (usePlayerStore, useMissionStore)
 - CSS: Tailwind para layout, CSS Modules para animações/efeitos custom
 - Imports: absolutos usando `@/` alias para src/
+
+---
+
+## Instruções para o Claude
+
+### Manutenção do CLAUDE.md
+Ao final de cada sessão de trabalho ou quando houver progresso significativo, atualize a seção **Estado Atual do Projeto** abaixo com:
+- O que foi implementado/alterado
+- Próximos passos prioritários
+- Qualquer decisão técnica relevante tomada
+
+### Sincronização com GitHub
+Após cada conjunto de alterações no projeto, faça commit e push automático para o repositório remoto (`origin main`). Use mensagens de commit descritivas no formato:
+```
+feat: <descrição breve do que foi adicionado>
+fix: <descrição de correção>
+refactor: <descrição de refatoração>
+chore: <configuração, dependências, etc>
+```
+O repositório remoto é: `https://github.com/GabrielsZan/mundo-interior.git`
+
+---
+
+## Estado Atual do Projeto
+
+### Fase 1 — Scaffold Completo ✅ (2026-03-26)
+
+**O que foi implementado:**
+
+#### Configuração e Tooling
+- `package.json` — React 18, Vite 5, TypeScript 5, Tailwind 3, Zustand 5, Supabase JS, vite-plugin-pwa
+- `vite.config.ts` — alias `@/` → `src/`, PWA configurado (manifest, ícones, autoUpdate)
+- `tsconfig.json` — strict mode, paths `@/*`
+- `tailwind.config.ts` — todos os tokens do GDD (cores, fontes, sombras, keyframes)
+- `postcss.config.js`, `index.html` (Google Fonts: Lora, Nunito, JetBrains Mono)
+- `.env.example` — template das variáveis de ambiente Supabase
+
+#### Design System (`src/styles/`)
+- `globals.css` — Tailwind layers + CSS custom properties + utilities prontas:
+  `.card`, `.card-hover`, `.btn-primary/ghost/gold`, `.domain-badge-{mind/body/soul/creation}`, `.xp-chip`, `.progress-bar`, `.progress-fill`
+- `animations.module.css` — keyframes CSS Modules: xpFloat, levelUp, streakPulse, fogReveal, shimmer (skill unlock)
+
+#### Tipos (`src/types/index.ts`)
+- `Domain`, `MissionType`, `SkillTier` (union types)
+- `DOMAIN_LABELS`, `DOMAIN_COLORS` (lookup maps)
+- `IMission`, `IPlayer`, `IDomainXP`, `ISkill`, `IXPGain` (interfaces)
+
+#### Lógica de Negócio
+- `src/lib/constants.ts` — `xpToNextLevel()`, `MISSION_XP`, `SKILL_XP_COST`, `STREAK_MILESTONES`
+- `src/lib/supabase.ts` — cliente Supabase (usa env vars)
+- `src/stores/playerStore.ts` — Zustand + persist; `gainXP` com loop de level-up automático
+- `src/stores/missionStore.ts` — Zustand + persist; `completeMission` chama `gainXP`, `resetDailies`
+- `src/hooks/useXP.ts` — progresso derivado (current, needed, percent, level)
+- `src/hooks/useMissions.ts` — filtros por domain/type/completed
+
+#### Componentes UI (`src/components/ui/`)
+- `Button` — variantes primary/ghost/gold
+- `Card` — base + hoverable
+- `XPBar` — barra de progresso com ARIA
+- `DomainBadge` — badge colorida por domínio
+- `index.ts` — barrel export
+
+#### App
+- `src/main.tsx` — entry point com StrictMode
+- `src/App.tsx` — `SetupScreen` (onboarding com nome) + `Dashboard` básico (nível, XP bar, domínios)
+- `src/vite-env.d.ts` — tipos para env vars e PWA
+
+**Variáveis de ambiente necessárias:**
+```
+VITE_SUPABASE_URL=<url do projeto Supabase>
+VITE_SUPABASE_ANON_KEY=<chave anon do Supabase>
+```
+
+---
+
+### Próximos Passos — Fase 1 (Core Loop)
+
+**Prioridade 1 — Feature de Missões (`src/features/missions/`)**
+- [ ] `MissionCard` — card de missão com domain badge, tipo, XP reward, botão completar
+- [ ] `MissionList` — lista filtrada por tipo (abas: Diárias / Principais / Épicas)
+- [ ] `AddMissionModal` — formulário para criar nova missão
+- [ ] `StreakBadge` — exibição do streak da missão com animação de pulso
+
+**Prioridade 2 — Dashboard expandido**
+- [ ] Integrar `MissionList` no `Dashboard`
+- [ ] Animação XP float ao completar missão (usar `animations.module.css`)
+- [ ] Animação level-up ao subir de nível
+- [ ] Seção de resumo diário (missões completadas hoje / total)
+
+**Prioridade 3 — Persistência Supabase**
+- [ ] Migration SQL: tabelas `players`, `missions`
+- [ ] Sincronizar `playerStore` e `missionStore` com Supabase
+- [ ] Auth básica (email/senha ou magic link)
+
+**Prioridade 4 — Reset de Diárias**
+- [ ] Lógica de detecção de virada de dia
+- [ ] Chamar `resetDailies()` automaticamente na abertura do app

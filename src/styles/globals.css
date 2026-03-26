@@ -1,0 +1,120 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ── CSS Custom Properties (design tokens) ─────────────────────── */
+:root {
+  /* Domain colors */
+  --color-mind:       #5B8C5A;
+  --color-body:       #C67B5C;
+  --color-soul:       #6BA3B7;
+  --color-creation:   #B8976A;
+
+  /* Base palette */
+  --color-bg:         #FBF6F0;
+  --color-ink:        #2A2118;
+  --color-gold:       #D4A843;
+
+  /* Spacing scale */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-6: 24px;
+  --space-8: 32px;
+
+  /* Border radius */
+  --radius-card:  12px;
+  --radius-badge: 20px;
+  --radius-sm:    6px;
+}
+
+/* ── Base Styles ────────────────────────────────────────────────── */
+@layer base {
+  html {
+    @apply bg-parchment text-ink font-body;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    @apply min-h-screen;
+  }
+
+  h1, h2, h3, h4 {
+    @apply font-heading;
+  }
+
+  /* XP numbers always use mono */
+  [data-xp], .xp-value {
+    @apply font-mono;
+  }
+
+  *:focus-visible {
+    @apply outline-2 outline-offset-2 outline-gold;
+  }
+}
+
+/* ── Component Utilities ────────────────────────────────────────── */
+@layer components {
+  .card {
+    @apply bg-white rounded-card shadow-card border border-parchment-dark;
+  }
+
+  .card-hover {
+    @apply card transition-shadow duration-200 hover:shadow-card-hover;
+  }
+
+  .domain-badge {
+    @apply inline-flex items-center gap-1.5 px-3 py-1 rounded-badge text-sm font-semibold;
+  }
+
+  .domain-badge-mind {
+    @apply domain-badge bg-mind/10 text-mind border border-mind/20;
+  }
+
+  .domain-badge-body {
+    @apply domain-badge bg-body/10 text-body border border-body/20;
+  }
+
+  .domain-badge-soul {
+    @apply domain-badge bg-soul/10 text-soul border border-soul/20;
+  }
+
+  .domain-badge-creation {
+    @apply domain-badge bg-creation/10 text-creation border border-creation/20;
+  }
+
+  .xp-chip {
+    @apply inline-flex items-center gap-1 px-2 py-0.5 rounded-sm
+           bg-gold/10 text-gold border border-gold/20
+           font-mono text-xs font-bold;
+  }
+
+  .btn {
+    @apply inline-flex items-center justify-center gap-2
+           px-4 py-2 rounded-card font-body font-semibold text-sm
+           transition-all duration-150 cursor-pointer
+           focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2;
+  }
+
+  .btn-primary {
+    @apply btn bg-ink text-parchment hover:bg-ink/80 focus-visible:outline-gold;
+  }
+
+  .btn-ghost {
+    @apply btn bg-transparent text-ink hover:bg-parchment-dark focus-visible:outline-ink;
+  }
+
+  .btn-gold {
+    @apply btn bg-gold text-ink hover:bg-gold-dark focus-visible:outline-gold;
+  }
+
+  .progress-bar {
+    @apply h-2 rounded-full bg-parchment-dark overflow-hidden;
+  }
+
+  .progress-fill {
+    @apply h-full rounded-full transition-all duration-500 ease-out;
+  }
+}
