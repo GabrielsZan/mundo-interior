@@ -1,0 +1,285 @@
+# **5. World Map System – “Mundo Interior”**
+
+## **5.1 Overview**
+
+The World Map is the primary navigation interface of *Mundo Interior*. It represents the player’s inner world and serves as the central hub for exploration, progression, and interaction.
+
+The map is designed as a hybrid between:
+
+- A **stylized fantasy world (visual immersion)**
+
+- A **node-based survival RPG map (functional clarity)**
+
+The system allows players to navigate between locations (Points of Interest), engage with missions, and visualize their personal growth.
+
+## **5.2 Core Design Principles**
+
+- **Clarity over density**: All interactive elements must be easy to identify and tap.
+
+- **Scale and distance**: Locations must feel far apart to reinforce progression and exploration.
+
+- **Symbolism**: Every region and location represents an aspect of the player’s internal development.
+
+- **Exploration**: The map evolves as the player progresses (Fog of War system).
+
+- **Mobile-first usability**: Designed for touch interaction, zoom, and panning.
+
+## **5.3 Map Structure**
+
+### **Full World Map**
+
+- The map is a **single large world image**, larger than the mobile screen.
+
+- The player views only a portion of the map at a time.
+
+- The map supports:
+
+- **Zooming**
+
+- **Panning (drag movement)**
+
+- The world extends beyond the visible screen, creating a sense of scale.
+
+### **Regional Layout**
+
+The map is divided into four major regions arranged like a compass:
+
+- **North – Mind (Mente)**
+Theme: Mountains, elevation, cold tones
+Represents: Focus, learning, cognition
+
+- **South – Body (Corpo)**
+Theme: Plains, earth tones, vitality
+Represents: Health, energy, physical habits
+
+- **East – Soul (Alma/Espírito)**
+Theme: Water, light, calm atmosphere
+Represents: Emotions, connection, inner peace
+
+- **West – Creation (Criação)**
+Theme: Forests, workshops, creativity
+Represents: Expression, building, skills
+
+### **Central Structure**
+
+- A **single Citadel (Cidadela Interior)** is located at the center of the map.
+
+- The Citadel is:
+
+- A **clickable POI**
+
+- Visually evolves over time (ruins → restored)
+
+- Opens a **separate dedicated screen** (not part of the map interaction layer)
+
+## **5.4 Points of Interest (POIs)**
+
+### **Definition**
+
+POIs are the primary interactive nodes on the map.
+
+Each POI represents:
+
+- A **skill**
+
+- A **habit**
+
+- Or a **growth area**
+
+### **Design Rules**
+
+Each POI must:
+
+- Be a **single, isolated structure**
+
+- Be clearly visible at small scale
+
+- Have **empty space around it** for easy tapping
+
+- Be visually distinct from other POIs
+
+- Not be clustered with other elements
+
+### **Interaction**
+
+- Tap POI → Opens mission interface
+
+- Each POI contains:
+
+- Associated missions
+
+- Progress tracking
+
+- Domain XP relevance
+
+### **Distribution**
+
+- POIs must be **widely spaced across the map**
+
+- Large areas of terrain must separate each location
+
+- The player should feel like they are **traveling between destinations**
+
+## **5.5 Challenge Zones**
+
+### **Definition**
+
+Challenge Zones are special map nodes representing internal obstacles.
+
+Examples:
+
+- Procrastination
+
+- Burnout
+
+- Perfectionism
+
+- Self-doubt
+
+### **Design Rules**
+
+- Visually distinct from regular POIs
+
+- No traditional “buildings” (more environmental storytelling)
+
+- Isolated and clearly readable
+
+- Positioned away from standard POIs
+
+### **Function**
+
+- Represent resistance or difficulty
+
+- Provide unique mission types or mechanics
+
+- Reinforce psychological depth of the system
+
+## **5.6 Spatial Design ****&**** Scale**
+
+The map must emphasize **scale and separation**:
+
+- All locations must appear **small relative to the world**
+
+- Distances between locations must be **significant**
+
+- The map must feel:
+
+- Expansive
+
+- Navigable
+
+- Uncluttered
+
+Terrain (grasslands, rivers, mountains) is used to:
+
+- Separate locations
+
+- Guide navigation
+
+- Provide visual breathing space
+
+## **5.7 Navigation System**
+
+The map uses a **node-based navigation system**:
+
+- The player selects locations directly (no free walking)
+
+- Movement is conceptual (tap-to-enter)
+
+- Optional visual paths may connect locations
+
+The system must clearly communicate:
+
+- Available locations
+
+- Locked/unlocked areas
+
+- Progression paths
+
+## **5.8 Fog of War**
+
+- The map starts partially covered in fog
+
+- Fog clears as the player progresses
+
+- New areas and POIs are revealed based on:
+
+- Skill progression
+
+- Mission completion
+
+This system reinforces:
+
+- Exploration
+
+- Discovery
+
+- Personal growth visualization
+
+## **5.9 Visual Style**
+
+- Painterly, semi-realistic aesthetic
+
+- Inspired by East-Asian fantasy environments
+
+- Soft lighting and warm tones
+
+- Calm, introspective atmosphere
+
+### **Visual Priorities:**
+
+- Readability on small screens
+
+- Clear silhouettes for POIs
+
+- Avoid excessive visual clutter
+
+- Maintain consistent art direction
+
+## **5.10 Technical Implementation Guidelines**
+
+- The base map is a **large high-resolution image**
+
+- POIs are implemented as **separate interactive elements (overlays)**
+
+- Each POI has:
+
+- Defined coordinates (x, y)
+
+- Click/touch interaction
+
+- The system must support:
+
+- Zoom
+
+- Pan
+
+- Layered UI
+
+## **5.11 User Experience Goals**
+
+The player should experience:
+
+- A sense of exploration
+
+- Clear decision-making (where to go next)
+
+- Emotional connection to locations
+
+- Visible progression over time
+
+The map should function as:
+
+A living representation of the player’s inner growth journey.
+
+## **5.12 Design Goal Summary**
+
+The World Map must successfully combine:
+
+- **Aesthetic immersion** (fantasy inner world)
+
+- **Gameplay clarity** (node-based navigation)
+
+- **Scalable interaction** (mobile-friendly system)
+
+The final result should feel like a **playable, explorable world**, not just an illustration.

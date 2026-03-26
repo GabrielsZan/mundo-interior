@@ -1,0 +1,311 @@
+Game Design Document: Mundo Interior
+
+1. Visão Geral e Filosofia
+
+- **Título:** Mundo Interior
+
+- **Conceito:** Um RPG de vida (Life-RPG) gamificado para web, focado em desenvolvimento pessoal, autoconhecimento e formação de hábitos. A aplicação transforma tarefas diárias e rotinas em uma experiência de RPG, com progressão de personagem, árvores de habilidades, um mapa explorável, sistema de loot e mecânicas de crafting.
+
+- **Filosofia Central:** A jornada de autoaperfeiçoamento é uma aventura épica e introspectiva. O foco não é apenas "completar tarefas", mas entender *como* cada tarefa molda o "mundo interior" do jogador. O progresso é uma forma de autodescoberta e a reconstrução de um santuário pessoal.
+
+- **Público-Alvo:** Indivíduos que buscam autoaperfeiçoamento, gostam de sistemas de progressão de RPGs, mas se sentem desengajados por aplicativos de produtividade tradicionais.
+
+- **Diferencial Competitivo:** Em contraste com o Habitica, que é mais focado em recompensas externas e combate, o "Mundo Interior" é sobre exploração interna, visualização do progresso e uma narrativa pessoal. A mecânica da Cidadela e a "Árvore da Alma" oferecem uma profundidade e personalização únicas.
+
+2. Mecânicas de Jogo (Gameplay Core Loop)
+
+- **Core Loop:**
+
+- **Definir Intenção:** O jogador cria "Missões" (tarefas/hábitos) ligadas a uma habilidade específica.
+
+- **Agir:** O jogador completa a Missão no mundo real.
+
+- **Registrar e Colher Recompensas:** O jogador marca a Missão como completa no app.
+
+- **Evoluir:** O jogador recebe XP para seu personagem e para a habilidade específica, subindo de nível e dissipando a névoa no mapa.
+
+- **Construir:** O jogador utiliza recursos e progresso para reconstruir e personalizar sua Cidadela Interior.
+
+3. Sistema de Personagem e Progressão
+
+3.1 O Avatar e Atributos Principais
+
+**O Avatar:** Representação do jogador no jogo. O progresso do avatar reflete diretamente o progresso do jogador.
+
+**Atributos Principais:**
+
+- **Nível Geral:** Nível do personagem (começa em 1).
+
+- **XP Geral:** Ganho ao completar qualquer tipo de Missão. Aumenta o Nível Geral do personagem.
+
+- **Fórmula de XP para Nível:** XP para o próximo nível = 100 * (1.5 ^ (Nível Atual - 1)). Ao subir de nível, o XP atual é zerado e o excesso é transferido.
+
+- **Níveis de Domínio:** Cada domínio possui seu próprio nível (começa em 1).
+
+- **XP de Domínio:** XP específico de cada domínio, ganho ao completar Missões associadas àquele domínio.
+
+3.2 Sistema de XP Detalhado
+
+O sistema de XP funciona em dois níveis distintos:
+
+**XP Geral (Universal):**
+
+- Ganho ao completar qualquer Missão (Diária, Principal ou Épica).
+
+- Usado **exclusivamente** para calcular o Nível Geral do personagem.
+
+- Não é consumido ou gasto em nenhuma mecânica.
+
+- Serve como indicador de progresso geral e pode ser requisito para acessar certos conteúdos (ex: "Requer Nível 10 Geral").
+
+**XP de Domínio (Específico):**
+
+- Ganho ao completar Missões associadas a um domínio específico.
+
+- Existem 4 pools de XP: Mente, Corpo, Alma e Criação.
+
+- **É consumido/gasto** ao desbloquear habilidades na Árvore da Alma.
+
+- Também contribui para o Nível do Domínio (veja seção 3.3).
+
+- Recompensas por tipo de Missão:
+
+- **Missão Diária:** +50 XP Geral, +50 XP do Domínio
+
+- **Missão Principal:** +150 XP Geral, +150 XP do Domínio
+
+- **Missão Épica:** +300 XP Geral, +300 XP do Domínio
+
+3.3 A Árvore da Alma (Skill System)
+
+O coração da progressão e da autodescoberta.
+
+**Estrutura Hierárquica:**
+
+- **4 Domínios:** Representam as quatro áreas fundamentais do ser.
+
+- **Mente (Verde Sálvia #6b8e6f):** Foco, aprendizado, clareza mental.
+
+- **Corpo (Terracota #d8a89f):** Saúde física, energia, bem-estar.
+
+- **Alma/Espírito (Azul Céu #a8d5e2):** Inteligência emocional, conexão, paz interior.
+
+- **Criação (Bege #c9b8a8):** Habilidades práticas, expressão, construção.
+
+- **16 Habilidades Tier 1 (4 por domínio):** Habilidades base que representam as disciplinas principais.
+
+- **Mente:** Foco, Leitura, Estudo, Raciocínio Crítico.
+
+- **Corpo:** Exercício, Nutrição, Sono, Postura.
+
+- **Alma/Espírito:** Meditação, Gratidão, Conexão Social, Empatia.
+
+- **Criação:** Escrita, Arte, Música, Programação.
+
+- **~60 Habilidades Tier 2 e 3 (Derivadas):** Cada habilidade Tier 1 possui 2-3 habilidades derivadas que expandem a profundidade.
+
+- **Exemplo - Foco (Mente):**
+
+- Tier 2: Concentração Profunda, Eliminação de Distrações, Controle de Atenção
+
+- Tier 3: Flow State
+
+- **Exemplo - Exercício (Corpo):**
+
+- Tier 2: Treinamento de Força, Resistência Cardiovascular, Flexibilidade
+
+- Tier 3: Desempenho Atlético
+
+**Mecânica de Desbloqueio:**
+
+- Cada habilidade tem um custo em XP de seu domínio:
+
+- **Tier 1:** 100 XP
+
+- **Tier 2:** 150 XP
+
+- **Tier 3:** 200 XP
+
+- Para desbloquear uma habilidade, o jogador deve:
+
+- Ter XP de domínio suficiente (o XP é **consumido**).
+
+- Ter desbloqueado todos os pré-requisitos (habilidades pai).
+
+- Ter desbloqueado pelo menos 1 habilidade do Tier anterior para acessar o próximo.
+
+**Progressão de Nível de Domínio:**
+
+- O Nível de cada Domínio aumenta baseado no **XP gasto** (não restante) para desbloquear habilidades.
+
+- Fórmula: Mesma progressão do XP Geral: XP para o próximo nível = 100 * (1.5 ^ (Nível Atual - 1)).
+
+- Exemplo: Gastar 100 XP para desbloquear "Foco" aumenta o progresso de Nível da Mente em 100 XP.
+
+- O Nível de Domínio é permanente e reflete o investimento total do jogador naquele domínio.
+
+**Persistência:**
+
+- Uma vez desbloqueada, uma habilidade permanece desbloqueada para sempre (exceto em eventos especiais que podem bloqueá-la temporariamente).
+
+- O XP gasto não pode ser recuperado, incentivando decisões estratégicas.
+
+4. Sistema de Missões
+
+**Estrutura de Missões:**
+
+Todas as missões são associadas a um domínio específico (Mente, Corpo, Alma ou Criação). Ao completar uma missão, o jogador recebe XP Geral + XP do Domínio correspondente.
+
+- **Missões Diárias:** Hábitos recorrentes (ex: "Meditar por 10 min").
+
+- Recompensas: +50 XP Geral, +50 XP do Domínio
+
+- Uso: Construção de hábitos e ganho consistente de XP.
+
+- **Missões Principais:** Objetivos de médio prazo (ex: "Terminar o Capítulo 3 do livro").
+
+- Recompensas: +150 XP Geral, +150 XP do Domínio, chance de loot.
+
+- Uso: Marcos significativos e progresso acelerado.
+
+- **Missões Épicas:** Grandes projetos de vida (ex: "Lançar meu site pessoal").
+
+- Recompensas: +300 XP Geral, +300 XP do Domínio, loot raro garantido, desbloqueio de marco no mapa ou progresso na Cidadela.
+
+- Uso: Objetivos transformadores e marcos de vida.
+
+**Fluxo de Conclusão de Missão:**
+
+- Jogador completa a missão no mundo real.
+
+- Marca como completa no app.
+
+- Recebe XP Geral (para nível geral) + XP de Domínio (para desbloquear habilidades).
+
+- O XP de Domínio fica disponível para gastar na Árvore da Alma.
+
+5. O Mundo do Jogo: A Interface e Exploração
+
+- **O Mapa do Mundo Interior:** A tela principal. Um mapa estilizado que representa a psique do jogador.
+
+- **Névoa (Fog of War):** A maior parte do mapa começa oculta.
+
+- **Exploração:** Conforme o jogador sobe o nível de habilidades específicas, a névoa se dissipa nas regiões correspondentes àquela habilidade (ex: subir de nível em "Leitura" revela "A Grande Biblioteca").
+
+- **Marcos:** Concluir Missões Épicas pode construir ou revelar estruturas únicas no mapa (ex: "A Torre do Foco", "O Observatório da Gratidão").
+
+- **O Diário do Viajante:** Uma seção onde o jogador pode escrever livremente, associando entradas de diário a dias ou missões completas, criando uma narrativa de sua jornada.
+
+6. Sistema de Recompensas (Loot & Crafting)
+
+- **Loot:** Itens recebidos ao completar Missões Principais e Épicas.
+
+- **Consumíveis:** Poções que dão bônus temporários (ex: "Poção de Foco" que dobra o XP de habilidade da Mente por um dia).
+
+- **Materiais de Crafting:** Recursos usados para criar equipamentos ou construir na Cidadela.
+
+- **Fragmentos de Lore:** Pedaços de texto que contam uma história sobre o Mundo Interior, servindo como metáforas para o crescimento pessoal.
+
+- **Equipamentos:** Itens que o avatar pode "equipar" para bônus passivos (ex: "Botas do Andarilho" que aumentam o XP ganho em todas as missões do Corpo).
+
+7. A Cidadela Interior: Reconstrução e Personalização
+
+- **Conceito:** No centro do mapa do "Mundo Interior" existe uma Cidadela em ruínas. O objetivo de longo prazo do jogador é reconstruir e personalizar esta Cidadela, transformando-a de ruínas em um santuário próspero que representa seu eu mais forte e equilibrado.
+
+- **Desbloqueio:** A Cidadela se torna acessível após o jogador atingir um marco significativo, como alcançar um certo nível geral ou um nível mínimo em habilidades de cada domínio.
+
+- **Projetos de Reconstrução:** A reconstrução acontece através de "Projetos de Construção", que funcionam como Missões Épicas especiais. Estes projetos exigem a conclusão de outras missões e o gasto de "Materiais de Crafting" específicos.
+
+- **Exemplos de Projetos:** Restaurar a Biblioteca Central (Mente), Erguer o Ginásio do Corpo (Corpo), Cultivar o Jardim da Alma (Alma/Espírito), Acender a Forja da Criação (Criação).
+
+- **Edifícios Funcionais:** Cada edifício restaurado concede bônus passivos permanentes ou desbloqueia novas funcionalidades (ex: A Biblioteca aumenta o XP de Mente, O Ginásio permite Treinos do Dia extras).
+
+- **Personalização:** O jogador pode usar materiais para adicionar elementos cosméticos à sua Cidadela (estátuas, fontes, árvores, etc.), tornando-a um reflexo único de seu progresso.
+
+- **Importância Filosófica:** A Cidadela é a metáfora definitiva para a construção do "eu", oferecendo um objetivo de longo prazo e uma visualização poderosa do progresso total do jogador.
+
+8. Eventos Dinâmicos
+
+- **Eventos Programados:** Desafios semanais ou mensais (ex: "Semana da Mente Clara", com bônus de XP para todas as missões do domínio da Mente).
+
+- **Eventos Aleatórios:** Pequenos eventos que podem aparecer no mapa, oferecendo missões surpresa ou recompensas.
+
+9. Monetização (Visão de Futuro)
+
+- **Modelo Freemium:** O jogo principal é 100% gratuito.
+
+- **Assinatura Opcional (****"****Viajante Consciente****"****):** Oferece recursos de conveniência e cosméticos.
+
+- Itens cosméticos para o avatar e para o mapa.
+
+- Estatísticas e gráficos de progresso mais detalhados.
+
+- Acesso a mais designs de diário.
+
+- **Filosofia Anti-Pay-to-Win:** O dinheiro nunca deve comprar progresso de poder. A assinatura apoia o desenvolvimento e oferece personalização.
+
+10. Interface da Arvore da Alma
+
+**Design Responsivo (Hibrido):**
+
+A Arvore da Alma utiliza um design hibrido que se adapta ao dispositivo:
+
+**Mobile (Colapsavel):**
+
+- Os 4 dominios sao exibidos como cards expansivos.
+
+- Ao clicar em um dominio, ele expande mostrando as 4 habilidades Tier 1.
+
+- Ao clicar em uma habilidade Tier 1, ela expande mostrando as habilidades Tier 2 derivadas.
+
+- Ao clicar em uma habilidade Tier 2, ela expande mostrando as habilidades Tier 3 (se houver).
+
+- Cada nivel pode ser colapsado para manter a interface limpa.
+
+**Desktop (Expansao Completa):**
+
+- Todos os dominios sao exibidos lado a lado em uma grid.
+
+- Cada dominio mostra sua hierarquia completa (Tier 1, 2, 3) em uma estrutura de arvore visual.
+
+- Conexoes visuais entre habilidades mostram as dependencias de pre-requisitos.
+
+- Suporte a zoom/pan para navegar em arvores grandes.
+
+**Elementos Visuais:**
+
+- **Cores por Dominio:**
+
+- Mente: Verde Salvia (#6b8e6f)
+
+- Corpo: Terracota (#d8a89f)
+
+- Alma: Azul Ceu (#a8d5e2)
+
+- Criacao: Bege (#c9b8a8)
+
+- **Status de Habilidade:**
+
+- Desbloqueada: Fundo verde, icone de cadeado aberto
+
+- Disponivel: Fundo amarelo, botao "Desbloquear"
+
+- Bloqueada: Fundo cinza, icone de cadeado fechado
+
+- **Painel de Progresso:** Exibe em tempo real:
+
+- Level Geral e XP Geral
+
+- Level e XP de cada dominio
+
+- Numero de habilidades desbloqueadas
+
+**Interatividade:**
+
+- Clique em "Desbloquear" para gastar XP e desbloquear uma habilidade.
+
+- Validacao em tempo real: mostra se ha XP suficiente e pre-requisitos atendidos.
+
+- Feedback visual: animacao de "level up" quando um dominio sobe de nivel.
+
+- Tooltip: Ao passar o mouse sobre uma habilidade, mostra descricao, custo, pre-requisitos e status.

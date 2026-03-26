@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Mundo Interior - World Map</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,wght@0,400;0,700;1,400;1,700&amp;family=Manrope:wght@400;600;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "on-error-container": "#93000a",
+              "on-background": "#231a10",
+              "inverse-surface": "#392f23",
+              "primary-fixed-dim": "#abd0ad",
+              "outline-variant": "#c2c8bf",
+              "secondary-fixed-dim": "#edbbb2",
+              "outline": "#727971",
+              "surface-container": "#feebd9",
+              "on-primary-fixed": "#01210b",
+              "surface-dim": "#e9d7c6",
+              "on-tertiary-container": "#f9fdff",
+              "on-primary": "#ffffff",
+              "on-tertiary-fixed": "#001f26",
+              "on-secondary-fixed": "#2f140f",
+              "on-primary-container": "#f7fff3",
+              "on-tertiary-fixed-variant": "#1f4d58",
+              "primary-fixed": "#c6ecc8",
+              "tertiary": "#36626d",
+              "surface-container-low": "#fff1e6",
+              "surface-container-high": "#f8e5d4",
+              "on-primary-fixed-variant": "#2d4e33",
+              "inverse-primary": "#abd0ad",
+              "secondary": "#7b554e",
+              "primary": "#426447",
+              "primary-container": "#5a7d5f",
+              "on-surface": "#231a10",
+              "surface-variant": "#f2dfce",
+              "error-container": "#ffdad6",
+              "tertiary-container": "#4f7b87",
+              "on-secondary-fixed-variant": "#613e37",
+              "tertiary-fixed": "#bdeaf7",
+              "surface-bright": "#fff8f4",
+              "on-secondary-container": "#7a544d",
+              "on-error": "#ffffff",
+              "secondary-container": "#ffcbc2",
+              "secondary-fixed": "#ffdad4",
+              "surface": "#fff8f4",
+              "tertiary-fixed-dim": "#a1cedb",
+              "background": "#fff8f4",
+              "surface-container-lowest": "#ffffff",
+              "on-tertiary": "#ffffff",
+              "inverse-on-surface": "#ffeedf",
+              "on-secondary": "#ffffff",
+              "surface-tint": "#45664a",
+              "on-surface-variant": "#424841",
+              "error": "#ba1a1a",
+              "surface-container-highest": "#f2dfce"
+            },
+            fontFamily: {
+              "headline": ["Newsreader"],
+              "body": ["Manrope"],
+              "label": ["Manrope"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .parchment-texture {
+            background-color: #fff8f4;
+            background-image: radial-gradient(#f2dfce 0.5px, transparent 0.5px);
+            background-size: 24px 24px;
+        }
+        .fog-of-war {
+            mask-image: radial-gradient(circle at center, transparent 30%, black 80%);
+            -webkit-mask-image: radial-gradient(circle at center, transparent 30%, black 80%);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background font-body selection:bg-secondary-container selection:text-on-secondary-container">
+<!-- TopAppBar -->
+<header class="fixed top-0 left-0 w-full z-50 flex justify-between items-center px-6 h-16 bg-[#fff8f4] dark:bg-[#1a140f]/90 shadow-[0_4px_20px_-2px_rgba(35,26,16,0.06)] backdrop-blur-md">
+<div class="flex items-center gap-3">
+<div class="relative">
+<div class="w-10 h-10 rounded-full border-2 border-primary overflow-hidden">
+<img alt="Avatar" class="w-full h-full object-cover" data-alt="Close-up portrait of a serene young man with short dark hair, warm lighting, painterly texture style" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA2tyOuiyTQ4oL4X7qz4slMXYDWBDtk5oR3nxRNVINjfMI0-YzChvpQv91yL7Wni9vD7bw0cHsDMo9H1NwrSuPdVCst_JtJZcnnuVyMzpBL-wl_Hujsjk3H8lsHoyOJjxbeYKN4c0NJQV2ipnlUVoC9tfq_W4vKJd1p1l8sVmr_tF4KwikPwRWZqCM0YOe-eI1yiWT7sqLX0RP4gXxSY2ws3glHXpRXzKILodaIi4PNdmkRCUytmKXbYlWWafa-j4YrWBnE4hpcjII"/>
+</div>
+<div class="absolute -bottom-1 -right-1 bg-primary text-on-primary text-[10px] font-bold px-1.5 py-0.5 rounded-full ring-2 ring-surface">
+                    LVL 3
+                </div>
+</div>
+<div class="flex flex-col">
+<h1 class="font-headline italic tracking-wide text-[#231a10] dark:text-[#f8e5d4] text-lg leading-tight">Mundo Interior</h1>
+<span class="font-label text-[10px] uppercase tracking-widest text-primary font-bold">Domain: Serenity</span>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<div class="hidden md:flex items-center gap-6 px-4">
+<span class="font-label text-[12px] uppercase tracking-widest text-[#426447] font-bold cursor-pointer hover:opacity-80 transition-opacity">World Map</span>
+<span class="font-label text-[12px] uppercase tracking-widest text-[#7a544d] opacity-60 cursor-pointer hover:opacity-80 transition-opacity">Soul Tree</span>
+<span class="font-label text-[12px] uppercase tracking-widest text-[#7a544d] opacity-60 cursor-pointer hover:opacity-80 transition-opacity">Quest Log</span>
+</div>
+<button class="text-[#426447] dark:text-[#abd0ad] hover:opacity-80 transition-opacity active:scale-95 duration-200">
+<span class="material-symbols-outlined text-2xl" data-icon="psychology">psychology</span>
+</button>
+</div>
+<div class="absolute bottom-0 left-0 bg-[#f2dfce] dark:bg-[#2c241b] h-[2px] w-full"></div>
+</header>
+<main class="relative min-h-screen pt-16 pb-24 overflow-hidden parchment-texture">
+<!-- The Psyche Map Container -->
+<div class="relative w-full h-[707px] flex items-center justify-center p-8">
+<!-- Fog of War Overlay -->
+<div class="absolute inset-0 z-10 pointer-events-none bg-surface-dim/40 backdrop-blur-sm fog-of-war"></div>
+<!-- Central Map Elements -->
+<div class="relative w-full max-w-5xl aspect-square md:aspect-video rounded-[3rem] bg-surface-container-low shadow-inner border-[12px] border-surface-variant/30 flex items-center justify-center overflow-hidden">
+<img alt="Map background" class="absolute inset-0 w-full h-full object-cover opacity-20" data-alt="Antique hand-drawn map texture with faded ink, subtle mountain outlines, and soft watercolor washes of sage and terracotta" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCYlvjMLY3JE0hIGPpT62r4MN05Zr_2d12X5CF8381r2xRqNEH_Rr4L7wXhYA3aZ85Zn3bmpaJOVUtSKOrCxtG5abmDx4xo-WK3dXRnQ618O8_pGLG4v01m8eEmsWy9bu2PjxjNajJTXlvamY4qH6gF7EOk9hX-6ueNVNtTvcyi-PfoRSuGf8ss1hMqk_1cASsfk5iPGGYi8fI9Ogb0KgX2S7MvBJ-Cwa6amlH-ARK65lw7GzXEbPnlWQmczqZkjIH82qMpyjVz50U"/>
+<!-- Map Landmarks -->
+<div class="relative z-20 w-full h-full">
+<!-- The Citadel (Center) -->
+<div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 group cursor-pointer">
+<div class="relative flex flex-col items-center">
+<div class="w-32 h-32 rounded-full bg-surface-container-high shadow-xl border-4 border-primary flex items-center justify-center overflow-hidden transition-transform group-hover:scale-105">
+<img alt="The Citadel" class="w-full h-full object-cover" data-alt="An ancient mystical city in partial ruins with glowing restored library sections, stone pillars, and floating lanterns" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA0G7OFiTReyC4PirNi3U8xATYBBK31X5cGRu06HywyBbcJ93oVuJCb4GvrqkmR5rVyMIye_MJdhjYPEFwt-5GZp26wOhs9UgKRZN8lQXkboxRCl94LorEa8pBpEUvbEuIIez42kU-AhraZnkV5dCRe-WDfb-YYkD5nVjq0h4LaJSj-3D5YHzQtG44JwXJYxBC7K3XtmHEHu26_kuW_otqHk8pA00HRE7TgiYfVhAAVIQ02jUVffQBCRVhGhY41REcovt3PH68rg4I"/>
+</div>
+<span class="mt-3 font-headline italic text-lg text-primary font-bold">Cidadela Interior</span>
+<span class="font-label text-[10px] uppercase tracking-widest text-on-surface-variant">The Core Self</span>
+</div>
+</div>
+<!-- Unlocked Node: Great Library -->
+<div class="absolute top-[25%] left-[30%] group cursor-pointer">
+<div class="flex flex-col items-center">
+<div class="w-16 h-16 rounded-full bg-primary/10 border-2 border-primary flex items-center justify-center text-primary backdrop-blur-md transition-all group-hover:bg-primary group-hover:text-on-primary">
+<span class="material-symbols-outlined text-3xl" data-icon="menu_book">menu_book</span>
+</div>
+<span class="mt-2 font-headline italic text-sm text-primary font-bold">Mente Library</span>
+<div class="h-1 w-8 bg-primary rounded-full mt-1"></div>
+</div>
+</div>
+<!-- Locked Node: Mountain of Resilience -->
+<div class="absolute top-[65%] right-[25%] opacity-40 grayscale pointer-events-none">
+<div class="flex flex-col items-center">
+<div class="w-16 h-16 rounded-full bg-on-surface-variant/20 border-2 border-dashed border-outline flex items-center justify-center text-on-surface-variant">
+<span class="material-symbols-outlined text-3xl" data-icon="lock">lock</span>
+</div>
+<span class="mt-2 font-headline italic text-sm text-on-surface-variant">Peaks of Resilience</span>
+</div>
+</div>
+<!-- Small Decorative Nodes -->
+<div class="absolute top-[40%] right-[35%] w-3 h-3 rounded-full bg-secondary-fixed-dim shadow-sm"></div>
+<div class="absolute bottom-[30%] left-[20%] w-4 h-4 rounded-full bg-primary-fixed-dim shadow-sm"></div>
+</div>
+</div>
+<!-- Floating Daily Quest Notification -->
+<div class="absolute bottom-12 right-12 z-30 max-w-xs animate-bounce-subtle">
+<div class="bg-surface-container-high/90 backdrop-blur-xl p-5 rounded-[2rem] shadow-[0_12px_40px_rgba(35,26,16,0.1)] border-l-4 border-primary">
+<div class="flex items-start gap-3">
+<div class="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined" data-icon="self_improvement">self_improvement</span>
+</div>
+<div>
+<p class="font-label text-[10px] uppercase tracking-[0.2em] text-primary font-bold mb-1">Daily Ritual</p>
+<h3 class="font-headline text-lg text-on-surface font-bold">Morning Meditation</h3>
+<p class="text-xs text-on-surface-variant mt-1">Center your thoughts for +50 Soul XP</p>
+<button class="mt-4 w-full py-2 bg-primary text-on-primary rounded-full font-label text-[10px] uppercase tracking-widest font-bold hover:opacity-90 transition-all">Begin Ritual</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 pb-6 pt-2 bg-[#fff8f4]/80 dark:bg-[#1a140f]/80 shadow-[0_-8px_32px_rgba(35,26,16,0.06)] backdrop-blur-xl rounded-t-[2rem]">
+<!-- World Map (Active) -->
+<a class="flex flex-col items-center justify-center bg-[#feebd9] dark:bg-[#2c241b] text-[#426447] dark:text-[#abd0ad] rounded-[1.5rem] px-5 py-2 scale-110 transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="map" style="font-variation-settings: 'FILL' 1;">map</span>
+<span class="font-['Manrope'] text-[10px] uppercase tracking-widest font-bold mt-1">World Map</span>
+</a>
+<!-- Soul Tree -->
+<a class="flex flex-col items-center justify-center text-[#7a544d] dark:text-[#c2c8bf] opacity-60 p-2 hover:bg-[#fff1e6] dark:hover:bg-[#231a10] rounded-full transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="account_tree">account_tree</span>
+<span class="font-['Manrope'] text-[10px] uppercase tracking-widest font-bold mt-1">Soul Tree</span>
+</a>
+<!-- Quest Log -->
+<a class="flex flex-col items-center justify-center text-[#7a544d] dark:text-[#c2c8bf] opacity-60 p-2 hover:bg-[#fff1e6] dark:hover:bg-[#231a10] rounded-full transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="assignment">assignment</span>
+<span class="font-['Manrope'] text-[10px] uppercase tracking-widest font-bold mt-1">Quest Log</span>
+</a>
+<!-- Journal -->
+<a class="flex flex-col items-center justify-center text-[#7a544d] dark:text-[#c2c8bf] opacity-60 p-2 hover:bg-[#fff1e6] dark:hover:bg-[#231a10] rounded-full transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="menu_book">menu_book</span>
+<span class="font-['Manrope'] text-[10px] uppercase tracking-widest font-bold mt-1">Journal</span>
+</a>
+</nav>
+<!-- Ambient Flourish -->
+<div class="fixed top-24 left-10 w-64 h-64 bg-primary/5 rounded-full blur-[100px] pointer-events-none"></div>
+<div class="fixed bottom-40 right-10 w-80 h-80 bg-secondary/5 rounded-full blur-[120px] pointer-events-none"></div>
+</body></html>
