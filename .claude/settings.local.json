@@ -3,7 +3,8 @@
     "allow": [
       "Bash(npm install:*)",
       "Bash(npx tsc:*)",
-      "Skill(update-config)"
+      "Skill(update-config)",
+      "Bash(npm run:*)"
     ]
   },
   "hooks": {
