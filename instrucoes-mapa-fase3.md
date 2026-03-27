@@ -1,20 +1,27 @@
-export type MapDomain = 'mente' | 'corpo' | 'alma' | 'criacao'
-export type POIType = 'regular' | 'challenge' | 'citadel'
+# Instruções para Refatorar o Mapa — Fase 3
 
+## Contexto
+O mapa atual usa MapTerrain SVG/CSS que ficou visualmente ruim. Vamos substituir por uma imagem de background pintada (watercolor Ghibli) com POIs posicionados como overlays programáticos.
+
+## Passo 1: Adicionar a imagem
+Coloque o arquivo `map-background.png` em `src/assets/map-background.png`
+A imagem tem 1536x1024 pixels, aspect ratio ~3:2.
+
+## Passo 2: Atualizar mapData.ts
+Substitua TODOS os POIs atuais por estes. As coordenadas são em percentual (x%, y%) da imagem 1536x1024.
+Cada POI tem: id, name, domain, type, description, icon, x (%), y (%).
+
+```typescript
 export interface POI {
-  id: string
-  name: string
-  domain: MapDomain
-  type: POIType
-  description: string
-  icon: string
-  x: number        // percentage 0-100 of MAP_W
-  y: number        // percentage 0-100 of MAP_H
-  revealXP: number // domainXP needed to reveal (0 = always visible)
+  id: string;
+  name: string;
+  domain: 'mente' | 'corpo' | 'alma' | 'criacao';
+  type: 'regular' | 'challenge' | 'citadel';
+  description: string;
+  icon: string;
+  x: number; // percentage 0-100
+  y: number; // percentage 0-100
 }
-
-export const MAP_W = 1536
-export const MAP_H = 1024
 
 export const mapPOIs: POI[] = [
   // === CIDADELA (Centro) ===
@@ -27,7 +34,6 @@ export const mapPOIs: POI[] = [
     icon: '🏰',
     x: 50.0,
     y: 36.1,
-    revealXP: 0,
   },
 
   // === MENTE (Norte) — 5 POIs ===
@@ -40,7 +46,6 @@ export const mapPOIs: POI[] = [
     icon: '📚',
     x: 24.7,
     y: 19.0,
-    revealXP: 0,
   },
   {
     id: 'mente-2',
@@ -51,7 +56,6 @@ export const mapPOIs: POI[] = [
     icon: '🗼',
     x: 40.4,
     y: 15.1,
-    revealXP: 50,
   },
   {
     id: 'mente-3',
@@ -62,7 +66,6 @@ export const mapPOIs: POI[] = [
     icon: '🔭',
     x: 61.8,
     y: 12.7,
-    revealXP: 100,
   },
   {
     id: 'mente-4',
@@ -73,7 +76,6 @@ export const mapPOIs: POI[] = [
     icon: '🎓',
     x: 35.2,
     y: 28.3,
-    revealXP: 150,
   },
   {
     id: 'mente-5',
@@ -84,7 +86,6 @@ export const mapPOIs: POI[] = [
     icon: '🧠',
     x: 20.2,
     y: 33.2,
-    revealXP: 200,
   },
 
   // === ALMA (Leste) — 5 POIs ===
@@ -97,7 +98,6 @@ export const mapPOIs: POI[] = [
     icon: '🌸',
     x: 78.1,
     y: 19.5,
-    revealXP: 0,
   },
   {
     id: 'alma-2',
@@ -108,7 +108,6 @@ export const mapPOIs: POI[] = [
     icon: '🧘',
     x: 87.9,
     y: 31.3,
-    revealXP: 50,
   },
   {
     id: 'alma-3',
@@ -119,7 +118,6 @@ export const mapPOIs: POI[] = [
     icon: '🤝',
     x: 71.6,
     y: 39.1,
-    revealXP: 100,
   },
   {
     id: 'alma-4',
@@ -130,7 +128,6 @@ export const mapPOIs: POI[] = [
     icon: '💙',
     x: 84.6,
     y: 48.8,
-    revealXP: 150,
   },
   {
     id: 'alma-5',
@@ -141,7 +138,6 @@ export const mapPOIs: POI[] = [
     icon: '🕊️',
     x: 93.1,
     y: 60.5,
-    revealXP: 200,
   },
 
   // === CORPO (Sul) — 5 POIs ===
@@ -154,7 +150,6 @@ export const mapPOIs: POI[] = [
     icon: '💪',
     x: 37.8,
     y: 66.4,
-    revealXP: 0,
   },
   {
     id: 'corpo-2',
@@ -165,7 +160,6 @@ export const mapPOIs: POI[] = [
     icon: '🥗',
     x: 54.0,
     y: 70.3,
-    revealXP: 50,
   },
   {
     id: 'corpo-3',
@@ -176,7 +170,6 @@ export const mapPOIs: POI[] = [
     icon: '😴',
     x: 26.0,
     y: 73.2,
-    revealXP: 100,
   },
   {
     id: 'corpo-4',
@@ -187,7 +180,6 @@ export const mapPOIs: POI[] = [
     icon: '🧍',
     x: 68.4,
     y: 75.2,
-    revealXP: 150,
   },
   {
     id: 'corpo-5',
@@ -198,7 +190,6 @@ export const mapPOIs: POI[] = [
     icon: '⛲',
     x: 45.6,
     y: 83.0,
-    revealXP: 200,
   },
 
   // === CRIAÇÃO (Oeste) — 5 POIs ===
@@ -211,7 +202,6 @@ export const mapPOIs: POI[] = [
     icon: '✍️',
     x: 11.1,
     y: 38.1,
-    revealXP: 0,
   },
   {
     id: 'criacao-2',
@@ -222,7 +212,6 @@ export const mapPOIs: POI[] = [
     icon: '🎨',
     x: 16.3,
     y: 52.7,
-    revealXP: 50,
   },
   {
     id: 'criacao-3',
@@ -233,7 +222,6 @@ export const mapPOIs: POI[] = [
     icon: '🎵',
     x: 7.8,
     y: 66.4,
-    revealXP: 100,
   },
   {
     id: 'criacao-4',
@@ -244,7 +232,6 @@ export const mapPOIs: POI[] = [
     icon: '🔨',
     x: 22.8,
     y: 60.5,
-    revealXP: 150,
   },
   {
     id: 'criacao-5',
@@ -255,7 +242,6 @@ export const mapPOIs: POI[] = [
     icon: '💡',
     x: 31.3,
     y: 46.9,
-    revealXP: 200,
   },
 
   // === CHALLENGE ZONES (4, uma por região) ===
@@ -268,7 +254,6 @@ export const mapPOIs: POI[] = [
     icon: '⚠️',
     x: 48.8,
     y: 23.4,
-    revealXP: 50,
   },
   {
     id: 'challenge-corpo',
@@ -279,7 +264,6 @@ export const mapPOIs: POI[] = [
     icon: '⚠️',
     x: 78.1,
     y: 66.4,
-    revealXP: 50,
   },
   {
     id: 'challenge-alma',
@@ -290,7 +274,6 @@ export const mapPOIs: POI[] = [
     icon: '⚠️',
     x: 64.5,
     y: 51.8,
-    revealXP: 50,
   },
   {
     id: 'challenge-criacao',
@@ -301,6 +284,36 @@ export const mapPOIs: POI[] = [
     icon: '⚠️',
     x: 13.0,
     y: 80.1,
-    revealXP: 50,
   },
-]
+];
+```
+
+## Passo 3: Refatorar MapPage.tsx
+- Remover o componente MapTerrain SVG/CSS completamente
+- Usar a imagem `map-background.png` como background do container do mapa
+- O container do mapa deve ser 1536x1024 (ou proporcional) com a imagem cobrindo 100%
+- POIs são posicionados com `position: absolute; left: {x}%; top: {y}%`
+- Manter o FogCanvas overlay como está (fog sépia)
+- Manter o pan com pointer capture como está
+- Manter o POISheet como está
+
+## Passo 4: Refinar POIMarker visual
+Os marcadores devem ficar bonitos sobre a arte watercolor:
+- POI regular: círculo de 36px com fundo semi-transparente na cor do domínio, borda sólida, emoji centralizado
+- POI challenge: círculo com borda dashed vermelha, fundo escuro semi-transparente
+- Cidadela: círculo maior (48px) com borda dourada, glow dourado
+- Label abaixo com text-shadow de pergaminho para legibilidade
+- Cores dos domínios: mente=#5B8C5A, corpo=#C67B5C, alma=#6BA3B7, criacao=#B8976A
+- Cor challenge: #C2675A
+- Cor cidadela: #D4A843
+
+## Passo 5: Ajustar FogCanvas
+- A névoa sépia `rgba(62,42,18,0.72)` está boa, manter
+- Garantir que os círculos de revelação alinham com as coordenadas percentuais dos POIs
+- Revelação deve usar as mesmas coordenadas x%, y% convertidas para pixels do canvas
+
+## O que NÃO mudar:
+- mapStore.ts (Zustand + persist) — manter como está
+- POISheet.tsx — manter como está
+- Lógica de revelação por XP — manter como está
+- Sistema de pan — manter como está

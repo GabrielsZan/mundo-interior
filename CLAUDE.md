@@ -226,6 +226,12 @@ VITE_SUPABASE_ANON_KEY=<chave anon do Supabase>
 - `POIMarker` atualizado: wrapper flex-col, nomes visíveis abaixo do ícone com halo de pergaminho (textShadow), bordas estilo pergaminho/ouro
 - Container externo: `#3E2A12` (coincide com a névoa, borda natural do mapa)
 
+### Refactor — Mapa: background pintado (watercolor) + 25 POIs ✅ (2026-03-27)
+- `mapData.ts` — interface `POI` com domínios em português (`mente/corpo/alma/criacao`); 25 POIs (5 por domínio + 4 challenge + citadela); MAP_W=1536, MAP_H=1024; export `mapPOIs`
+- `MapPage.tsx` — `MapTerrain` SVG removido; background agora é `map-background.png` (watercolor Ghibli, 1536×1024); mapeamento `MapDomain → domainXP key` para reveal logic; dots de domínio atualizados para pt-BR
+- `POIMarker.tsx` — cores por mapa local (pt-BR keys); regular=36px semi-transparente; challenge=borda dashed vermelha, fundo escuro; citadela=48px com glow dourado
+- `POISheet.tsx` — `COLOR_MAP` e `LABEL_MAP` atualizados para chaves pt-BR (mente/corpo/alma/criacao); removida dependência de `DOMAIN_COLORS` do types global
+
 ### Fix — Skill Tree: disponibilidade de T2 após desbloquear T1 ✅ (2026-03-27)
 - `prereqsMet(id)` adicionado ao skillStore — verifica só pré-requisitos, sem checar XP
 - `canUnlock(id)` mantido para guard do unlock (prereqs + XP)

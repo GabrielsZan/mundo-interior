@@ -144,13 +144,13 @@ Examples:
 
 - Isolated and clearly readable
 
-- Positioned away from standard POIs
+- Positioned in a certain distance but in between standard POIs
 
 ### **Function**
 
 - Represent resistance or difficulty
 
-- Provide unique mission types or mechanics
+- Provide a few unique mission types or mechanics as a way of overcoming and moving on from that environment
 
 - Reinforce psychological depth of the system
 
@@ -186,7 +186,7 @@ The map uses a **node-based navigation system**:
 
 - Movement is conceptual (tap-to-enter)
 
-- Optional visual paths may connect locations
+- Visual paths should connect locations
 
 The system must clearly communicate:
 

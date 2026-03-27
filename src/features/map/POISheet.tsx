@@ -1,25 +1,28 @@
-import { DOMAIN_COLORS, DOMAIN_LABELS } from '@/types'
-import type { IPOI } from './mapData'
+import type { POI } from './mapData'
 
 interface POISheetProps {
-  poi: IPOI | null
+  poi: POI | null
   onClose: () => void
 }
 
 const COLOR_MAP: Record<string, string> = {
-  ...DOMAIN_COLORS,
-  center: '#D4A843',
+  mente:   '#5B8C5A',
+  corpo:   '#C67B5C',
+  alma:    '#6BA3B7',
+  criacao: '#B8976A',
 }
 
 const LABEL_MAP: Record<string, string> = {
-  ...DOMAIN_LABELS,
-  center: 'Centro',
+  mente:   'Mente',
+  corpo:   'Corpo',
+  alma:    'Alma',
+  criacao: 'Criação',
 }
 
 export function POISheet({ poi, onClose }: POISheetProps) {
   if (!poi) return null
 
-  const color = poi.type === 'challenge' ? '#7A4C4C' : (COLOR_MAP[poi.domain] ?? '#888')
+  const color = poi.type === 'challenge' ? '#C2675A' : (COLOR_MAP[poi.domain] ?? '#888')
   const label = LABEL_MAP[poi.domain] ?? poi.domain
 
   return (

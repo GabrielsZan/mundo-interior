@@ -1,20 +1,32 @@
-import { DOMAIN_COLORS } from '@/types'
-import type { IPOI } from './mapData'
+import type { POI } from './mapData'
 import { MAP_W, MAP_H } from './mapData'
 
 interface POIMarkerProps {
-  poi: IPOI
+  poi: POI
   isRevealed: boolean
   isVisited: boolean
-  onTap: (poi: IPOI) => void
+  onTap: (poi: POI) => void
 }
 
 const DOMAIN_COLOR_MAP: Record<string, string> = {
-  ...DOMAIN_COLORS,
-  center: '#D4A843',
+  mente:   '#5B8C5A',
+  corpo:   '#C67B5C',
+  alma:    '#6BA3B7',
+  criacao: '#B8976A',
 }
 
-const CHALLENGE_COLOR = '#7A4C4C'
+const CHALLENGE_COLOR = '#C2675A'
+const CITADEL_COLOR   = '#D4A843'
+
+// Parchment label halo via text-shadow (no rectangular bg)
+const LABEL_SHADOW = `
+  0 0 3px rgba(232,213,160,0.95),
+  0 0 7px rgba(232,213,160,0.80),
+  1px 1px 0 rgba(232,213,160,0.85),
+  -1px -1px 0 rgba(232,213,160,0.85),
+  1px -1px 0 rgba(232,213,160,0.85),
+  -1px  1px 0 rgba(232,213,160,0.85)
+`
 
 export function POIMarker({ poi, isRevealed, isVisited, onTap }: POIMarkerProps) {
   if (!isRevealed) return null
@@ -22,39 +34,38 @@ export function POIMarker({ poi, isRevealed, isVisited, onTap }: POIMarkerProps)
   const x = (poi.x / 100) * MAP_W
   const y = (poi.y / 100) * MAP_H
 
-  const bg =
-    poi.type === 'challenge'
-      ? CHALLENGE_COLOR
-      : DOMAIN_COLOR_MAP[poi.domain] ?? '#888'
+  const domainColor = DOMAIN_COLOR_MAP[poi.domain] ?? '#888'
 
-  const size =
-    poi.type === 'citadel' ? 54
-    : poi.type === 'challenge' ? 34
-    : 40
+  const isCitadel   = poi.type === 'citadel'
+  const isChallenge = poi.type === 'challenge'
 
-  const iconSize =
-    poi.type === 'citadel' ? 24
-    : poi.type === 'challenge' ? 14
-    : 17
+  const size      = isCitadel ? 48 : 36
+  const iconSize  = isCitadel ? 22 : isChallenge ? 14 : 16
+  const zIndex    = isCitadel ? 10 : isChallenge ? 4 : 5
 
-  const zIndex = poi.type === 'citadel' ? 10 : poi.type === 'challenge' ? 4 : 5
+  const bg = isChallenge
+    ? 'rgba(30,18,12,0.72)'
+    : isCitadel
+      ? CITADEL_COLOR
+      : `${domainColor}CC`  // domain color at ~80% opacity
 
-  // Parchment-toned label halo (textShadow technique — no rectangular bg box)
-  const labelShadow = `
-    0 0 3px rgba(232,213,160,0.95),
-    0 0 7px rgba(232,213,160,0.80),
-    1px 1px 0 rgba(232,213,160,0.85),
-    -1px -1px 0 rgba(232,213,160,0.85),
-    1px -1px 0 rgba(232,213,160,0.85),
-    -1px  1px 0 rgba(232,213,160,0.85)
-  `
+  const border = isCitadel
+    ? `2.5px solid ${CITADEL_COLOR}`
+    : isChallenge
+      ? '2px dashed #C2675A'
+      : `2px solid ${domainColor}`
+
+  const boxShadow = isCitadel
+    ? `0 0 0 3px ${CITADEL_COLOR}44, 0 0 14px rgba(212,168,67,0.50), 0 3px 12px rgba(42,33,24,0.5)`
+    : isChallenge
+      ? '0 0 8px rgba(194,103,90,0.35), 0 2px 8px rgba(42,33,24,0.5)'
+      : `0 2px 8px rgba(42,33,24,0.40), inset 0 1px 0 rgba(255,255,255,0.18)`
 
   return (
     <div
       className="absolute flex flex-col items-center"
       style={{ left: x, top: y, transform: 'translate(-50%, -50%)', zIndex }}
     >
-      {/* Icon button */}
       <button
         onClick={() => onTap(poi)}
         className="flex items-center justify-center rounded-full
@@ -64,33 +75,27 @@ export function POIMarker({ poi, isRevealed, isVisited, onTap }: POIMarkerProps)
           height: size,
           background: bg,
           opacity: isVisited ? 0.82 : 1,
-          border: poi.type === 'citadel'
-            ? '2.5px solid rgba(212,168,67,0.90)'
-            : '2px solid rgba(232,213,160,0.75)',
-          boxShadow: poi.type === 'citadel'
-            ? `0 0 0 3px ${bg}50, 0 0 12px rgba(212,168,67,0.4), 0 3px 12px rgba(42,33,24,0.5)`
-            : poi.type === 'challenge'
-              ? '0 0 8px rgba(42,33,24,0.6), inset 0 1px 0 rgba(255,255,255,0.12)'
-              : '0 2px 8px rgba(42,33,24,0.45), inset 0 1px 0 rgba(255,255,255,0.18)',
+          border,
+          boxShadow,
         }}
         title={poi.name}
       >
         <span style={{ fontSize: iconSize, lineHeight: 1 }}>{poi.icon}</span>
       </button>
 
-      {/* Name label — hidden for challenges (name is the reveal on tap) */}
-      {poi.type !== 'challenge' && (
+      {/* Label — hidden for challenge zones */}
+      {!isChallenge && (
         <span
           className="mt-1 font-heading italic text-center pointer-events-none select-none"
           style={{
-            fontSize: poi.type === 'citadel' ? '10px' : '8.5px',
+            fontSize: isCitadel ? '10px' : '8.5px',
             color: '#2A2118',
-            opacity: isVisited ? 0.65 : 0.85,
-            textShadow: labelShadow,
-            letterSpacing: poi.type === 'citadel' ? '0.05em' : '0.02em',
-            maxWidth: poi.type === 'citadel' ? '90px' : '72px',
+            opacity: isVisited ? 0.65 : 0.88,
+            textShadow: LABEL_SHADOW,
+            letterSpacing: isCitadel ? '0.05em' : '0.02em',
+            maxWidth: isCitadel ? '90px' : '72px',
             lineHeight: 1.2,
-            whiteSpace: poi.type === 'citadel' ? 'nowrap' : 'normal',
+            whiteSpace: isCitadel ? 'nowrap' : 'normal',
             textAlign: 'center',
           }}
         >
