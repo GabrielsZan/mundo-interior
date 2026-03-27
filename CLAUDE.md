@@ -189,10 +189,40 @@ VITE_SUPABASE_ANON_KEY=<chave anon do Supabase>
 
 ---
 
-### Próximos Passos — Fase 2 (Árvore da Alma)
+---
 
-- [ ] `src/features/skill-tree/` — layout da árvore com 3 tiers por domínio
-- [ ] `SkillNode` — nó de habilidade (locked/unlocked/available)
-- [ ] `SkillTreePage` — tela com filtro de domínio, conexões SVG entre nós
-- [ ] Integrar desbloqueio com `domainXP` do player
-- [ ] Animação `shimmer` ao desbloquear habilidade
+### Fase 2 — Árvore da Alma COMPLETA ✅ (2026-03-26)
+
+- `src/features/skill-tree/SkillNode.tsx` — nó com estados locked/available/unlocked + shimmer
+- `src/features/skill-tree/SkillTreeView.tsx` — layout horizontal por tier com linhas SVG
+- `src/features/skill-tree/SkillTreePage.tsx` — filtro de domínio, XP disponível, contagem
+- `src/stores/skillStore.ts` — Zustand + persist; `unlockSkill`, `canUnlock`, seed de habilidades
+
+---
+
+### Fase 3 — Mapa do Mundo Interior COMPLETA ✅ (2026-03-27)
+
+**O que foi implementado:**
+
+- `src/features/map/mapData.ts` — 15 POIs com coordenadas, ícones, domínio e XP de revelação
+- `src/stores/mapStore.ts` — Zustand + persist; rastreia POIs visitados
+- `src/features/map/FogCanvas.tsx` — canvas overlay que "recorta" névoa ao redor de POIs revelados
+- `src/features/map/POIMarker.tsx` — botão posicionado absolutamente no mapa (regular/challenge/citadel)
+- `src/features/map/POISheet.tsx` — bottom sheet com nome, descrição e tipo do POI
+- `src/features/map/MapPage.tsx` — mapa 1600×900px com pan (pointer events), terreno CSS+SVG, fog of war
+- `src/App.tsx` — tab "Mapa 🗺️" adicionada ao BottomNav
+
+**Mecânicas:**
+- 4 regiões por domínio (Norte/Mente, Sul/Corpo, Leste/Alma, Oeste/Criação) + Cidadela central
+- 13 POIs regulares + 2 challenge zones (Labirinto da Procrastinação, Pântano do Esgotamento)
+- Fog of War revelado por `domainXP` do player (gradiente radial em canvas com `destination-out`)
+- Pan com pointer capture (funciona em touch e mouse)
+
+---
+
+### Próximos Passos — Fase 4 (Loot, Inventário e Diário)
+
+- [ ] `src/features/inventory/` — tela de inventário com itens coletados
+- [ ] Sistema de loot ao completar missões (itens aleatórios por domínio)
+- [ ] `src/features/journal/` — diário de jornada (log de missões completadas)
+- [ ] Persistência de inventário no Supabase

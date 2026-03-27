@@ -5,6 +5,7 @@ import { useSkillStore } from '@/stores/skillStore'
 import { Button, Card, XPBar, DomainBadge } from '@/components/ui'
 import { MissionList } from '@/features/missions'
 import { SkillTreePage } from '@/features/skill-tree'
+import { MapPage } from '@/features/map'
 import { AuthScreen } from '@/features/auth/AuthScreen'
 import { useXP } from '@/hooks/useXP'
 import { supabase, isSupabaseConfigured } from '@/lib/supabase'
@@ -118,11 +119,12 @@ function Dashboard() {
 
 // ── Bottom Nav ────────────────────────────────────────────────────────────────
 
-type View = 'dashboard' | 'skills'
+type View = 'dashboard' | 'skills' | 'map'
 
 const NAV_ITEMS: { view: View; label: string; icon: string }[] = [
   { view: 'dashboard', label: 'Missões',      icon: '📋' },
   { view: 'skills',    label: 'Habilidades',  icon: '🌳' },
+  { view: 'map',       label: 'Mapa',         icon: '🗺️' },
 ]
 
 function BottomNav({ view, setView }: { view: View; setView: (v: View) => void }) {
@@ -217,7 +219,9 @@ export default function App() {
 
   return (
     <>
-      {view === 'dashboard' ? <Dashboard /> : <SkillTreePage />}
+      {view === 'dashboard' && <Dashboard />}
+      {view === 'skills'    && <SkillTreePage />}
+      {view === 'map'       && <MapPage />}
       <BottomNav view={view} setView={setView} />
     </>
   )
