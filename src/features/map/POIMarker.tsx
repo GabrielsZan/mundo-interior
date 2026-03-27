@@ -37,28 +37,66 @@ export function POIMarker({ poi, isRevealed, isVisited, onTap }: POIMarkerProps)
     : poi.type === 'challenge' ? 14
     : 17
 
+  const zIndex = poi.type === 'citadel' ? 10 : poi.type === 'challenge' ? 4 : 5
+
+  // Parchment-toned label halo (textShadow technique — no rectangular bg box)
+  const labelShadow = `
+    0 0 3px rgba(232,213,160,0.95),
+    0 0 7px rgba(232,213,160,0.80),
+    1px 1px 0 rgba(232,213,160,0.85),
+    -1px -1px 0 rgba(232,213,160,0.85),
+    1px -1px 0 rgba(232,213,160,0.85),
+    -1px  1px 0 rgba(232,213,160,0.85)
+  `
+
   return (
-    <button
-      onClick={() => onTap(poi)}
-      className="absolute flex items-center justify-center rounded-full shadow-lg
-                 transition-transform duration-150 active:scale-90 hover:scale-110 z-[5]"
-      style={{
-        left: x,
-        top: y,
-        transform: 'translate(-50%, -50%)',
-        width: size,
-        height: size,
-        background: bg,
-        opacity: isVisited ? 0.8 : 1,
-        border: `2px solid rgba(255,255,255,${poi.type === 'citadel' ? 0.8 : 0.5})`,
-        zIndex: poi.type === 'citadel' ? 10 : poi.type === 'challenge' ? 4 : 5,
-        boxShadow: poi.type === 'citadel'
-          ? `0 0 0 4px ${bg}40, 0 4px 16px rgba(0,0,0,0.5)`
-          : '0 2px 8px rgba(0,0,0,0.4)',
-      }}
-      title={poi.name}
+    <div
+      className="absolute flex flex-col items-center"
+      style={{ left: x, top: y, transform: 'translate(-50%, -50%)', zIndex }}
     >
-      <span style={{ fontSize: iconSize, lineHeight: 1 }}>{poi.icon}</span>
-    </button>
+      {/* Icon button */}
+      <button
+        onClick={() => onTap(poi)}
+        className="flex items-center justify-center rounded-full
+                   transition-transform duration-150 active:scale-90 hover:scale-110"
+        style={{
+          width: size,
+          height: size,
+          background: bg,
+          opacity: isVisited ? 0.82 : 1,
+          border: poi.type === 'citadel'
+            ? '2.5px solid rgba(212,168,67,0.90)'
+            : '2px solid rgba(232,213,160,0.75)',
+          boxShadow: poi.type === 'citadel'
+            ? `0 0 0 3px ${bg}50, 0 0 12px rgba(212,168,67,0.4), 0 3px 12px rgba(42,33,24,0.5)`
+            : poi.type === 'challenge'
+              ? '0 0 8px rgba(42,33,24,0.6), inset 0 1px 0 rgba(255,255,255,0.12)'
+              : '0 2px 8px rgba(42,33,24,0.45), inset 0 1px 0 rgba(255,255,255,0.18)',
+        }}
+        title={poi.name}
+      >
+        <span style={{ fontSize: iconSize, lineHeight: 1 }}>{poi.icon}</span>
+      </button>
+
+      {/* Name label — hidden for challenges (name is the reveal on tap) */}
+      {poi.type !== 'challenge' && (
+        <span
+          className="mt-1 font-heading italic text-center pointer-events-none select-none"
+          style={{
+            fontSize: poi.type === 'citadel' ? '10px' : '8.5px',
+            color: '#2A2118',
+            opacity: isVisited ? 0.65 : 0.85,
+            textShadow: labelShadow,
+            letterSpacing: poi.type === 'citadel' ? '0.05em' : '0.02em',
+            maxWidth: poi.type === 'citadel' ? '90px' : '72px',
+            lineHeight: 1.2,
+            whiteSpace: poi.type === 'citadel' ? 'nowrap' : 'normal',
+            textAlign: 'center',
+          }}
+        >
+          {poi.name}
+        </span>
+      )}
+    </div>
   )
 }

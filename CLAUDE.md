@@ -220,6 +220,12 @@ VITE_SUPABASE_ANON_KEY=<chave anon do Supabase>
 
 ---
 
+### Fix — Mapa: redesign visual pergaminho + fog sépia ✅ (2026-03-27)
+- `MapTerrain` reescrito: base `#E8D5A0`, regiões como paths SVG orgânicos, montanhas com triângulos de tinta, floresta com símbolos de pinheiro, rio com 3 linhas paralelas, lago com hatch, planícies com hatch diagonal, anel da Cidadela em ouro, rosa dos ventos, moldura dupla, vignette nas bordas
+- `FogCanvas` corrigido: névoa sépia quente `rgba(62,42,18,0.72)` + gradiente de revelação com feather de 60% do raio + halo de tinta na borda
+- `POIMarker` atualizado: wrapper flex-col, nomes visíveis abaixo do ícone com halo de pergaminho (textShadow), bordas estilo pergaminho/ouro
+- Container externo: `#3E2A12` (coincide com a névoa, borda natural do mapa)
+
 ### Fix — Skill Tree: disponibilidade de T2 após desbloquear T1 ✅ (2026-03-27)
 - `prereqsMet(id)` adicionado ao skillStore — verifica só pré-requisitos, sem checar XP
 - `canUnlock(id)` mantido para guard do unlock (prereqs + XP)
