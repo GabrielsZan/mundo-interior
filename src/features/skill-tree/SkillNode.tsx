@@ -9,19 +9,21 @@ interface SkillNodeProps {
 }
 
 export function SkillNode({ skill }: SkillNodeProps) {
-  const canUnlock  = useSkillStore((s) => s.canUnlock)
+  const canUnlock   = useSkillStore((s) => s.canUnlock)
+  const prereqsMet  = useSkillStore((s) => s.prereqsMet)
   const unlockSkill = useSkillStore((s) => s.unlockSkill)
-  const skills     = useSkillStore((s) => s.skills)
+  const skills      = useSkillStore((s) => s.skills)
 
   const [shimmer, setShimmer] = useState(false)
 
-  const available = canUnlock(skill.id)
+  const pathOpen    = prereqsMet(skill.id)   // prereqs done (regardless of XP)
+  const canAfford   = canUnlock(skill.id)    // prereqs done AND has XP
   const domainColor = DOMAIN_COLORS[skill.domain]
 
-  // State derivations
+  // 'available' = prereqs met (path is open); button enabled only when canAfford
   const state: 'unlocked' | 'available' | 'locked' = skill.isUnlocked
     ? 'unlocked'
-    : available
+    : pathOpen
       ? 'available'
       : 'locked'
 
@@ -32,7 +34,7 @@ export function SkillNode({ skill }: SkillNodeProps) {
     .map((s) => s!.name)
 
   function handleUnlock() {
-    if (state !== 'available') return
+    if (!canAfford) return
     setShimmer(true)
     unlockSkill(skill.id)
     setTimeout(() => setShimmer(false), 800)
@@ -79,15 +81,21 @@ export function SkillNode({ skill }: SkillNodeProps) {
         </p>
       )}
 
-      {/* Unlock button */}
+      {/* Unlock button / XP needed */}
       {state === 'available' && (
-        <button
-          onClick={handleUnlock}
-          className="mt-auto text-xs font-semibold py-1 px-2 rounded-[6px] transition-all active:scale-95"
-          style={{ background: domainColor, color: '#fff' }}
-        >
-          Desbloquear
-        </button>
+        canAfford ? (
+          <button
+            onClick={handleUnlock}
+            className="mt-auto text-xs font-semibold py-1 px-2 rounded-[6px] transition-all active:scale-95"
+            style={{ background: domainColor, color: '#fff' }}
+          >
+            Desbloquear
+          </button>
+        ) : (
+          <p className="mt-auto text-[10px] font-mono text-ink/40">
+            Precisa de {skill.xpCost} XP
+          </p>
+        )
       )}
     </div>
   )

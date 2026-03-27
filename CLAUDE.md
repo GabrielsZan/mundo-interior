@@ -220,6 +220,14 @@ VITE_SUPABASE_ANON_KEY=<chave anon do Supabase>
 
 ---
 
+### Fix — Skill Tree: disponibilidade de T2 após desbloquear T1 ✅ (2026-03-27)
+- `prereqsMet(id)` adicionado ao skillStore — verifica só pré-requisitos, sem checar XP
+- `canUnlock(id)` mantido para guard do unlock (prereqs + XP)
+- `SkillNode` agora usa `prereqsMet` para o estado visual `'available'` e `canUnlock` só para habilitar o botão
+- Quando pré-requisito cumprido mas XP insuficiente: card fica visível/disponível com texto "Precisa de N XP"
+
+---
+
 ### Próximos Passos — Fase 4 (Loot, Inventário e Diário)
 
 - [ ] `src/features/inventory/` — tela de inventário com itens coletados

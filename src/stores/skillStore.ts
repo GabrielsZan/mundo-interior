@@ -11,7 +11,8 @@ interface SkillState {
   // Actions
   initSkills:  () => void
   unlockSkill: (id: string) => void
-  canUnlock:   (id: string) => boolean
+  canUnlock:   (id: string) => boolean   // prereqs met AND has enough XP
+  prereqsMet:  (id: string) => boolean   // only checks prerequisites
   loadFromDb:  (playerId: string) => Promise<void>
 }
 
@@ -40,6 +41,15 @@ export const useSkillStore = create<SkillState>()(
           (pid) => skills.find((s) => s.id === pid)?.isUnlocked ?? false
         )
         return hasXP && prereqsMet
+      },
+
+      prereqsMet: (id) => {
+        const { skills } = get()
+        const skill = skills.find((s) => s.id === id)
+        if (!skill || skill.isUnlocked) return false
+        return skill.prerequisiteIds.every(
+          (pid) => skills.find((s) => s.id === pid)?.isUnlocked ?? false
+        )
       },
 
       unlockSkill: (id) => {
