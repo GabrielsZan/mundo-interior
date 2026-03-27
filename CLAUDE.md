@@ -87,21 +87,29 @@ supabase/         → Migrations SQL, seed data
 
 ## Instruções para o Claude
 
-### Manutenção do CLAUDE.md
-Ao final de cada sessão de trabalho ou quando houver progresso significativo, atualize a seção **Estado Atual do Projeto** abaixo com:
-- O que foi implementado/alterado
-- Próximos passos prioritários
+> **OBRIGATÓRIO — sem exceção:** Toda vez que qualquer alteração de código for feita neste projeto, as duas ações abaixo DEVEM ser executadas antes de considerar a tarefa concluída. Não pergunte, não espere confirmação, apenas faça.
+
+### 1. Atualizar CLAUDE.md
+Ao finalizar qualquer conjunto de alterações, atualize a seção **Estado Atual do Projeto** abaixo com:
+- O que foi implementado/alterado nesta sessão
+- Próximos passos prioritários atualizados
 - Qualquer decisão técnica relevante tomada
 
-### Sincronização com GitHub
-Após cada conjunto de alterações no projeto, faça commit e push automático para o repositório remoto (`origin main`). Use mensagens de commit descritivas no formato:
+### 2. Commit e Push para o GitHub
+Imediatamente após atualizar o CLAUDE.md, faça commit de TUDO e push para `origin main`. Use mensagens de commit descritivas:
 ```
 feat: <descrição breve do que foi adicionado>
 fix: <descrição de correção>
 refactor: <descrição de refatoração>
 chore: <configuração, dependências, etc>
 ```
-O repositório remoto é: `https://github.com/GabrielsZan/mundo-interior.git`
+Repositório remoto: `https://github.com/GabrielsZan/mundo-interior.git`
+
+**Sequência obrigatória ao terminar qualquer trabalho:**
+1. Editar CLAUDE.md (seção Estado Atual)
+2. `git add -A`
+3. `git commit -m "..."`
+4. `git push origin main`
 
 ---
 
