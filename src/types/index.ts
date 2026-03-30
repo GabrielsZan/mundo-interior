@@ -74,6 +74,50 @@ export interface ISkill {
   prerequisiteIds: string[]
 }
 
+// ── Item / Inventory ─────────────────────────────────────────────────────────
+
+export type ItemRarity = 'common' | 'uncommon' | 'rare' | 'legendary'
+
+export const RARITY_LABELS: Record<ItemRarity, string> = {
+  common:    'Comum',
+  uncommon:  'Incomum',
+  rare:      'Raro',
+  legendary: 'Lendário',
+}
+
+export const RARITY_COLORS: Record<ItemRarity, string> = {
+  common:    '#9CA3AF',
+  uncommon:  '#5B8C5A',
+  rare:      '#6BA3B7',
+  legendary: '#D4A843',
+}
+
+export interface IItem {
+  id:          string
+  name:        string
+  description: string
+  domain:      Domain
+  rarity:      ItemRarity
+  icon:        string        // emoji
+  obtainedAt:  string
+  fromMission: string
+}
+
+// ── Journal ───────────────────────────────────────────────────────────────────
+
+export interface IJournalEntry {
+  id:           string
+  missionId:    string
+  missionTitle: string
+  domain:       Domain
+  type:         MissionType
+  xpGeneral:    number
+  xpDomain:     number
+  completedAt:  string
+  itemIds:      string[]
+  note:         string
+}
+
 // ── Utility ──────────────────────────────────────────────────────────────────
 
 export interface IXPGain {

@@ -6,6 +6,8 @@ import { Button, Card, XPBar, DomainBadge } from '@/components/ui'
 import { MissionList } from '@/features/missions'
 import { SkillTreePage } from '@/features/skill-tree'
 import { MapPage } from '@/features/map'
+import { InventoryPage } from '@/features/inventory'
+import { JournalPage } from '@/features/journal'
 import { AuthScreen } from '@/features/auth/AuthScreen'
 import { useXP } from '@/hooks/useXP'
 import { supabase, isSupabaseConfigured } from '@/lib/supabase'
@@ -119,12 +121,14 @@ function Dashboard() {
 
 // ── Bottom Nav ────────────────────────────────────────────────────────────────
 
-type View = 'dashboard' | 'skills' | 'map'
+type View = 'dashboard' | 'skills' | 'map' | 'inventory' | 'journal'
 
 const NAV_ITEMS: { view: View; label: string; icon: string }[] = [
   { view: 'dashboard', label: 'Missões',      icon: '📋' },
   { view: 'skills',    label: 'Habilidades',  icon: '🌳' },
   { view: 'map',       label: 'Mapa',         icon: '🗺️' },
+  { view: 'inventory', label: 'Inventário',   icon: '🎒' },
+  { view: 'journal',   label: 'Diário',       icon: '📖' },
 ]
 
 function BottomNav({ view, setView }: { view: View; setView: (v: View) => void }) {
@@ -222,6 +226,8 @@ export default function App() {
       {view === 'dashboard' && <Dashboard />}
       {view === 'skills'    && <SkillTreePage />}
       {view === 'map'       && <MapPage />}
+      {view === 'inventory' && <InventoryPage />}
+      {view === 'journal'   && <JournalPage />}
       <BottomNav view={view} setView={setView} />
     </>
   )

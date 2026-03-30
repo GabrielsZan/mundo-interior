@@ -1,8 +1,11 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
-import type { IMission, Domain, MissionType } from '@/types'
+import type { IMission, IItem, Domain, MissionType } from '@/types'
 import { MISSION_XP } from '@/lib/constants'
+import { rollLoot } from '@/lib/lootTables'
 import { usePlayerStore } from '@/stores/playerStore'
+import { useInventoryStore } from '@/stores/inventoryStore'
+import { useJournalStore } from '@/stores/journalStore'
 import {
   dbFetchMissions,
   dbInsertMission,
@@ -18,10 +21,10 @@ interface MissionState {
 
   // Actions
   addMission:      (draft: Omit<IMission, 'id' | 'isCompleted' | 'completedAt' | 'streak' | 'createdAt' | 'xpGeneral' | 'xpDomain'>) => void
-  completeMission: (id: string) => void
+  completeMission: (id: string) => IItem[]  // returns dropped items for animation
   deleteMission:   (id: string) => void
   resetDailies:    () => void
-  checkDailyReset: () => void   // call on app open
+  checkDailyReset: () => void
   setPlayerId:     (id: string | null) => void
   loadFromDb:      (playerId: string) => Promise<void>
 }
@@ -34,7 +37,7 @@ function missionXP(type: MissionType): { xpGeneral: number; xpDomain: number } {
 }
 
 function todayISO(): string {
-  return new Date().toISOString().slice(0, 10) // YYYY-MM-DD
+  return new Date().toISOString().slice(0, 10)
 }
 
 export const useMissionStore = create<MissionState>()(
@@ -64,23 +67,51 @@ export const useMissionStore = create<MissionState>()(
       completeMission: (id) => {
         const { missions } = get()
         const mission = missions.find((m) => m.id === id)
-        if (!mission || mission.isCompleted) return
+        if (!mission || mission.isCompleted) return []
 
+        // XP
         usePlayerStore.getState().gainXP({
           general:    mission.xpGeneral,
           domain:     mission.xpDomain,
           domainType: mission.domain as Domain,
         })
 
+        // Loot
+        const completedAt = new Date().toISOString()
+        const lootEntries = rollLoot(mission.domain, mission.type)
+        const items: IItem[] = lootEntries.map((entry) => ({
+          ...entry,
+          id:          crypto.randomUUID(),
+          obtainedAt:  completedAt,
+          fromMission: mission.title,
+        }))
+        useInventoryStore.getState().addItems(items)
+
+        // Journal
+        useJournalStore.getState().addEntry({
+          id:           crypto.randomUUID(),
+          missionId:    id,
+          missionTitle: mission.title,
+          domain:       mission.domain,
+          type:         mission.type,
+          xpGeneral:    mission.xpGeneral,
+          xpDomain:     mission.xpDomain,
+          completedAt,
+          itemIds:      items.map((i) => i.id),
+          note:         '',
+        })
+
         const patch = {
           isCompleted: true,
-          completedAt: new Date().toISOString(),
+          completedAt,
           streak:      mission.streak + 1,
         }
         set((s) => ({
           missions: s.missions.map((m) => m.id === id ? { ...m, ...patch } : m),
         }))
         dbUpdateMission(id, patch)
+
+        return items
       },
 
       deleteMission: (id) => {

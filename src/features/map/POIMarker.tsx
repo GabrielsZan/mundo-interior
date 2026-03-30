@@ -15,7 +15,6 @@ const DOMAIN_COLOR_MAP: Record<string, string> = {
   criacao: '#B8976A',
 }
 
-const CHALLENGE_COLOR = '#C2675A'
 const CITADEL_COLOR   = '#D4A843'
 
 // Parchment label halo via text-shadow (no rectangular bg)

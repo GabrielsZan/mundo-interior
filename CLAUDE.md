@@ -240,9 +240,35 @@ VITE_SUPABASE_ANON_KEY=<chave anon do Supabase>
 
 ---
 
-### Próximos Passos — Fase 4 (Loot, Inventário e Diário)
+### Fase 4 — Loot, Inventário e Diário COMPLETA ✅ (2026-03-30)
 
-- [ ] `src/features/inventory/` — tela de inventário com itens coletados
-- [ ] Sistema de loot ao completar missões (itens aleatórios por domínio)
-- [ ] `src/features/journal/` — diário de jornada (log de missões completadas)
-- [ ] Persistência de inventário no Supabase
+**Tipos adicionados (`src/types/index.ts`)**
+- `ItemRarity` (common/uncommon/rare/legendary) + `RARITY_LABELS` + `RARITY_COLORS`
+- `IItem` — item de inventário com id, name, description, domain, rarity, icon, obtainedAt, fromMission
+- `IJournalEntry` — entrada do diário com xpGeneral/xpDomain, itemIds, note editável
+
+**Loot Tables (`src/lib/lootTables.ts`)**
+- 4 itens por domínio × 4 raridades = 16 templates
+- Pesos de raridade por tipo de missão: Daily (70/28/2/0), Main (30/50/18/2), Epic (10/30/45/15)
+- Quantidade de drops: Daily=1, Main=1-2, Epic=2-3
+
+**Stores**
+- `src/stores/inventoryStore.ts` — Zustand + persist; `addItems`, `removeItem`
+- `src/stores/journalStore.ts` — Zustand + persist; `addEntry`, `updateNote`
+- `missionStore.completeMission` atualizado: retorna `IItem[]`, integra loot roll + journal entry
+
+**UI**
+- `src/features/inventory/InventoryPage.tsx` — grid 2 colunas, filtro por domínio, border-top por raridade
+- `src/features/journal/JournalPage.tsx` — lista de entradas, data relativa, XP chips, ícones de loot, nota editável inline
+- `MissionCard.tsx` — animação de ícones de loot flutuando após completar missão
+- `missions.module.css` — keyframe `lootPop` adicionado
+- `App.tsx` — 2 novos tabs: Inventário 🎒 e Diário 📖 (nav agora tem 5 itens)
+
+---
+
+### Próximos Passos — Fase 5 (Cidadela Interior e Eventos)
+
+- [ ] `src/features/citadel/` — tela da Cidadela central com NPCs e eventos
+- [ ] Sistema de eventos temporários (desafios semanais/mensais)
+- [ ] Persistência de inventário e diário no Supabase
+- [ ] Notificações PWA para missões diárias

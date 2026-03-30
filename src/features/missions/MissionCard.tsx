@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useMissionStore } from '@/stores/missionStore'
 import { DomainBadge } from '@/components/ui'
 import { MISSION_TYPE_LABELS } from '@/types'
-import type { IMission } from '@/types'
+import type { IMission, IItem } from '@/types'
 import styles from './missions.module.css'
 
 interface MissionCardProps {
@@ -12,13 +12,16 @@ interface MissionCardProps {
 export function MissionCard({ mission }: MissionCardProps) {
   const completeMission = useMissionStore((s) => s.completeMission)
   const deleteMission   = useMissionStore((s) => s.deleteMission)
-  const [xpFloat, setXpFloat] = useState(false)
+  const [xpFloat,   setXpFloat]   = useState(false)
+  const [lootItems, setLootItems] = useState<IItem[]>([])
 
   function handleComplete() {
     if (mission.isCompleted) return
     setXpFloat(true)
-    completeMission(mission.id)
+    const items = completeMission(mission.id)
+    setLootItems(items)
     setTimeout(() => setXpFloat(false), 1200)
+    setTimeout(() => setLootItems([]), 2200)
   }
 
   return (
@@ -29,6 +32,17 @@ export function MissionCard({ mission }: MissionCardProps) {
           +{mission.xpGeneral} XP
         </span>
       )}
+
+      {/* Loot pop animations */}
+      {lootItems.map((item, i) => (
+        <span
+          key={item.id}
+          className={styles.lootItem}
+          style={{ right: 8 + i * 32 }}
+        >
+          {item.icon}
+        </span>
+      ))}
 
       {/* Header */}
       <div className="flex items-start justify-between gap-2">
@@ -61,7 +75,6 @@ export function MissionCard({ mission }: MissionCardProps) {
 
       {/* Footer */}
       <div className="flex items-center justify-between">
-        {/* Streak badge */}
         {mission.type === 'daily' && mission.streak > 0 && (
           <span className={`text-xs font-mono text-gold font-bold ${styles.streakFlame}`}>
             🔥 {mission.streak} dias
@@ -69,7 +82,6 @@ export function MissionCard({ mission }: MissionCardProps) {
         )}
         {!(mission.type === 'daily' && mission.streak > 0) && <span />}
 
-        {/* Complete button */}
         <button
           onClick={handleComplete}
           disabled={mission.isCompleted}
