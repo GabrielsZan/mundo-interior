@@ -5,6 +5,7 @@ import type { IMapMission } from '@/lib/mapMissions'
 import type { MapDomain } from '@/features/map/mapData'
 import type { Domain } from '@/types'
 import { usePlayerStore } from '@/stores/playerStore'
+import { useEventStore } from '@/stores/eventStore'
 
 // ── Progression order per region ─────────────────────────────────────────────
 const REGION_ORDER: Record<MapDomain, string[]> = {
@@ -105,14 +106,6 @@ function getNextPOI(poiId: string): string | null {
   return null
 }
 
-// Helper: get all POI ids that come AFTER a given poiId in its region
-function getSubsequentPOIs(poiId: string): string[] {
-  for (const order of Object.values(REGION_ORDER)) {
-    const idx = order.indexOf(poiId)
-    if (idx !== -1) return order.slice(idx + 1)
-  }
-  return []
-}
 
 export const useMapStore = create<MapState>()(
   persist(
@@ -167,6 +160,9 @@ export const useMapStore = create<MapState>()(
             domainType: domainKey,
           })
         }
+
+        // Weekly event progress
+        useEventStore.getState().progressEvent()
 
         set({
           completedMapMissions: newCompleted,
@@ -253,7 +249,7 @@ export const useMapStore = create<MapState>()(
 
             const tentacao = NYXOS_TENTACOES[domain]
             const poiMissions = ALL_MAP_MISSIONS.filter((m) => m.poiId === target)
-            const poiName = poiMissions[0]?.poiId ?? target // fallback to id
+            void poiMissions  // missions data available if needed later
 
             newPendingInvasions.push({
               domain,

@@ -309,9 +309,41 @@ VITE_SUPABASE_ANON_KEY=<chave anon do Supabase>
 
 ---
 
-### Próximos Passos — Fase 5 (Cidadela Interior e Eventos)
+### Fase 5 — Cidadela Interior + Eventos Semanais COMPLETA ✅ (2026-03-31)
 
-- [ ] `src/features/citadel/` — tela da Cidadela central com NPCs e eventos
-- [ ] Sistema de eventos temporários (desafios semanais/mensais)
+**O que foi implementado:**
+
+- `src/lib/weeklyEvents.ts` — Pool de 12 eventos semanais rotativos (por ISO week % 12); cada evento tem nome, descrição, domínio, ícone, requisito de missões, XP bônus e item de recompensa
+- `src/stores/eventStore.ts` — Zustand + persist; rastreia semana atual (`weekKey`), progresso da semana (`progress`), e se recompensa foi reivindicada (`rewardClaimed`); `checkNewWeek` reseta ao virar semana; `progressEvent` incrementado a cada missão completada; `claimReward` dá XP + adiciona item ao inventário
+- `src/features/citadel/CitadelPage.tsx` — Tela completa da Cidadela com:
+  - **Perfil do jogador** — nome, nível, XP total acumulado
+  - **Desafio da Semana** — card com barra de progresso, preview da recompensa e botão de reivindicar
+  - **Conselho dos Domínios** — 4 NPCs (Mestra Lyra/Mente, Guerreiro Kaito/Corpo, Oráculo Serafim/Alma, Artesã Phaedra/Criação), cada um com 3 níveis de diálogo baseados no XP do domínio (< 150 / 150-500 / > 500)
+  - **Sua Jornada** — estatísticas: missões concluídas, habilidades desbloqueadas, locais explorados, itens coletados
+  - **XP por Domínio** — barras relativas mostrando distribuição entre domínios
+- `src/features/citadel/index.ts` — Barrel export
+- `src/features/map/POISheet.tsx` — prop `onOpenCitadel` adicionada; botão "🏰 Entrar na Cidadela" aparece quando POI selecionado é a Cidadela
+- `src/features/map/MapPage.tsx` — prop `onOpenCitadel` recebida e repassada ao POISheet
+- `src/App.tsx` — view `'citadel'` adicionada; `CitadelPage` renderizado com botão de voltar ao mapa; `BottomNav` oculto na Cidadela; `checkNewWeek` chamado no mount do Dashboard
+- `src/stores/missionStore.ts` — `completeMission` chama `useEventStore.progressEvent()` após completar
+- `src/stores/mapStore.ts` — `completeMapMission` chama `useEventStore.progressEvent()` após completar
+- `src/stores/mapStore.ts` — função `getSubsequentPOIs` (nunca usada) removida; `poiName` duplicado removido
+
+**Fluxo de navegação:**
+- Mapa → toca POI Cidadela → POISheet → "Entrar na Cidadela" → CitadelPage (tela cheia, sem nav)
+- CitadelPage → botão ← → volta ao Mapa
+
+**Sistema de eventos semanais:**
+- 12 eventos no pool, rotação por número de semana ISO
+- Todos os tipos de missão (normais + mapa) progridem o evento
+- Recompensa: XP bônus + item raro adicionado ao inventário
+- Reset automático toda segunda-feira (semana ISO)
+
+---
+
+### Próximos Passos
+
 - [ ] Persistência de inventário e diário no Supabase
 - [ ] Notificações PWA para missões diárias
+- [ ] Sistema de conquistas/achievements
+- [ ] Efeito sonoro ao reivindicar recompensa semanal

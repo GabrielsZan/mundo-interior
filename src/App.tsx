@@ -8,9 +8,11 @@ import { SkillTreePage } from '@/features/skill-tree'
 import { MapPage } from '@/features/map'
 import { InventoryPage } from '@/features/inventory'
 import { JournalPage } from '@/features/journal'
+import { CitadelPage } from '@/features/citadel'
 import { AuthScreen } from '@/features/auth/AuthScreen'
 import { useXP } from '@/hooks/useXP'
 import { supabase, isSupabaseConfigured } from '@/lib/supabase'
+import { useEventStore } from '@/stores/eventStore'
 import styles from '@/features/missions/missions.module.css'
 
 // ── Setup ─────────────────────────────────────────────────────────────────────
@@ -59,12 +61,14 @@ function Dashboard() {
   const xp              = useXP()!
   const checkDailyReset = useMissionStore((s) => s.checkDailyReset)
   const setPlayerId     = useMissionStore((s) => s.setPlayerId)
+  const checkNewWeek    = useEventStore((s) => s.checkNewWeek)
 
   const prevLevel       = useRef(player.level)
   const [levelUp, setLevelUp] = useState(false)
 
   useEffect(() => { setPlayerId(player.id) }, [player.id, setPlayerId])
   useEffect(() => { checkDailyReset() }, [checkDailyReset])
+  useEffect(() => { checkNewWeek() }, [checkNewWeek])
 
   useEffect(() => {
     if (player.level > prevLevel.current) {
@@ -121,7 +125,7 @@ function Dashboard() {
 
 // ── Bottom Nav ────────────────────────────────────────────────────────────────
 
-type View = 'dashboard' | 'skills' | 'map' | 'inventory' | 'journal'
+type View = 'dashboard' | 'skills' | 'map' | 'inventory' | 'journal' | 'citadel'
 
 const NAV_ITEMS: { view: View; label: string; icon: string }[] = [
   { view: 'dashboard', label: 'Missões',      icon: '📋' },
@@ -225,10 +229,11 @@ export default function App() {
     <>
       {view === 'dashboard' && <Dashboard />}
       {view === 'skills'    && <SkillTreePage />}
-      {view === 'map'       && <MapPage />}
+      {view === 'map'       && <MapPage onOpenCitadel={() => setView('citadel')} />}
       {view === 'inventory' && <InventoryPage />}
       {view === 'journal'   && <JournalPage />}
-      <BottomNav view={view} setView={setView} />
+      {view === 'citadel'   && <CitadelPage onBack={() => setView('map')} />}
+      {view !== 'citadel' && <BottomNav view={view} setView={setView} />}
     </>
   )
 }

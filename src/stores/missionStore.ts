@@ -6,6 +6,7 @@ import { rollLoot } from '@/lib/lootTables'
 import { usePlayerStore } from '@/stores/playerStore'
 import { useInventoryStore } from '@/stores/inventoryStore'
 import { useJournalStore } from '@/stores/journalStore'
+import { useEventStore } from '@/stores/eventStore'
 import {
   dbFetchMissions,
   dbInsertMission,
@@ -100,6 +101,9 @@ export const useMissionStore = create<MissionState>()(
           itemIds:      items.map((i) => i.id),
           note:         '',
         })
+
+        // Weekly event progress
+        useEventStore.getState().progressEvent()
 
         const patch = {
           isCompleted: true,
