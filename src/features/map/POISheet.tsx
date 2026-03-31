@@ -60,11 +60,14 @@ export function POISheet({ poi, onClose }: POISheetProps) {
 
       {/* Bottom sheet */}
       <div className="fixed bottom-16 inset-x-0 z-40 px-3 pb-2">
-        <div className="max-w-lg mx-auto bg-white rounded-2xl shadow-2xl overflow-hidden">
-          {/* Color bar */}
-          <div className="h-1" style={{ background: invaded ? '#8B7332' : color }} />
+        <div
+          className="max-w-lg mx-auto bg-white rounded-2xl shadow-2xl overflow-hidden flex flex-col"
+          style={{ maxHeight: 'calc(100vh - 7rem)' }}
+        >
+          {/* Color bar — fixed at top */}
+          <div className="h-1 shrink-0" style={{ background: invaded ? '#8B7332' : color }} />
 
-          <div className="p-5">
+          <div className="p-5 overflow-y-auto">
             {/* Header */}
             <div className="flex items-start gap-3">
               {/* Icon */}

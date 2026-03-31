@@ -287,6 +287,13 @@ VITE_SUPABASE_ANON_KEY=<chave anon do Supabase>
 
 ---
 
+### Aba "Mundo" nas Missões + Fix POISheet ✅ (2026-03-31)
+
+- `MissionList.tsx` — aba "Mundo" adicionada (4ª tab) com missões do mapa agrupadas por POI, estado de invasão/bloqueio, checkbox de completar inline, badge de pendentes em verde
+- `POISheet.tsx` — sheet agora tem `max-height: calc(100vh - 7rem)` + `overflow-y-auto`, garantindo scroll e visibilidade das missões em qualquer tamanho de tela
+
+---
+
 ### Próximos Passos — Fase 5 (Cidadela Interior e Eventos)
 
 - [ ] `src/features/citadel/` — tela da Cidadela central com NPCs e eventos
