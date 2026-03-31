@@ -3,12 +3,13 @@ import { MAP_W, MAP_H } from './mapData'
 import styles from './map.module.css'
 
 interface POIMarkerProps {
-  poi:        POI
-  isRevealed: boolean
-  isVisited:  boolean
-  isInvaded:  boolean
-  isLocked:   boolean
-  onTap:      (poi: POI) => void
+  poi:          POI
+  isRevealed:   boolean
+  isVisited:    boolean
+  isInvaded:    boolean
+  isLocked:     boolean
+  onTap:        (poi: POI) => void
+  onResetDrag:  () => void
 }
 
 const DOMAIN_COLOR_MAP: Record<string, string> = {
@@ -30,7 +31,7 @@ const LABEL_SHADOW = `
   -1px  1px 0 rgba(232,213,160,0.85)
 `
 
-export function POIMarker({ poi, isRevealed, isVisited, isInvaded, isLocked, onTap }: POIMarkerProps) {
+export function POIMarker({ poi, isRevealed, isVisited, isInvaded, isLocked, onTap, onResetDrag }: POIMarkerProps) {
   if (!isRevealed) return null
 
   const x = (poi.x / 100) * MAP_W
@@ -54,7 +55,7 @@ export function POIMarker({ poi, isRevealed, isVisited, isInvaded, isLocked, onT
       >
         <button
           onClick={() => onTap(poi)}
-          onPointerDown={(e) => e.stopPropagation()}
+          onPointerDown={(e) => { onResetDrag(); e.stopPropagation() }}
           className={`flex items-center justify-center rounded-full
                      transition-transform duration-150 active:scale-90 hover:scale-110
                      ${styles.invasionPulse}`}
@@ -119,7 +120,7 @@ export function POIMarker({ poi, isRevealed, isVisited, isInvaded, isLocked, onT
     >
       <button
         onClick={() => onTap(poi)}
-        onPointerDown={(e) => e.stopPropagation()}
+        onPointerDown={(e) => { onResetDrag(); e.stopPropagation() }}
         className="flex items-center justify-center rounded-full
                    transition-transform duration-150 active:scale-90 hover:scale-110"
         style={{

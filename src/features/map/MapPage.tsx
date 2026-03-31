@@ -94,6 +94,10 @@ export function MapPage() {
   }))
 
   // ── POI tap ────────────────────────────────────────────────────────────────
+  const resetDrag = useCallback(() => {
+    didDrag.current = false
+  }, [])
+
   function handlePOITap(poi: POI) {
     if (didDrag.current) return
     setSelectedPOI(poi)
@@ -102,6 +106,7 @@ export function MapPage() {
   const revealedCount = mapPOIs.filter(isRevealed).length
 
   return (
+    <>
     <div
       ref={containerRef}
       className="fixed inset-0 bottom-16 overflow-hidden touch-none"
@@ -140,6 +145,7 @@ export function MapPage() {
             isInvaded={isPOIInvaded(poi.id)}
             isLocked={isPOILocked(poi.id)}
             onTap={handlePOITap}
+            onResetDrag={resetDrag}
           />
         ))}
 
@@ -179,15 +185,17 @@ export function MapPage() {
         </div>
       </div>
 
-      {/* ── POI info sheet ── */}
+    </div>
+
+      {/* ── POI info sheet — OUTSIDE touch-none container ── */}
       {selectedPOI && (
         <POISheet poi={selectedPOI} onClose={() => setSelectedPOI(null)} />
       )}
 
-      {/* ── Nyxos invasion modal ── */}
+      {/* ── Nyxos invasion modal — OUTSIDE touch-none container ── */}
       {showInvasionModal && pendingInvasions.length > 0 && (
         <NyxosInvasionModal onClose={() => setShowInvasionModal(false)} />
       )}
-    </div>
+    </>
   )
 }

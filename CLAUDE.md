@@ -287,6 +287,12 @@ VITE_SUPABASE_ANON_KEY=<chave anon do Supabase>
 
 ---
 
+### Fix interação no mapa: sheet + pan + tap ✅ (2026-03-31)
+
+- `MapPage.tsx` — POISheet e NyxosInvasionModal movidos para FORA do container `touch-none`; `touch-action: none` no container impedia síntese de `click` em filhos (iOS/Android)
+- `MapPage.tsx` — `resetDrag` callback exposto e passado ao POIMarker para resetar `didDrag` quando novo tap começa em um POI (necessário pois `stopPropagation` impede o container de resetar)
+- `POIMarker.tsx` — `onPointerDown` chama `onResetDrag()` antes de `stopPropagation()`, garantindo que tap após pan funciona
+
 ### Fix crítico: tap nos POIs do mapa ✅ (2026-03-31)
 
 - `POIMarker.tsx` — `onPointerDown={(e) => e.stopPropagation()}` nos dois botões de POI
