@@ -287,6 +287,14 @@ VITE_SUPABASE_ANON_KEY=<chave anon do Supabase>
 
 ---
 
+### Fix crítico: tap nos POIs do mapa ✅ (2026-03-31)
+
+- `POIMarker.tsx` — `onPointerDown={(e) => e.stopPropagation()}` nos dois botões de POI
+- Causa raiz: `setPointerCapture` no container capturava o ponteiro antes do botão receber `click`
+- Com stopPropagation, o container não captura e o `click` dispara normalmente no botão
+
+---
+
 ### Aba "Mundo" nas Missões + Fix POISheet ✅ (2026-03-31) v2
 
 - `MissionList.tsx` — aba "Mundo" adicionada (4ª tab) com missões do mapa agrupadas por POI, estado de invasão/bloqueio, checkbox de completar inline, badge de pendentes em verde

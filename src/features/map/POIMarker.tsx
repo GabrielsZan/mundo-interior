@@ -54,6 +54,7 @@ export function POIMarker({ poi, isRevealed, isVisited, isInvaded, isLocked, onT
       >
         <button
           onClick={() => onTap(poi)}
+          onPointerDown={(e) => e.stopPropagation()}
           className={`flex items-center justify-center rounded-full
                      transition-transform duration-150 active:scale-90 hover:scale-110
                      ${styles.invasionPulse}`}
@@ -118,6 +119,7 @@ export function POIMarker({ poi, isRevealed, isVisited, isInvaded, isLocked, onT
     >
       <button
         onClick={() => onTap(poi)}
+        onPointerDown={(e) => e.stopPropagation()}
         className="flex items-center justify-center rounded-full
                    transition-transform duration-150 active:scale-90 hover:scale-110"
         style={{
