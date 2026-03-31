@@ -266,6 +266,27 @@ VITE_SUPABASE_ANON_KEY=<chave anon do Supabase>
 
 ---
 
+### Mapa — Sistema de Progressão por Missões + Nyxos COMPLETO ✅ (2026-03-31)
+
+**O que foi implementado:**
+
+- `src/lib/mapMissions.ts` — 73 missões seed data (todas as tabelas do documento)
+- `src/stores/mapStore.ts` — progressão LINEAR por região via missões (sem XP); invasão do Nyxos com inatividade + chance base 5%; reconquista; `completedPois`, `invadedPois`, `pendingInvasions`
+- `src/features/map/NyxosInvasionModal.tsx` — modal dramático ao abrir o app quando invasão ocorre
+- `src/features/map/map.module.css` — keyframe `invasionPulse` para borda dourada escura pulsante
+- `src/features/map/POIMarker.tsx` — visual de POI invadido (escuro, greyscale, borda #8B7332 pulsante)
+- `src/features/map/POISheet.tsx` — lista de missões do POI, estado invadido/bloqueado, botão Reconquistar
+- `src/features/map/MapPage.tsx` — fog revela por `revealedPois` do store (não por XP)
+
+**Regras de progressão:**
+- 4 POIs iniciais: mente-1, alma-1, corpo-1, criacao-1 + Cidadela
+- Completar TODAS missões de um POI → revela o próximo da região
+- Challenge zones reveladas ao completar o 3º POI da região
+- Invasão: 5% base, escala até 80% com 7+ dias inativo, requer 3 POIs completos no domínio
+- Reconquista: refazer todas as missões do POI invadido
+
+---
+
 ### Próximos Passos — Fase 5 (Cidadela Interior e Eventos)
 
 - [ ] `src/features/citadel/` — tela da Cidadela central com NPCs e eventos

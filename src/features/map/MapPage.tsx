@@ -1,11 +1,11 @@
-import { useRef, useState, useCallback } from 'react'
-import { usePlayerStore } from '@/stores/playerStore'
+import { useRef, useState, useCallback, useEffect } from 'react'
 import { useMapStore } from '@/stores/mapStore'
 import { mapPOIs, MAP_W, MAP_H } from './mapData'
 import type { POI } from './mapData'
 import { FogCanvas } from './FogCanvas'
 import { POIMarker } from './POIMarker'
 import { POISheet } from './POISheet'
+import { NyxosInvasionModal } from './NyxosInvasionModal'
 import mapBg from '@/assets/map-background.png'
 
 const FOG_RADIUS_REGULAR = 175
@@ -18,20 +18,28 @@ const DOMAIN_COLORS: Record<string, string> = {
   criacao: '#B8976A',
 }
 
-// Maps Portuguese domain names → playerStore domainXP keys
-const DOMAIN_XP_KEY: Record<string, 'mind' | 'body' | 'soul' | 'creation'> = {
-  mente:   'mind',
-  corpo:   'body',
-  alma:    'soul',
-  criacao: 'creation',
-}
-
 export function MapPage() {
-  const player   = usePlayerStore((s) => s.player)!
-  const visited  = useMapStore((s) => s.visitedPOIs)
-  const visitPOI = useMapStore((s) => s.visitPOI)
+  const revealedPois        = useMapStore((s) => s.revealedPois)
+  const invadedPois         = useMapStore((s) => s.invadedPois)
+  const pendingInvasions    = useMapStore((s) => s.pendingInvasions)
+  const checkInvasion       = useMapStore((s) => s.checkInvasion)
+  const isPOIInvaded        = useMapStore((s) => s.isPOIInvaded)
+  const isPOILocked         = useMapStore((s) => s.isPOILocked)
 
   const [selectedPOI, setSelectedPOI] = useState<POI | null>(null)
+  const [showInvasionModal, setShowInvasionModal] = useState(false)
+
+  // Run invasion check on mount
+  useEffect(() => {
+    checkInvasion()
+  }, [checkInvasion])
+
+  // Show modal when pending invasions appear
+  useEffect(() => {
+    if (pendingInvasions.length > 0) {
+      setShowInvasionModal(true)
+    }
+  }, [pendingInvasions.length])
 
   // ── Pan state ──────────────────────────────────────────────────────────────
   const containerRef = useRef<HTMLDivElement>(null)
@@ -74,23 +82,20 @@ export function MapPage() {
     dragInfo.current = null
   }, [])
 
-  // ── Reveal logic ───────────────────────────────────────────────────────────
+  // ── Reveal logic (store-based) ─────────────────────────────────────────────
   function isRevealed(poi: POI): boolean {
-    if (poi.type === 'citadel') return true
-    const xpKey = DOMAIN_XP_KEY[poi.domain]
-    return player.domainXP[xpKey] >= poi.revealXP
+    return revealedPois.includes(poi.id)
   }
 
   const revealPoints = mapPOIs.filter(isRevealed).map((poi) => ({
-    x: (poi.x / 100) * MAP_W,
-    y: (poi.y / 100) * MAP_H,
+    x:      (poi.x / 100) * MAP_W,
+    y:      (poi.y / 100) * MAP_H,
     radius: poi.type === 'citadel' ? FOG_RADIUS_CITADEL : FOG_RADIUS_REGULAR,
   }))
 
   // ── POI tap ────────────────────────────────────────────────────────────────
   function handlePOITap(poi: POI) {
     if (didDrag.current) return
-    visitPOI(poi.id)
     setSelectedPOI(poi)
   }
 
@@ -110,10 +115,10 @@ export function MapPage() {
       <div
         className="absolute"
         style={{
-          width: MAP_W,
+          width:  MAP_W,
           height: MAP_H,
-          left: `calc(50% + ${offset.x}px)`,
-          top:  `calc(50% + ${offset.y}px)`,
+          left:   `calc(50% + ${offset.x}px)`,
+          top:    `calc(50% + ${offset.y}px)`,
           transform: 'translate(-50%, -50%)',
           userSelect: 'none',
         }}
@@ -131,7 +136,9 @@ export function MapPage() {
             key={poi.id}
             poi={poi}
             isRevealed={isRevealed(poi)}
-            isVisited={visited.includes(poi.id)}
+            isVisited={false}
+            isInvaded={isPOIInvaded(poi.id)}
+            isLocked={isPOILocked(poi.id)}
             onTap={handlePOITap}
           />
         ))}
@@ -151,7 +158,13 @@ export function MapPage() {
               Mundo Interior
             </h1>
             <p className="text-white/45 text-xs mt-0.5">
-              {revealedCount}/{mapPOIs.length} locais revelados · Arraste para explorar
+              {revealedCount}/{mapPOIs.length} locais revelados
+              {invadedPois.length > 0 && (
+                <span style={{ color: '#D4A843' }}>
+                  {' '}· {invadedPois.length} invadido{invadedPois.length > 1 ? 's' : ''}
+                </span>
+              )}
+              {' '}· Arraste para explorar
             </p>
           </div>
           <div className="flex gap-2 mt-1">
@@ -169,6 +182,11 @@ export function MapPage() {
       {/* ── POI info sheet ── */}
       {selectedPOI && (
         <POISheet poi={selectedPOI} onClose={() => setSelectedPOI(null)} />
+      )}
+
+      {/* ── Nyxos invasion modal ── */}
+      {showInvasionModal && pendingInvasions.length > 0 && (
+        <NyxosInvasionModal onClose={() => setShowInvasionModal(false)} />
       )}
     </div>
   )
