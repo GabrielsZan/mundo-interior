@@ -163,7 +163,7 @@ export function POISheet({ poi, onClose }: POISheetProps) {
                   )}
                 </div>
 
-                <div className="flex flex-col gap-2 max-h-56 overflow-y-auto">
+                <div className="flex flex-col gap-2">
                   {missions.map((mission) => {
                     const done = completedMapMissions.includes(mission.id)
                     return (

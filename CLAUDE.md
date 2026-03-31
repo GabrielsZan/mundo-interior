@@ -287,10 +287,11 @@ VITE_SUPABASE_ANON_KEY=<chave anon do Supabase>
 
 ---
 
-### Aba "Mundo" nas Missões + Fix POISheet ✅ (2026-03-31)
+### Aba "Mundo" nas Missões + Fix POISheet ✅ (2026-03-31) v2
 
 - `MissionList.tsx` — aba "Mundo" adicionada (4ª tab) com missões do mapa agrupadas por POI, estado de invasão/bloqueio, checkbox de completar inline, badge de pendentes em verde
-- `POISheet.tsx` — sheet agora tem `max-height: calc(100vh - 7rem)` + `overflow-y-auto`, garantindo scroll e visibilidade das missões em qualquer tamanho de tela
+- `POISheet.tsx` — removido `max-h-56` do container interno de missões (era o que cortava a lista); sheet com `max-height: calc(100vh - 7rem)` + `overflow-y-auto` no nível correto
+- `MissionList WorldMissionsTab` — dropdown por missão: clicar no nome ou ▼ expande para mostrar a descrição; ▲ fecha; apenas uma missão expande por vez
 
 ---
 

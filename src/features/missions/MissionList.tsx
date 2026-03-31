@@ -29,6 +29,8 @@ function WorldMissionsTab() {
   const isPOIInvaded         = useMapStore((s) => s.isPOIInvaded)
   const isPOILocked          = useMapStore((s) => s.isPOILocked)
 
+  const [expanded, setExpanded] = useState<string | null>(null)
+
   const visiblePOIs = mapPOIs.filter(
     (p) => p.type !== 'citadel' && revealedPois.includes(p.id)
   )
@@ -85,57 +87,88 @@ function WorldMissionsTab() {
 
               {/* Mission rows */}
               {!locked && missions.map((mission) => {
-                const done = completedMapMissions.includes(mission.id)
+                const done       = completedMapMissions.includes(mission.id)
+                const isExpanded = expanded === mission.id
+
                 return (
                   <div
                     key={mission.id}
-                    className="flex items-center gap-2.5 py-2 border-t"
+                    className="border-t"
                     style={{ borderColor: 'rgba(42,33,24,0.07)' }}
                   >
-                    {/* Checkbox */}
-                    <button
-                      disabled={done || invaded}
-                      onClick={() => completeMapMission(mission.id, poi.id)}
-                      className="w-4 h-4 rounded shrink-0 flex items-center justify-center transition-colors"
-                      style={{
-                        background: done ? color : 'transparent',
-                        border:     `2px solid ${done ? color : 'rgba(42,33,24,0.2)'}`,
-                        cursor:     done || invaded ? 'default' : 'pointer',
-                        opacity:    invaded ? 0.4 : 1,
-                      }}
-                      title={done ? 'Concluída' : 'Completar'}
-                    >
-                      {done && (
-                        <svg width="8" height="6" viewBox="0 0 10 8" fill="none">
-                          <path
-                            d="M1 4l3 3 5-6"
-                            stroke="white"
-                            strokeWidth="2"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                          />
-                        </svg>
-                      )}
-                    </button>
+                    {/* Main row */}
+                    <div className="flex items-center gap-2.5 py-2">
+                      {/* Checkbox */}
+                      <button
+                        disabled={done || invaded}
+                        onClick={() => completeMapMission(mission.id, poi.id)}
+                        className="w-4 h-4 rounded shrink-0 flex items-center justify-center transition-colors"
+                        style={{
+                          background: done ? color : 'transparent',
+                          border:     `2px solid ${done ? color : 'rgba(42,33,24,0.2)'}`,
+                          cursor:     done || invaded ? 'default' : 'pointer',
+                          opacity:    invaded ? 0.4 : 1,
+                        }}
+                        title={done ? 'Concluída' : 'Completar'}
+                      >
+                        {done && (
+                          <svg width="8" height="6" viewBox="0 0 10 8" fill="none">
+                            <path
+                              d="M1 4l3 3 5-6"
+                              stroke="white"
+                              strokeWidth="2"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                            />
+                          </svg>
+                        )}
+                      </button>
 
-                    {/* Name */}
-                    <p
-                      className="flex-1 text-xs font-semibold leading-snug"
-                      style={{
-                        color:          done ? 'rgba(42,33,24,0.35)' : '#2A2118',
-                        textDecoration: done ? 'line-through' : 'none',
-                      }}
-                    >
-                      {mission.name}
-                    </p>
+                      {/* Name — tap to expand */}
+                      <button
+                        onClick={() => setExpanded(isExpanded ? null : mission.id)}
+                        className="flex-1 text-left"
+                      >
+                        <p
+                          className="text-xs font-semibold leading-snug"
+                          style={{
+                            color:          done ? 'rgba(42,33,24,0.35)' : '#2A2118',
+                            textDecoration: done ? 'line-through' : 'none',
+                          }}
+                        >
+                          {mission.name}
+                        </p>
+                      </button>
 
-                    {/* XP */}
-                    <span
-                      className="text-xs font-mono shrink-0"
-                      style={{ color: done ? 'rgba(42,33,24,0.25)' : color }}
-                    >
-                      +{mission.xpGeneral}
-                    </span>
+                      {/* XP + chevron */}
+                      <div className="flex items-center gap-1 shrink-0">
+                        <span
+                          className="text-xs font-mono"
+                          style={{ color: done ? 'rgba(42,33,24,0.25)' : color }}
+                        >
+                          +{mission.xpGeneral}
+                        </span>
+                        <button
+                          onClick={() => setExpanded(isExpanded ? null : mission.id)}
+                          className="text-ink/25 hover:text-ink/50 transition-colors"
+                          style={{ fontSize: 10, lineHeight: 1 }}
+                        >
+                          {isExpanded ? '▲' : '▼'}
+                        </button>
+                      </div>
+                    </div>
+
+                    {/* Expanded description */}
+                    {isExpanded && (
+                      <div
+                        className="pb-2.5 px-1"
+                        style={{ marginTop: -4 }}
+                      >
+                        <p className="text-xs text-ink/55 font-body leading-relaxed">
+                          {mission.description}
+                        </p>
+                      </div>
+                    )}
                   </div>
                 )
               })}
