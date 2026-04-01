@@ -9,6 +9,7 @@ import { MapPage } from '@/features/map'
 import { InventoryPage } from '@/features/inventory'
 import { JournalPage } from '@/features/journal'
 import { CitadelPage } from '@/features/citadel'
+import { OnboardingFlow } from '@/features/onboarding'
 import { AuthScreen } from '@/features/auth/AuthScreen'
 import { useXP } from '@/hooks/useXP'
 import { supabase, isSupabaseConfigured } from '@/lib/supabase'
@@ -224,6 +225,8 @@ export default function App() {
   if (authStatus === 'unauthenticated') return <AuthScreen />
 
   if (!player) return <SetupScreen userId={userId} />
+
+  if (!player.hasCompletedOnboarding) return <OnboardingFlow />
 
   return (
     <>

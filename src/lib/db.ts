@@ -23,13 +23,14 @@ export async function dbUpsertPlayer(player: IPlayer, userId: string): Promise<v
   try {
     await supabase.from('players').upsert(
       {
-        id:               player.id,
-        user_id:          userId,
-        name:             player.name,
-        level:            player.level,
-        xp_general:       player.xpGeneral,
-        xp_to_next_level: player.xpToNextLevel,
-        domain_xp:        player.domainXP,
+        id:                        player.id,
+        user_id:                   userId,
+        name:                      player.name,
+        level:                     player.level,
+        xp_general:                player.xpGeneral,
+        xp_to_next_level:          player.xpToNextLevel,
+        domain_xp:                 player.domainXP,
+        has_completed_onboarding:  player.hasCompletedOnboarding,
       },
       { onConflict: 'user_id' }
     )
@@ -38,13 +39,14 @@ export async function dbUpsertPlayer(player: IPlayer, userId: string): Promise<v
 
 function rowToPlayer(row: Record<string, unknown>): IPlayer {
   return {
-    id:            row.id as string,
-    name:          row.name as string,
-    level:         row.level as number,
-    xpGeneral:     row.xp_general as number,
-    xpToNextLevel: row.xp_to_next_level as number,
-    domainXP:      row.domain_xp as IPlayer['domainXP'],
-    createdAt:     row.created_at as string,
+    id:                     row.id as string,
+    name:                   row.name as string,
+    level:                  row.level as number,
+    xpGeneral:              row.xp_general as number,
+    xpToNextLevel:          row.xp_to_next_level as number,
+    domainXP:               row.domain_xp as IPlayer['domainXP'],
+    createdAt:              row.created_at as string,
+    hasCompletedOnboarding: (row.has_completed_onboarding as boolean) ?? false,
   }
 }
 

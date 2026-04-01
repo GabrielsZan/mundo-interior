@@ -57,6 +57,7 @@ export interface IPlayer {
   xpToNextLevel: number // XP needed to reach next level
   domainXP:    IDomainXP
   createdAt:   string
+  hasCompletedOnboarding: boolean
 }
 
 // ── Skill ────────────────────────────────────────────────────────────────────

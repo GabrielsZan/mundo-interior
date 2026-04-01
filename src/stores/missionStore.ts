@@ -22,6 +22,7 @@ interface MissionState {
 
   // Actions
   addMission:      (draft: Omit<IMission, 'id' | 'isCompleted' | 'completedAt' | 'streak' | 'createdAt' | 'xpGeneral' | 'xpDomain'>) => void
+  addBulkMissions: (drafts: Array<Omit<IMission, 'id' | 'isCompleted' | 'completedAt' | 'streak' | 'createdAt' | 'xpGeneral' | 'xpDomain'>>) => void
   completeMission: (id: string) => IItem[]  // returns dropped items for animation
   deleteMission:   (id: string) => void
   resetDailies:    () => void
@@ -63,6 +64,10 @@ export const useMissionStore = create<MissionState>()(
         set((s) => ({ missions: [...s.missions, mission] }))
         const { playerId } = get()
         if (playerId) dbInsertMission(mission, playerId)
+      },
+
+      addBulkMissions: (drafts) => {
+        drafts.forEach((d) => get().addMission(d))
       },
 
       completeMission: (id) => {

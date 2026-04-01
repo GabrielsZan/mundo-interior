@@ -341,6 +341,33 @@ VITE_SUPABASE_ANON_KEY=<chave anon do Supabase>
 
 ---
 
+---
+
+### Onboarding — Questionário + Seleção de Missões Iniciais ✅ (2026-04-01)
+
+**O que foi implementado:**
+
+- `src/lib/onboardingData.ts` — 12 perguntas (3 por domínio, 3 opções cada, score 1/2/3) + pool de 32 missões diárias starter (8 por domínio)
+- `src/features/onboarding/QuizStep.tsx` — quiz pergunta por pergunta com barra de progresso, cabeçalho colorido por domínio, opções como cards grandes, botão Voltar
+- `src/features/onboarding/ResultsStep.tsx` — tela de resultados com 4 barras por domínio (ordenadas do mais fraco), badge "Prioridade" no domínio mais fraco, mensagem contextual
+- `src/features/onboarding/MissionPickerStep.tsx` — grid de missões agrupadas por domínio (fraco primeiro), checkboxes, counter sticky no bottom, mínimo 3 seleções
+- `src/features/onboarding/OnboardingFlow.tsx` — orquestrador das 4 etapas (quiz → results → picker → done)
+- `src/features/onboarding/index.ts` — barrel export
+- `src/types/index.ts` — campo `hasCompletedOnboarding: boolean` adicionado em `IPlayer`
+- `src/stores/playerStore.ts` — `createDefaultPlayer` seta flag como `false`; nova action `completeOnboarding()`
+- `src/stores/missionStore.ts` — nova action `addBulkMissions()` para adicionar várias missões de uma vez
+- `src/lib/db.ts` — `rowToPlayer` e `dbUpsertPlayer` incluem `has_completed_onboarding`
+- `src/App.tsx` — check `!player.hasCompletedOnboarding` renderiza `<OnboardingFlow />` antes do Dashboard
+
+**Fluxo:**
+```
+SetupScreen (nome) → initPlayer() → OnboardingFlow → Dashboard (com missões)
+```
+- Usuários existentes (flag `false`) também passam pelo onboarding no próximo acesso
+- Ao confirmar missões: `setPlayerId` + `addBulkMissions` + `completeOnboarding` em sequência
+
+---
+
 ### Próximos Passos
 
 - [ ] Persistência de inventário e diário no Supabase

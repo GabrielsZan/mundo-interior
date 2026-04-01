@@ -10,11 +10,12 @@ interface PlayerState {
   isLoading: boolean
 
   // Actions
-  initPlayer:    (name: string, userId?: string) => void
-  loadFromDb:    (userId: string) => Promise<'loaded' | 'not_found'>
-  gainXP:        (gain: IXPGain) => void
-  spendDomainXP: (domain: Domain, amount: number) => void
-  resetPlayer:   () => void
+  initPlayer:          (name: string, userId?: string) => void
+  loadFromDb:          (userId: string) => Promise<'loaded' | 'not_found'>
+  gainXP:              (gain: IXPGain) => void
+  spendDomainXP:       (domain: Domain, amount: number) => void
+  resetPlayer:         () => void
+  completeOnboarding:  () => void
 }
 
 const DEFAULT_DOMAIN_XP: IDomainXP = {
@@ -24,13 +25,14 @@ const DEFAULT_DOMAIN_XP: IDomainXP = {
 function createDefaultPlayer(name: string): IPlayer {
   const level = 1
   return {
-    id:            crypto.randomUUID(),
+    id:                     crypto.randomUUID(),
     name,
     level,
-    xpGeneral:     0,
-    xpToNextLevel: xpToNextLevel(level),
-    domainXP:      { ...DEFAULT_DOMAIN_XP },
-    createdAt:     new Date().toISOString(),
+    xpGeneral:              0,
+    xpToNextLevel:          xpToNextLevel(level),
+    domainXP:               { ...DEFAULT_DOMAIN_XP },
+    createdAt:              new Date().toISOString(),
+    hasCompletedOnboarding: false,
   }
 }
 
@@ -103,6 +105,14 @@ export const usePlayerStore = create<PlayerState>()(
       },
 
       resetPlayer: () => set({ player: null, userId: null }),
+
+      completeOnboarding: () => {
+        const { player, userId } = get()
+        if (!player) return
+        const updated: IPlayer = { ...player, hasCompletedOnboarding: true }
+        set({ player: updated })
+        if (userId) dbUpsertPlayer(updated, userId)
+      },
     }),
     { name: 'mundo-interior-player' }
   )
