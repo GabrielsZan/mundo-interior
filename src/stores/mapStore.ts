@@ -6,6 +6,8 @@ import type { MapDomain } from '@/features/map/mapData'
 import type { Domain } from '@/types'
 import { usePlayerStore } from '@/stores/playerStore'
 import { useEventStore } from '@/stores/eventStore'
+import { dbFetchMapState, dbUpsertMapState } from '@/lib/db'
+import type { MapStateSnapshot } from '@/lib/db'
 
 // ── Progression order per region ─────────────────────────────────────────────
 const REGION_ORDER: Record<MapDomain, string[]> = {
@@ -52,6 +54,22 @@ function todayStr(): string {
   return new Date().toISOString().slice(0, 10)
 }
 
+function syncMapState(state: MapState): void {
+  const playerId = usePlayerStore.getState().player?.id
+  if (!playerId) return
+  const snapshot: MapStateSnapshot = {
+    revealedPois:         state.revealedPois,
+    completedPois:        state.completedPois,
+    invadedPois:          state.invadedPois,
+    completedMapMissions: state.completedMapMissions,
+    lastActivityDate:     state.lastActivityDate,
+    lastInvasionCheck:    state.lastInvasionCheck,
+    daysInactive:         state.daysInactive,
+    pendingInvasions:     state.pendingInvasions,
+  }
+  dbUpsertMapState(playerId, snapshot)
+}
+
 export interface PendingInvasion {
   domain:   string
   poiId:    string
@@ -76,9 +94,10 @@ interface MapState {
   pendingInvasions: PendingInvasion[]
 
   // ── Actions ───────────────────────────────────────────────────────────────
-  completeMapMission:   (missionId: string, poiId: string) => void
-  reconquerPOI:         (poiId: string) => void
-  checkInvasion:        () => void
+  loadFromDb:            (playerId: string) => Promise<void>
+  completeMapMission:    (missionId: string, poiId: string) => void
+  reconquerPOI:          (poiId: string) => void
+  checkInvasion:         () => void
   clearPendingInvasions: () => void
 
   // ── Selectors ─────────────────────────────────────────────────────────────
@@ -121,6 +140,11 @@ export const useMapStore = create<MapState>()(
       pendingInvasions:     [],
 
       // ── Actions ────────────────────────────────────────────────────────────
+
+      loadFromDb: async (playerId) => {
+        const snapshot = await dbFetchMapState(playerId)
+        if (snapshot) set(snapshot)
+      },
 
       completeMapMission: (missionId, poiId) => {
         const state = get()
@@ -171,6 +195,7 @@ export const useMapStore = create<MapState>()(
           lastActivityDate:     todayStr(),
           daysInactive:         0,
         })
+        syncMapState(get())
       },
 
       reconquerPOI: (poiId) => {
@@ -198,6 +223,7 @@ export const useMapStore = create<MapState>()(
           lastActivityDate:     todayStr(),
           daysInactive:         0,
         })
+        syncMapState(get())
       },
 
       checkInvasion: () => {
@@ -267,9 +293,13 @@ export const useMapStore = create<MapState>()(
           daysInactive,
           lastInvasionCheck: today,
         })
+        syncMapState(get())
       },
 
-      clearPendingInvasions: () => set({ pendingInvasions: [] }),
+      clearPendingInvasions: () => {
+        set({ pendingInvasions: [] })
+        syncMapState(get())
+      },
 
       // ── Selectors ──────────────────────────────────────────────────────────
 

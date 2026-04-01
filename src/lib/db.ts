@@ -1,5 +1,25 @@
 import { supabase } from './supabase'
-import type { IPlayer, IMission } from '@/types'
+import type { IPlayer, IMission, IItem, IJournalEntry } from '@/types'
+import type { PendingInvasion } from '@/stores/mapStore'
+
+// ── Shared snapshot types ─────────────────────────────────────────────────────
+
+export interface MapStateSnapshot {
+  revealedPois:         string[]
+  completedPois:        string[]
+  invadedPois:          string[]
+  completedMapMissions: string[]
+  lastActivityDate:     string | null
+  lastInvasionCheck:    string | null
+  daysInactive:         number
+  pendingInvasions:     PendingInvasion[]
+}
+
+export interface EventStateSnapshot {
+  weekKey:       string
+  progress:      number
+  rewardClaimed: boolean
+}
 
 // ── Player ───────────────────────────────────────────────────────────────────
 
@@ -156,4 +176,164 @@ function rowToMission(row: Record<string, unknown>): IMission {
     streak:      row.streak as number,
     createdAt:   row.created_at as string,
   }
+}
+
+// ── Inventory ────────────────────────────────────────────────────────────────
+
+export async function dbFetchInventory(playerId: string): Promise<IItem[]> {
+  if (!supabase) return []
+  try {
+    const { data, error } = await supabase
+      .from('inventory_items')
+      .select('*')
+      .eq('player_id', playerId)
+      .order('created_at', { ascending: true })
+    if (error || !data) return []
+    return data.map((row: Record<string, unknown>) => ({
+      id:          row.id as string,
+      name:        row.name as string,
+      description: row.description as string,
+      domain:      row.domain as IItem['domain'],
+      rarity:      row.rarity as IItem['rarity'],
+      icon:        row.icon as string,
+      obtainedAt:  row.obtained_at as string,
+      fromMission: row.from_mission as string,
+    }))
+  } catch {
+    return []
+  }
+}
+
+export async function dbInsertInventoryItems(items: IItem[], playerId: string): Promise<void> {
+  if (!supabase || items.length === 0) return
+  try {
+    await supabase.from('inventory_items').insert(
+      items.map((item) => ({
+        id:           item.id,
+        player_id:    playerId,
+        name:         item.name,
+        description:  item.description,
+        domain:       item.domain,
+        rarity:       item.rarity,
+        icon:         item.icon,
+        obtained_at:  item.obtainedAt,
+        from_mission: item.fromMission,
+      }))
+    )
+  } catch { /* fire-and-forget */ }
+}
+
+export async function dbDeleteInventoryItem(id: string): Promise<void> {
+  if (!supabase) return
+  try {
+    await supabase.from('inventory_items').delete().eq('id', id)
+  } catch { /* fire-and-forget */ }
+}
+
+// ── Journal ───────────────────────────────────────────────────────────────────
+
+export async function dbFetchJournal(playerId: string): Promise<IJournalEntry[]> {
+  if (!supabase) return []
+  try {
+    const { data, error } = await supabase
+      .from('journal_entries')
+      .select('*')
+      .eq('player_id', playerId)
+      .order('completed_at', { ascending: false })
+    if (error || !data) return []
+    return data.map((row: Record<string, unknown>) => ({
+      id:           row.id as string,
+      missionId:    row.mission_id as string,
+      missionTitle: row.mission_title as string,
+      domain:       row.domain as IJournalEntry['domain'],
+      type:         row.type as IJournalEntry['type'],
+      xpGeneral:    row.xp_general as number,
+      xpDomain:     row.xp_domain as number,
+      completedAt:  row.completed_at as string,
+      itemIds:      row.item_ids as string[],
+      note:         row.note as string,
+    }))
+  } catch {
+    return []
+  }
+}
+
+export async function dbInsertJournalEntry(entry: IJournalEntry, playerId: string): Promise<void> {
+  if (!supabase) return
+  try {
+    await supabase.from('journal_entries').insert({
+      id:            entry.id,
+      player_id:     playerId,
+      mission_id:    entry.missionId,
+      mission_title: entry.missionTitle,
+      domain:        entry.domain,
+      type:          entry.type,
+      xp_general:    entry.xpGeneral,
+      xp_domain:     entry.xpDomain,
+      completed_at:  entry.completedAt,
+      item_ids:      entry.itemIds,
+      note:          entry.note,
+    })
+  } catch { /* fire-and-forget */ }
+}
+
+export async function dbUpdateJournalNote(id: string, note: string): Promise<void> {
+  if (!supabase) return
+  try {
+    await supabase.from('journal_entries').update({ note }).eq('id', id)
+  } catch { /* fire-and-forget */ }
+}
+
+// ── Map State ─────────────────────────────────────────────────────────────────
+
+export async function dbFetchMapState(playerId: string): Promise<MapStateSnapshot | null> {
+  if (!supabase) return null
+  try {
+    const { data, error } = await supabase
+      .from('players')
+      .select('map_state')
+      .eq('id', playerId)
+      .single()
+    if (error || !data || !data.map_state) return null
+    return data.map_state as MapStateSnapshot
+  } catch {
+    return null
+  }
+}
+
+export async function dbUpsertMapState(playerId: string, state: MapStateSnapshot): Promise<void> {
+  if (!supabase) return
+  try {
+    await supabase
+      .from('players')
+      .update({ map_state: state })
+      .eq('id', playerId)
+  } catch { /* fire-and-forget */ }
+}
+
+// ── Event State ───────────────────────────────────────────────────────────────
+
+export async function dbFetchEventState(playerId: string): Promise<EventStateSnapshot | null> {
+  if (!supabase) return null
+  try {
+    const { data, error } = await supabase
+      .from('players')
+      .select('event_state')
+      .eq('id', playerId)
+      .single()
+    if (error || !data || !data.event_state) return null
+    return data.event_state as EventStateSnapshot
+  } catch {
+    return null
+  }
+}
+
+export async function dbUpsertEventState(playerId: string, state: EventStateSnapshot): Promise<void> {
+  if (!supabase) return
+  try {
+    await supabase
+      .from('players')
+      .update({ event_state: state })
+      .eq('id', playerId)
+  } catch { /* fire-and-forget */ }
 }

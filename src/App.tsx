@@ -14,6 +14,9 @@ import { AuthScreen } from '@/features/auth/AuthScreen'
 import { useXP } from '@/hooks/useXP'
 import { supabase, isSupabaseConfigured } from '@/lib/supabase'
 import { useEventStore } from '@/stores/eventStore'
+import { useInventoryStore } from '@/stores/inventoryStore'
+import { useJournalStore } from '@/stores/journalStore'
+import { useMapStore } from '@/stores/mapStore'
 import styles from '@/features/missions/missions.module.css'
 
 // ── Setup ─────────────────────────────────────────────────────────────────────
@@ -58,16 +61,22 @@ function SetupScreen({ userId }: { userId?: string }) {
 // ── Dashboard ─────────────────────────────────────────────────────────────────
 
 function Dashboard() {
-  const player          = usePlayerStore((s) => s.player)!
-  const xp              = useXP()!
-  const checkDailyReset = useMissionStore((s) => s.checkDailyReset)
-  const setPlayerId     = useMissionStore((s) => s.setPlayerId)
-  const checkNewWeek    = useEventStore((s) => s.checkNewWeek)
+  const player                  = usePlayerStore((s) => s.player)!
+  const xp                      = useXP()!
+  const checkDailyReset         = useMissionStore((s) => s.checkDailyReset)
+  const setMissionPlayerId      = useMissionStore((s) => s.setPlayerId)
+  const setInventoryPlayerId    = useInventoryStore((s) => s.setPlayerId)
+  const setJournalPlayerId      = useJournalStore((s) => s.setPlayerId)
+  const checkNewWeek            = useEventStore((s) => s.checkNewWeek)
 
   const prevLevel       = useRef(player.level)
   const [levelUp, setLevelUp] = useState(false)
 
-  useEffect(() => { setPlayerId(player.id) }, [player.id, setPlayerId])
+  useEffect(() => {
+    setMissionPlayerId(player.id)
+    setInventoryPlayerId(player.id)
+    setJournalPlayerId(player.id)
+  }, [player.id, setMissionPlayerId, setInventoryPlayerId, setJournalPlayerId])
   useEffect(() => { checkDailyReset() }, [checkDailyReset])
   useEffect(() => { checkNewWeek() }, [checkNewWeek])
 
@@ -163,11 +172,15 @@ function BottomNav({ view, setView }: { view: View; setView: (v: View) => void }
 type AuthStatus = 'loading' | 'unauthenticated' | 'authenticated'
 
 export default function App() {
-  const player       = usePlayerStore((s) => s.player)
-  const loadFromDb   = usePlayerStore((s) => s.loadFromDb)
-  const loadMissions = useMissionStore((s) => s.loadFromDb)
-  const loadSkills   = useSkillStore((s) => s.loadFromDb)
-  const initSkills   = useSkillStore((s) => s.initSkills)
+  const player          = usePlayerStore((s) => s.player)
+  const loadFromDb      = usePlayerStore((s) => s.loadFromDb)
+  const loadMissions    = useMissionStore((s) => s.loadFromDb)
+  const loadSkills      = useSkillStore((s) => s.loadFromDb)
+  const initSkills      = useSkillStore((s) => s.initSkills)
+  const loadInventory   = useInventoryStore((s) => s.loadFromDb)
+  const loadJournal     = useJournalStore((s) => s.loadFromDb)
+  const loadMapState    = useMapStore((s) => s.loadFromDb)
+  const loadEventState  = useEventStore((s) => s.loadFromDb)
 
   const [authStatus, setAuthStatus] = useState<AuthStatus>(
     isSupabaseConfigured ? 'loading' : 'authenticated'
@@ -189,7 +202,14 @@ export default function App() {
       if (result === 'loaded') {
         const playerId = usePlayerStore.getState().player?.id
         if (playerId) {
-          await Promise.all([loadMissions(playerId), loadSkills(playerId)])
+          await Promise.all([
+            loadMissions(playerId),
+            loadSkills(playerId),
+            loadInventory(playerId),
+            loadJournal(playerId),
+            loadMapState(playerId),
+            loadEventState(playerId),
+          ])
         }
       }
       setAuthStatus('authenticated')
@@ -212,7 +232,7 @@ export default function App() {
     })
 
     return () => listener.subscription.unsubscribe()
-  }, [loadFromDb, loadMissions, loadSkills])
+  }, [loadFromDb, loadMissions, loadSkills, loadInventory, loadJournal, loadMapState, loadEventState])
 
   if (authStatus === 'loading') {
     return (

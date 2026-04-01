@@ -368,9 +368,29 @@ SetupScreen (nome) → initPlayer() → OnboardingFlow → Dashboard (com missõ
 
 ---
 
+---
+
+### Persistência Supabase — Inventário, Diário, Mapa e Eventos ✅ (2026-04-01)
+
+**O que foi implementado:**
+
+- `supabase/migrations/003_inventory_journal_map_events.sql` — novas tabelas e colunas:
+  - `inventory_items` (tabela com RLS por player_id)
+  - `journal_entries` (tabela com RLS por player_id)
+  - `players.map_state` (coluna JSONB para snapshot do mapa)
+  - `players.event_state` (coluna JSONB para snapshot do evento semanal)
+  - `players.has_completed_onboarding` (boolean, retrocompatível)
+- `src/lib/db.ts` — 8 novos helpers: `dbFetchInventory`, `dbInsertInventoryItems`, `dbDeleteInventoryItem`, `dbFetchJournal`, `dbInsertJournalEntry`, `dbUpdateJournalNote`, `dbFetchMapState/dbUpsertMapState`, `dbFetchEventState/dbUpsertEventState`; tipos `MapStateSnapshot` e `EventStateSnapshot`
+- `src/stores/inventoryStore.ts` — `playerId` + `setPlayerId` + `loadFromDb`; sync fire-and-forget em `addItems` e `removeItem`
+- `src/stores/journalStore.ts` — `playerId` + `setPlayerId` + `loadFromDb`; sync em `addEntry` e `updateNote`
+- `src/stores/mapStore.ts` — `loadFromDb`; sync via `syncMapState()` após `completeMapMission`, `reconquerPOI`, `checkInvasion`, `clearPendingInvasions`
+- `src/stores/eventStore.ts` — `loadFromDb`; sync após `checkNewWeek`, `progressEvent`, `claimReward`
+- `src/App.tsx` — `loadInventory`, `loadJournal`, `loadMapState`, `loadEventState` adicionados ao `Promise.all` na inicialização; `setInventoryPlayerId` + `setJournalPlayerId` chamados no mount do Dashboard
+
+**Todos os dados do jogo agora são sincronizados ao Supabase** e sobrevivem a múltiplos dispositivos e limpeza de localStorage.
+
 ### Próximos Passos
 
-- [ ] Persistência de inventário e diário no Supabase
 - [ ] Notificações PWA para missões diárias
 - [ ] Sistema de conquistas/achievements
 - [ ] Efeito sonoro ao reivindicar recompensa semanal
