@@ -216,10 +216,13 @@ function WeeklyEventCard() {
 // ── Main page ─────────────────────────────────────────────────────────────────
 
 interface CitadelPageProps {
-  onBack: () => void
+  onBack:        () => void
+  onLogout:      () => void
+  onDeleteData:  () => void
 }
 
-export function CitadelPage({ onBack }: CitadelPageProps) {
+export function CitadelPage({ onBack, onLogout, onDeleteData }: CitadelPageProps) {
+  const [confirmDelete, setConfirmDelete] = useState(false)
   const player       = usePlayerStore((s) => s.player)!
   const missions     = useMissionStore((s) => s.missions)
   const skills       = useSkillStore((s) => s.skills)
@@ -362,6 +365,52 @@ export function CitadelPage({ onBack }: CitadelPageProps) {
               )
             })}
           </div>
+        </section>
+
+        {/* Account actions */}
+        <section className="flex flex-col gap-3 pt-2">
+          <button
+            onClick={onLogout}
+            className="w-full py-3 rounded-xl text-sm font-semibold font-body transition-colors"
+            style={{ background: 'rgba(42,33,24,0.06)', color: 'rgba(42,33,24,0.55)', border: '1px solid rgba(42,33,24,0.12)' }}
+          >
+            Sair da conta
+          </button>
+
+          {!confirmDelete ? (
+            <button
+              onClick={() => setConfirmDelete(true)}
+              className="w-full py-3 rounded-xl text-sm font-semibold font-body transition-colors"
+              style={{ background: 'rgba(180,40,30,0.06)', color: 'rgba(180,40,30,0.55)', border: '1px solid rgba(180,40,30,0.15)' }}
+            >
+              Apagar meus dados
+            </button>
+          ) : (
+            <div
+              className="rounded-xl p-4 flex flex-col gap-3"
+              style={{ background: 'rgba(180,40,30,0.06)', border: '1px solid rgba(180,40,30,0.20)' }}
+            >
+              <p className="text-sm font-body text-center" style={{ color: 'rgba(180,40,30,0.8)' }}>
+                ⚠️ Isso apagará <strong>todos</strong> os seus dados permanentemente. Tem certeza?
+              </p>
+              <div className="flex gap-2">
+                <button
+                  onClick={() => setConfirmDelete(false)}
+                  className="flex-1 py-2 rounded-xl text-sm font-semibold font-body"
+                  style={{ background: 'rgba(42,33,24,0.08)', color: 'rgba(42,33,24,0.55)' }}
+                >
+                  Cancelar
+                </button>
+                <button
+                  onClick={onDeleteData}
+                  className="flex-1 py-2 rounded-xl text-sm font-semibold font-body"
+                  style={{ background: 'rgba(180,40,30,0.15)', color: 'rgba(180,40,30,0.9)' }}
+                >
+                  Sim, apagar tudo
+                </button>
+              </div>
+            </div>
+          )}
         </section>
 
         {/* Flavor footer */}

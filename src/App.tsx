@@ -60,7 +60,11 @@ function SetupScreen({ userId }: { userId?: string }) {
 
 // ── Dashboard ─────────────────────────────────────────────────────────────────
 
-function Dashboard() {
+interface DashboardProps {
+  onOpenCitadel: () => void
+}
+
+function Dashboard({ onOpenCitadel }: DashboardProps) {
   const player                  = usePlayerStore((s) => s.player)!
   const xp                      = useXP()!
   const checkDailyReset         = useMissionStore((s) => s.checkDailyReset)
@@ -93,14 +97,17 @@ function Dashboard() {
       {/* Header */}
       <header className="bg-white border-b border-parchment-dark px-6 py-4 sticky top-0 z-10">
         <div className="max-w-2xl mx-auto flex items-center justify-between gap-4">
-          <div>
+          <button
+            onClick={onOpenCitadel}
+            className="text-left hover:opacity-70 transition-opacity"
+          >
             <h1 className="font-heading text-xl italic font-bold text-ink leading-tight">
               {player.name}
             </h1>
             <p className={`text-ink/50 text-xs font-mono ${levelUp ? styles.levelUpBurst : ''}`}>
               Nível {player.level}
             </p>
-          </div>
+          </button>
 
           <div className="flex-1 max-w-[200px]">
             <XPBar current={xp.current} needed={xp.needed} percent={xp.percent} />
@@ -185,8 +192,31 @@ export default function App() {
   const [authStatus, setAuthStatus] = useState<AuthStatus>(
     isSupabaseConfigured ? 'loading' : 'authenticated'
   )
-  const [userId, setUserId] = useState<string | undefined>()
-  const [view,   setView]   = useState<View>('dashboard')
+  const [userId,    setUserId]    = useState<string | undefined>()
+  const [view,      setView]      = useState<View>('dashboard')
+  const [prevView,  setPrevView]  = useState<View>('dashboard')
+
+  function openCitadel(from: View) {
+    setPrevView(from)
+    setView('citadel')
+  }
+
+  async function handleLogout() {
+    if (isSupabaseConfigured && supabase) {
+      await supabase.auth.signOut()
+    } else {
+      // local mode: just reset player so setup screen appears
+      usePlayerStore.getState().resetPlayer()
+    }
+  }
+
+  async function handleDeleteData() {
+    if (isSupabaseConfigured && supabase) {
+      await supabase.auth.signOut()
+    }
+    localStorage.clear()
+    window.location.reload()
+  }
 
   // Init skills from seed on local mode (runs once)
   useEffect(() => {
@@ -250,12 +280,18 @@ export default function App() {
 
   return (
     <>
-      {view === 'dashboard' && <Dashboard />}
+      {view === 'dashboard' && <Dashboard onOpenCitadel={() => openCitadel('dashboard')} />}
       {view === 'skills'    && <SkillTreePage />}
-      {view === 'map'       && <MapPage onOpenCitadel={() => setView('citadel')} />}
+      {view === 'map'       && <MapPage onOpenCitadel={() => openCitadel('map')} />}
       {view === 'inventory' && <InventoryPage />}
       {view === 'journal'   && <JournalPage />}
-      {view === 'citadel'   && <CitadelPage onBack={() => setView('map')} />}
+      {view === 'citadel'   && (
+        <CitadelPage
+          onBack={() => setView(prevView)}
+          onLogout={handleLogout}
+          onDeleteData={handleDeleteData}
+        />
+      )}
       {view !== 'citadel' && <BottomNav view={view} setView={setView} />}
     </>
   )

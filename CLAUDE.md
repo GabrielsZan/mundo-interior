@@ -389,8 +389,20 @@ SetupScreen (nome) → initPlayer() → OnboardingFlow → Dashboard (com missõ
 
 **Todos os dados do jogo agora são sincronizados ao Supabase** e sobrevivem a múltiplos dispositivos e limpeza de localStorage.
 
+---
+
+### Cidadela — Logout, Apagar Dados + Navegação pelo Header ✅ (2026-04-01)
+
+- `src/features/citadel/CitadelPage.tsx` — props `onLogout` e `onDeleteData` adicionadas; botão "Sair da conta" (limpo, cinza); botão "Apagar meus dados" com confirmação em 2 passos (vermelho); estado local `confirmDelete`
+- `src/App.tsx` — `openCitadel(from)` rastreia `prevView` para o botão de voltar funcionar tanto do dashboard quanto do mapa; `handleLogout` chama `supabase.auth.signOut()` (ou `resetPlayer` em local mode); `handleDeleteData` faz `signOut` + `localStorage.clear()` + `window.location.reload()`; Dashboard recebe prop `onOpenCitadel`; header do Dashboard (nome + nível) agora é um `<button>` clicável que abre a Cidadela
+
+**Fluxo de navegação:**
+- Header (nome/nível) no Dashboard → abre Cidadela (voltar retorna ao Dashboard)
+- POI Cidadela no Mapa → abre Cidadela (voltar retorna ao Mapa)
+
 ### Próximos Passos
 
+- [ ] Cidadela vira tela de perfil do usuário (refatorar visual)
 - [ ] Notificações PWA para missões diárias
 - [ ] Sistema de conquistas/achievements
 - [ ] Efeito sonoro ao reivindicar recompensa semanal
