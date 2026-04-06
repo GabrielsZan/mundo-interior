@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head><meta charset="utf-8"><title>Gerar Ícones</title></head>
+<body style="font-family:sans-serif;padding:20px;background:#1a1a1a;color:#fff">
+  <h2>Gerando ícones do Mundo Interior...</h2>
+  <canvas id="c"></canvas>
+  <p id="status">Aguarde...</p>
+
+<script>
+function drawIcon(size) {
+  const canvas = document.getElementById('c')
+  canvas.width = size
+  canvas.height = size
+  const ctx = canvas.getContext('2d')
+
+  // Fundo degradê escuro
+  const bg = ctx.createLinearGradient(0, 0, size, size)
+  bg.addColorStop(0, '#1C1408')
+  bg.addColorStop(1, '#2A2118')
+  ctx.fillStyle = bg
+  ctx.beginPath()
+  ctx.roundRect(0, 0, size, size, size * 0.18)
+  ctx.fill()
+
+  // Círculo dourado central
+  const cx = size / 2
+  const cy = size / 2
+  const r = size * 0.35
+
+  const glow = ctx.createRadialGradient(cx, cy, r * 0.1, cx, cy, r)
+  glow.addColorStop(0, '#F0C840')
+  glow.addColorStop(0.6, '#D4A843')
+  glow.addColorStop(1, '#8B6914')
+  ctx.fillStyle = glow
+  ctx.beginPath()
+  ctx.arc(cx, cy, r, 0, Math.PI * 2)
+  ctx.fill()
+
+  // Letra M
+  ctx.fillStyle = '#1C1408'
+  ctx.font = `bold ${size * 0.38}px serif`
+  ctx.textAlign = 'center'
+  ctx.textBaseline = 'middle'
+  ctx.fillText('M', cx, cy + size * 0.02)
+
+  // Estrelinhas nos cantos
+  const starSize = size * 0.045
+  const positions = [
+    [size * 0.18, size * 0.18],
+    [size * 0.82, size * 0.18],
+    [size * 0.18, size * 0.82],
+    [size * 0.82, size * 0.82],
+  ]
+  ctx.fillStyle = '#D4A843'
+  positions.forEach(([x, y]) => {
+    ctx.save()
+    ctx.translate(x, y)
+    ctx.beginPath()
+    for (let i = 0; i < 5; i++) {
+      const angle = (i * 4 * Math.PI) / 5 - Math.PI / 2
+      const r2 = i % 2 === 0 ? starSize : starSize * 0.4
+      ctx.lineTo(Math.cos(angle) * r2, Math.sin(angle) * r2)
+    }
+    ctx.closePath()
+    ctx.fill()
+    ctx.restore()
+  })
+
+  return canvas.toDataURL('image/png')
+}
+
+function download(dataUrl, filename) {
+  const a = document.createElement('a')
+  a.href = dataUrl
+  a.download = filename
+  a.click()
+}
+
+// Gera e baixa os dois tamanhos
+setTimeout(() => {
+  download(drawIcon(192), 'icon-192.png')
+  setTimeout(() => {
+    download(drawIcon(512), 'icon-512.png')
+    document.getElementById('status').innerHTML =
+      '✅ Dois arquivos baixados! Mova <b>icon-192.png</b> e <b>icon-512.png</b> para a pasta <b>public/</b> do projeto.'
+  }, 500)
+}, 300)
+</script>
+</body>
+</html>
