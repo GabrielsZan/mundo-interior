@@ -407,11 +407,12 @@ SetupScreen (nome) → initPlayer() → OnboardingFlow → Dashboard (com missõ
 - Pasta `android/` gerada com `npx cap add android`
 - APK gerado via Android Studio: `Build → Generate App Bundles or APKs → Generate APKs`
 
-### Fix Auth — OTP por código em vez de magic link ✅ (2026-04-06)
+### Fix Auth — Email + senha (resolve mobile) ✅ (2026-04-06)
 
-- `AuthScreen.tsx` — fluxo em 2 etapas: email → código de 6 dígitos
-- `supabase.auth.signInWithOtp` envia o código; `supabase.auth.verifyOtp` verifica
-- Resolve o problema do magic link apontar para `localhost` no app mobile (Capacitor)
+- `AuthScreen.tsx` — login e cadastro com email + senha; sem magic link
+- `signInWithPassword` para login; `signUp` para cadastro
+- Erros traduzidos para pt-BR
+- Requer "Enable email confirmations" desabilitado no Supabase (Authentication → Providers → Email)
 
 ### Próximos Passos
 
