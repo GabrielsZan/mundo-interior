@@ -5,7 +5,8 @@
       "Bash(npx tsc:*)",
       "Skill(update-config)",
       "Bash(npm run:*)",
-      "Bash(taskkill:*)"
+      "Bash(taskkill:*)",
+      "Bash(npx cap:*)"
     ]
   },
   "hooks": {
