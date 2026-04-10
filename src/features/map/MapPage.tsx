@@ -18,11 +18,7 @@ const DOMAIN_COLORS: Record<string, string> = {
   criacao: '#B8976A',
 }
 
-interface MapPageProps {
-  onOpenCitadel?: () => void
-}
-
-export function MapPage({ onOpenCitadel }: MapPageProps) {
+export function MapPage() {
   const revealedPois        = useMapStore((s) => s.revealedPois)
   const invadedPois         = useMapStore((s) => s.invadedPois)
   const pendingInvasions    = useMapStore((s) => s.pendingInvasions)
@@ -193,7 +189,7 @@ export function MapPage({ onOpenCitadel }: MapPageProps) {
 
       {/* ── POI info sheet — OUTSIDE touch-none container ── */}
       {selectedPOI && (
-        <POISheet poi={selectedPOI} onClose={() => setSelectedPOI(null)} onOpenCitadel={onOpenCitadel} />
+        <POISheet poi={selectedPOI} onClose={() => setSelectedPOI(null)} />
       )}
 
       {/* ── Nyxos invasion modal — OUTSIDE touch-none container ── */}

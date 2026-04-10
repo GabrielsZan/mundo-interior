@@ -438,9 +438,16 @@ SetupScreen (nome) → initPlayer() → OnboardingFlow → Dashboard (com missõ
 - `completeMapMission` agora chama `rollLoot`, adiciona itens ao inventário e cria entrada no diário
 - Mesmo comportamento das missões normais
 
+### Separação Perfil / Cidadela ✅ (2026-04-10)
+
+- Página aberta pelo header (nome/nível) renomeada de "A Cidadela Interior" para **"Perfil do Aventureiro"** — contém perfil, evento semanal, NPCs, stats e ações de conta
+- POI Cidadela no mapa desvinculado desta página — exibe placeholder "🏰 Em breve" no POISheet
+- `MapPage` não recebe mais `onOpenCitadel`; `POISheet` não recebe mais a prop
+- A Cidadela real (com suas mecânicas próprias) será criada como nova página separada
+
 ### Próximos Passos
 
-- [ ] Cidadela vira tela de perfil do usuário (refatorar visual)
+- [ ] Criar a página real da Cidadela Interior (acessível pelo POI no mapa)
 - [ ] Notificações PWA para missões diárias
 - [ ] Sistema de conquistas/achievements
 - [ ] Efeito sonoro ao reivindicar recompensa semanal

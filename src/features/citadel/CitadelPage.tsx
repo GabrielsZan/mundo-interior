@@ -255,9 +255,9 @@ export function CitadelPage({ onBack, onLogout, onDeleteData }: CitadelPageProps
           </button>
           <div>
             <h1 className="font-heading text-xl italic font-bold text-ink leading-tight">
-              🏰 A Cidadela Interior
+              🧭 Perfil do Aventureiro
             </h1>
-            <p className="text-ink/40 text-xs font-body">Sua fortaleza de desenvolvimento pessoal</p>
+            <p className="text-ink/40 text-xs font-body">Sua jornada de desenvolvimento pessoal</p>
           </div>
         </div>
       </header>

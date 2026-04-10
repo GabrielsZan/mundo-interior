@@ -2,9 +2,8 @@ import { useMapStore } from '@/stores/mapStore'
 import type { POI } from './mapData'
 
 interface POISheetProps {
-  poi:             POI | null
-  onClose:         () => void
-  onOpenCitadel?: () => void
+  poi:     POI | null
+  onClose: () => void
 }
 
 const COLOR_MAP: Record<string, string> = {
@@ -27,7 +26,7 @@ const MISSION_TYPE_LABELS: Record<string, string> = {
   daily: 'Diária',
 }
 
-export function POISheet({ poi, onClose, onOpenCitadel }: POISheetProps) {
+export function POISheet({ poi, onClose }: POISheetProps) {
   const getMissionsForPOI   = useMapStore((s) => s.getMissionsForPOI)
   const completedMapMissions = useMapStore((s) => s.completedMapMissions)
   const completeMapMission  = useMapStore((s) => s.completeMapMission)
@@ -149,15 +148,12 @@ export function POISheet({ poi, onClose, onOpenCitadel }: POISheetProps) {
                 <p className="text-xs text-ink/40 italic font-body mb-3">
                   A Cidadela evolui conforme você cresce. Aqui residem os guardiões dos domínios e os desafios da semana.
                 </p>
-                {onOpenCitadel && (
-                  <button
-                    onClick={() => { onClose(); onOpenCitadel() }}
-                    className="w-full py-2.5 rounded-xl text-sm font-semibold transition-opacity hover:opacity-80"
-                    style={{ background: '#D4A843', color: '#FBF6F0' }}
-                  >
-                    🏰 Entrar na Cidadela
-                  </button>
-                )}
+                <div
+                  className="w-full py-2.5 rounded-xl text-sm font-semibold text-center"
+                  style={{ background: 'rgba(212,168,67,0.12)', color: 'rgba(212,168,67,0.55)', border: '1px dashed rgba(212,168,67,0.35)' }}
+                >
+                  🏰 Em breve
+                </div>
               </div>
             )}
 

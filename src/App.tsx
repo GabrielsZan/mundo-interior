@@ -281,7 +281,7 @@ export default function App() {
     <>
       {view === 'dashboard' && <Dashboard onOpenCitadel={() => openCitadel('dashboard')} />}
       {view === 'skills'    && <SkillTreePage />}
-      {view === 'map'       && <MapPage onOpenCitadel={() => openCitadel('map')} />}
+      {view === 'map'       && <MapPage />}
       {view === 'inventory' && <InventoryPage />}
       {view === 'journal'   && <JournalPage />}
       {view === 'citadel'   && (
