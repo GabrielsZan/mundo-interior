@@ -3,9 +3,12 @@ import { persist } from 'zustand/middleware'
 import { ALL_MAP_MISSIONS } from '@/lib/mapMissions'
 import type { IMapMission } from '@/lib/mapMissions'
 import type { MapDomain } from '@/features/map/mapData'
-import type { Domain } from '@/types'
+import type { Domain, IItem } from '@/types'
 import { usePlayerStore } from '@/stores/playerStore'
+import { useInventoryStore } from '@/stores/inventoryStore'
+import { useJournalStore } from '@/stores/journalStore'
 import { useEventStore } from '@/stores/eventStore'
+import { rollLoot } from '@/lib/lootTables'
 import { dbFetchMapState, dbUpsertMapState } from '@/lib/db'
 import type { MapStateSnapshot } from '@/lib/db'
 
@@ -174,14 +177,40 @@ export const useMapStore = create<MapState>()(
           }
         }
 
-        // Award XP
+        // Award XP + loot + journal
         const mission = ALL_MAP_MISSIONS.find((m) => m.id === missionId)
         if (mission) {
-          const domainKey = DOMAIN_MAP[mission.domain]
+          const domainKey   = DOMAIN_MAP[mission.domain]
+          const completedAt = new Date().toISOString()
+
           usePlayerStore.getState().gainXP({
             general:    mission.xpGeneral,
             domain:     mission.xpDomain,
             domainType: domainKey,
+          })
+
+          // Loot
+          const lootEntries = rollLoot(domainKey, mission.type)
+          const items: IItem[] = lootEntries.map((entry) => ({
+            ...entry,
+            id:          crypto.randomUUID(),
+            obtainedAt:  completedAt,
+            fromMission: mission.name,
+          }))
+          useInventoryStore.getState().addItems(items)
+
+          // Journal
+          useJournalStore.getState().addEntry({
+            id:           crypto.randomUUID(),
+            missionId:    missionId,
+            missionTitle: mission.name,
+            domain:       domainKey,
+            type:         mission.type,
+            xpGeneral:    mission.xpGeneral,
+            xpDomain:     mission.xpDomain,
+            completedAt,
+            itemIds:      items.map((i) => i.id),
+            note:         '',
           })
         }
 

@@ -204,10 +204,9 @@ export default function App() {
   async function handleLogout() {
     if (isSupabaseConfigured && supabase) {
       await supabase.auth.signOut()
-    } else {
-      // local mode: just reset player so setup screen appears
-      usePlayerStore.getState().resetPlayer()
     }
+    localStorage.clear()
+    window.location.reload()
   }
 
   async function handleDeleteData() {

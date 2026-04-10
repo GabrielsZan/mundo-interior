@@ -240,7 +240,7 @@ export function CitadelPage({ onBack, onLogout, onDeleteData }: CitadelPageProps
     criacao: player.domainXP.creation,
   }
 
-  const totalXP = Object.values(player.domainXP).reduce((a, b) => a + b, 0)
+  const totalXP = player.totalXPEarned ?? Object.values(player.domainXP).reduce((a, b) => a + b, 0)
 
   return (
     <div className="min-h-screen bg-parchment pb-8">

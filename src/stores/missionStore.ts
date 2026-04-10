@@ -129,13 +129,24 @@ export const useMissionStore = create<MissionState>()(
       },
 
       resetDailies: () => {
-        const { playerId } = get()
+        const { missions, playerId } = get()
+        // Missions NOT completed yesterday lose their streak
+        const missedIds = missions
+          .filter((m) => m.type === 'daily' && !m.isCompleted)
+          .map((m) => m.id)
+
         set((s) => ({
           missions: s.missions.map((m) =>
-            m.type === 'daily' ? { ...m, isCompleted: false, completedAt: null } : m
+            m.type === 'daily'
+              ? { ...m, isCompleted: false, completedAt: null, streak: m.isCompleted ? m.streak : 0 }
+              : m
           ),
         }))
-        if (playerId) dbResetDailyMissions(playerId)
+
+        if (playerId) {
+          dbResetDailyMissions(playerId)
+          missedIds.forEach((id) => dbUpdateMission(id, { streak: 0 }))
+        }
       },
 
       checkDailyReset: () => {

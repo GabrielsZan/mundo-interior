@@ -414,6 +414,30 @@ SetupScreen (nome) → initPlayer() → OnboardingFlow → Dashboard (com missõ
 - Erros traduzidos para pt-BR
 - Requer "Enable email confirmations" desabilitado no Supabase (Authentication → Providers → Email)
 
+### Bug Fixes ✅ (2026-04-10)
+
+**1. Streak real de dias consecutivos** (`missionStore.ts`)
+- `resetDailies` agora reseta `streak → 0` para missões que NÃO foram completadas no dia anterior
+- DB sincronizado: chama `dbUpdateMission(id, { streak: 0 })` para cada missão perdida
+
+**2. Logout limpa localStorage** (`App.tsx`)
+- `handleLogout` agora faz `localStorage.clear()` + `window.location.reload()` após signOut
+- Impede que dados de um usuário apareçam para outro no mesmo dispositivo
+
+**3. Confirmação antes de deletar missão** (`MissionCard.tsx`)
+- Botão "×" agora mostra "Sim / Não" inline antes de deletar
+- Evita deleções acidentais no mobile
+
+**4. XP total histórico na Cidadela** (`IPlayer`, `playerStore`, `db.ts`, `CitadelPage`)
+- Novo campo `totalXPEarned` em `IPlayer` — acumula todo XP ganho, nunca decresce
+- `gainXP` incrementa `totalXPEarned` a cada ganho
+- `CitadelPage` usa `player.totalXPEarned` (fallback para soma de domain XP em contas antigas)
+- Migration `004_total_xp_earned.sql` adicionada para o Supabase
+
+**5. Missões do mapa geram loot e entradas no diário** (`mapStore.ts`)
+- `completeMapMission` agora chama `rollLoot`, adiciona itens ao inventário e cria entrada no diário
+- Mesmo comportamento das missões normais
+
 ### Próximos Passos
 
 - [ ] Cidadela vira tela de perfil do usuário (refatorar visual)

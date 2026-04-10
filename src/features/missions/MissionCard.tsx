@@ -12,8 +12,9 @@ interface MissionCardProps {
 export function MissionCard({ mission }: MissionCardProps) {
   const completeMission = useMissionStore((s) => s.completeMission)
   const deleteMission   = useMissionStore((s) => s.deleteMission)
-  const [xpFloat,   setXpFloat]   = useState(false)
-  const [lootItems, setLootItems] = useState<IItem[]>([])
+  const [xpFloat,        setXpFloat]        = useState(false)
+  const [lootItems,      setLootItems]      = useState<IItem[]>([])
+  const [confirmDelete,  setConfirmDelete]  = useState(false)
 
   function handleComplete() {
     if (mission.isCompleted) return
@@ -55,13 +56,30 @@ export function MissionCard({ mission }: MissionCardProps) {
           )}
         </div>
 
-        <button
-          onClick={() => deleteMission(mission.id)}
-          className="text-ink/20 hover:text-ink/50 transition-colors text-lg leading-none shrink-0"
-          aria-label="Remover missão"
-        >
-          ×
-        </button>
+        {confirmDelete ? (
+          <div className="flex items-center gap-1 shrink-0">
+            <button
+              onClick={() => setConfirmDelete(false)}
+              className="text-[11px] text-ink/40 hover:text-ink/60 px-1.5 py-0.5 rounded transition-colors"
+            >
+              Não
+            </button>
+            <button
+              onClick={() => deleteMission(mission.id)}
+              className="text-[11px] text-red-500 font-semibold px-1.5 py-0.5 rounded hover:bg-red-50 transition-colors"
+            >
+              Sim
+            </button>
+          </div>
+        ) : (
+          <button
+            onClick={() => setConfirmDelete(true)}
+            className="text-ink/20 hover:text-ink/50 transition-colors text-lg leading-none shrink-0"
+            aria-label="Remover missão"
+          >
+            ×
+          </button>
+        )}
       </div>
 
       {/* Meta row */}

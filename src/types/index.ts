@@ -53,8 +53,9 @@ export interface IPlayer {
   id:          string
   name:        string
   level:       number
-  xpGeneral:   number   // total XP Geral accumulated
+  xpGeneral:   number   // XP restante no nível atual
   xpToNextLevel: number // XP needed to reach next level
+  totalXPEarned: number // XP total histórico acumulado (nunca decresce)
   domainXP:    IDomainXP
   createdAt:   string
   hasCompletedOnboarding: boolean

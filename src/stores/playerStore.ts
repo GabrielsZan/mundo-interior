@@ -30,6 +30,7 @@ function createDefaultPlayer(name: string): IPlayer {
     level,
     xpGeneral:              0,
     xpToNextLevel:          xpToNextLevel(level),
+    totalXPEarned:          0,
     domainXP:               { ...DEFAULT_DOMAIN_XP },
     createdAt:              new Date().toISOString(),
     hasCompletedOnboarding: false,
@@ -87,6 +88,7 @@ export const usePlayerStore = create<PlayerState>()(
           level,
           xpGeneral:     xpPool,
           xpToNextLevel: threshold,
+          totalXPEarned: (player.totalXPEarned ?? 0) + general + domain,
           domainXP:      newDomainXP,
         }
         set({ player: updated })
