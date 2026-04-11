@@ -9,6 +9,8 @@ import { useInventoryStore } from '@/stores/inventoryStore'
 import { useJournalStore } from '@/stores/journalStore'
 import { useEventStore } from '@/stores/eventStore'
 import { rollLoot } from '@/lib/lootTables'
+import { computeActiveBuffs, applyXPBuffs } from '@/lib/buffs'
+import { useSkillStore } from '@/stores/skillStore'
 import { dbFetchMapState, dbUpsertMapState } from '@/lib/db'
 import type { MapStateSnapshot } from '@/lib/db'
 
@@ -183,14 +185,27 @@ export const useMapStore = create<MapState>()(
           const domainKey   = DOMAIN_MAP[mission.domain]
           const completedAt = new Date().toISOString()
 
+          // Buffs
+          const activeBuffs = computeActiveBuffs(useSkillStore.getState().skills)
+          const boosted = applyXPBuffs(
+            { xpGeneral: mission.xpGeneral, xpDomain: mission.xpDomain },
+            activeBuffs,
+            domainKey,
+          )
+
           usePlayerStore.getState().gainXP({
-            general:    mission.xpGeneral,
-            domain:     mission.xpDomain,
+            general:    boosted.xpGeneral,
+            domain:     boosted.xpDomain,
             domainType: domainKey,
           })
 
-          // Loot
-          const lootEntries = rollLoot(domainKey, mission.type)
+          // Loot (com buffs)
+          const lootEntries = rollLoot(
+            domainKey,
+            mission.type,
+            activeBuffs.lootRarityShift,
+            activeBuffs.lootExtraChance,
+          )
           const items: IItem[] = lootEntries.map((entry) => ({
             ...entry,
             id:          crypto.randomUUID(),
@@ -199,15 +214,15 @@ export const useMapStore = create<MapState>()(
           }))
           useInventoryStore.getState().addItems(items)
 
-          // Journal
+          // Journal (registra XP real com buffs)
           useJournalStore.getState().addEntry({
             id:           crypto.randomUUID(),
             missionId:    missionId,
             missionTitle: mission.name,
             domain:       domainKey,
             type:         mission.type,
-            xpGeneral:    mission.xpGeneral,
-            xpDomain:     mission.xpDomain,
+            xpGeneral:    boosted.xpGeneral,
+            xpDomain:     boosted.xpDomain,
             completedAt,
             itemIds:      items.map((i) => i.id),
             note:         '',

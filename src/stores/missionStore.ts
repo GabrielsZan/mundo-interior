@@ -3,10 +3,12 @@ import { persist } from 'zustand/middleware'
 import type { IMission, IItem, Domain, MissionType } from '@/types'
 import { MISSION_XP } from '@/lib/constants'
 import { rollLoot } from '@/lib/lootTables'
+import { computeActiveBuffs, applyXPBuffs } from '@/lib/buffs'
 import { usePlayerStore } from '@/stores/playerStore'
 import { useInventoryStore } from '@/stores/inventoryStore'
 import { useJournalStore } from '@/stores/journalStore'
 import { useEventStore } from '@/stores/eventStore'
+import { useSkillStore } from '@/stores/skillStore'
 import {
   dbFetchMissions,
   dbInsertMission,
@@ -75,16 +77,29 @@ export const useMissionStore = create<MissionState>()(
         const mission = missions.find((m) => m.id === id)
         if (!mission || mission.isCompleted) return []
 
-        // XP
+        // Buffs
+        const activeBuffs = computeActiveBuffs(useSkillStore.getState().skills)
+        const boosted = applyXPBuffs(
+          { xpGeneral: mission.xpGeneral, xpDomain: mission.xpDomain },
+          activeBuffs,
+          mission.domain as Domain,
+        )
+
+        // XP (com buffs)
         usePlayerStore.getState().gainXP({
-          general:    mission.xpGeneral,
-          domain:     mission.xpDomain,
+          general:    boosted.xpGeneral,
+          domain:     boosted.xpDomain,
           domainType: mission.domain as Domain,
         })
 
-        // Loot
+        // Loot (com buffs)
         const completedAt = new Date().toISOString()
-        const lootEntries = rollLoot(mission.domain, mission.type)
+        const lootEntries = rollLoot(
+          mission.domain,
+          mission.type,
+          activeBuffs.lootRarityShift,
+          activeBuffs.lootExtraChance,
+        )
         const items: IItem[] = lootEntries.map((entry) => ({
           ...entry,
           id:          crypto.randomUUID(),
@@ -93,15 +108,15 @@ export const useMissionStore = create<MissionState>()(
         }))
         useInventoryStore.getState().addItems(items)
 
-        // Journal
+        // Journal (registra XP real recebido com buffs)
         useJournalStore.getState().addEntry({
           id:           crypto.randomUUID(),
           missionId:    id,
           missionTitle: mission.title,
           domain:       mission.domain,
           type:         mission.type,
-          xpGeneral:    mission.xpGeneral,
-          xpDomain:     mission.xpDomain,
+          xpGeneral:    boosted.xpGeneral,
+          xpDomain:     boosted.xpDomain,
           completedAt,
           itemIds:      items.map((i) => i.id),
           note:         '',

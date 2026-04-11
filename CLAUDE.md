@@ -445,6 +445,21 @@ SetupScreen (nome) → initPlayer() → OnboardingFlow → Dashboard (com missõ
 - `MapPage` não recebe mais `onOpenCitadel`; `POISheet` não recebe mais a prop
 - A Cidadela real (com suas mecânicas próprias) será criada como nova página separada
 
+### Sistema de Buffs da Árvore da Alma ✅ (2026-04-10)
+
+**O que foi implementado:**
+
+- `src/types/index.ts` — `BuffType`, `ISkillBuff`, `ActiveBuffs` adicionados; campo `buff: ISkillBuff` inserido em `ISkill`
+- `src/data/skills.ts` — Todos os 96 skills agora têm campo `buff` com tipo, valor e label em pt-BR (valores balanceados por tier: T1=5%/10%, T2=8-10%/15-20%, T3=12-15%/20-25%)
+- `src/lib/buffs.ts` — Novo arquivo: `computeActiveBuffs(skills)` e `applyXPBuffs(base, buffs, domain)`
+- `src/lib/lootTables.ts` — `rollLoot` agora aceita `lootRarityShiftPct` e `lootExtraChancePct` (default 0); adiciona upgrade de raridade e item extra
+- `src/stores/missionStore.ts` — `completeMission` aplica buffs antes de conceder XP e loot
+- `src/stores/mapStore.ts` — `completeMapMission` aplica buffs antes de conceder XP e loot
+- `src/features/skill-tree/SkillNode.tsx` — Badge de buff adicionado ao card (cinza=locked, cor do domínio=available/unlocked)
+- `src/features/skill-tree/SkillTreePage.tsx` — Widget "Bônus Ativos" exibido quando há skills desbloqueadas, mostrando bônus acumulados do domínio ativo
+
+**Arquitetura:** Buffs são computados em tempo real a partir do array `skills[]` persistido — sem novas colunas no Supabase. Stacking aditivo entre habilidades do mesmo tipo.
+
 ### Próximos Passos
 
 - [ ] Criar a página real da Cidadela Interior (acessível pelo POI no mapa)

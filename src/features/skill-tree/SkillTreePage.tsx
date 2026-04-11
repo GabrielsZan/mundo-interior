@@ -4,6 +4,7 @@ import { useSkillStore } from '@/stores/skillStore'
 import { DOMAIN_LABELS, DOMAIN_COLORS } from '@/types'
 import type { Domain } from '@/types'
 import { SkillTreeView } from './SkillTreeView'
+import { computeActiveBuffs } from '@/lib/buffs'
 
 const DOMAINS: Domain[] = ['mind', 'body', 'soul', 'creation']
 
@@ -16,6 +17,9 @@ export function SkillTreePage() {
   const domainColor   = DOMAIN_COLORS[activeDomain]
   const totalSkills   = skills.filter((s) => s.domain === activeDomain).length
   const unlockedCount = skills.filter((s) => s.domain === activeDomain && s.isUnlocked).length
+
+  const activeBuffs   = computeActiveBuffs(skills)
+  const domainXPBonus = activeBuffs.xpDomainPct[activeDomain] ?? 0
 
   return (
     <div className="min-h-screen bg-parchment pb-24">
@@ -64,6 +68,36 @@ export function SkillTreePage() {
             </p>
           </div>
         </div>
+
+        {/* Active buffs */}
+        {unlockedCount > 0 && (
+          <div className="rounded-card border border-parchment-dark bg-white p-3 flex flex-col gap-2">
+            <span className="text-[10px] font-mono font-bold text-ink/40 uppercase tracking-wide">Bônus Ativos</span>
+            <div className="flex flex-wrap gap-2">
+              {domainXPBonus > 0 && (
+                <span className="px-2 py-0.5 rounded-[5px] text-[10px] font-mono font-semibold"
+                  style={{ background: `${domainColor}18`, color: domainColor }}>
+                  +{domainXPBonus}% XP {DOMAIN_LABELS[activeDomain]}
+                </span>
+              )}
+              {activeBuffs.xpGeneralPct > 0 && (
+                <span className="px-2 py-0.5 rounded-[5px] text-[10px] font-mono font-semibold bg-gold/10 text-gold">
+                  +{activeBuffs.xpGeneralPct}% XP Geral
+                </span>
+              )}
+              {activeBuffs.lootRarityShift > 0 && (
+                <span className="px-2 py-0.5 rounded-[5px] text-[10px] font-mono font-semibold bg-ink/5 text-ink/60">
+                  +{activeBuffs.lootRarityShift}% Raridade do Saque
+                </span>
+              )}
+              {activeBuffs.lootExtraChance > 0 && (
+                <span className="px-2 py-0.5 rounded-[5px] text-[10px] font-mono font-semibold bg-ink/5 text-ink/60">
+                  +{activeBuffs.lootExtraChance}% Item Extra
+                </span>
+              )}
+            </div>
+          </div>
+        )}
 
         {/* Skill tree */}
         <SkillTreeView domain={activeDomain} />

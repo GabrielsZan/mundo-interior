@@ -60,6 +60,13 @@ const ITEM_COUNT: Record<MissionType, [number, number]> = {
   epic:  [2, 3],
 }
 
+const RARITY_UPGRADE: Record<ItemRarity, ItemRarity> = {
+  common:    'uncommon',
+  uncommon:  'rare',
+  rare:      'legendary',
+  legendary: 'legendary',
+}
+
 function rollRarity(type: MissionType): ItemRarity {
   const weights = RARITY_WEIGHTS[type]
   const total   = weights.reduce((sum, [, w]) => sum + w, 0)
@@ -71,12 +78,28 @@ function rollRarity(type: MissionType): ItemRarity {
   return 'common'
 }
 
-export function rollLoot(domain: Domain, type: MissionType): ILootEntry[] {
+export function rollLoot(
+  domain: Domain,
+  type: MissionType,
+  lootRarityShiftPct = 0,
+  lootExtraChancePct = 0,
+): ILootEntry[] {
   const [min, max] = ITEM_COUNT[type]
-  const count      = Math.floor(Math.random() * (max - min + 1)) + min
+  let count = Math.floor(Math.random() * (max - min + 1)) + min
+
+  // Extra item roll (capped at 100%)
+  if (Math.random() * 100 < Math.min(lootExtraChancePct, 100)) {
+    count += 1
+  }
+
   const results: ILootEntry[] = []
   for (let i = 0; i < count; i++) {
-    results.push(LOOT_POOLS[domain][rollRarity(type)])
+    let rarity = rollRarity(type)
+    // Rarity upgrade roll (per item, capped at 100%)
+    if (Math.random() * 100 < Math.min(lootRarityShiftPct, 100)) {
+      rarity = RARITY_UPGRADE[rarity]
+    }
+    results.push(LOOT_POOLS[domain][rarity])
   }
   return results
 }

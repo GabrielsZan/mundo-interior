@@ -74,6 +74,18 @@ export function SkillNode({ skill }: SkillNodeProps) {
         </p>
       </div>
 
+      {/* Buff badge */}
+      <div
+        className="px-1.5 py-0.5 rounded-[5px] text-[9px] font-mono font-semibold leading-snug"
+        style={
+          state !== 'locked'
+            ? { background: `${domainColor}18`, color: domainColor }
+            : { background: 'rgba(42,33,24,0.05)', color: 'rgba(42,33,24,0.25)' }
+        }
+      >
+        {skill.isUnlocked ? '✦' : '◇'} {skill.buff.label}
+      </div>
+
       {/* Prerequisite hint */}
       {state === 'locked' && missingPrereqs.length > 0 && (
         <p className="text-ink/30 text-[10px] leading-snug">

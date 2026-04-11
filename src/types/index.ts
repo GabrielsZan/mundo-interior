@@ -65,15 +65,35 @@ export interface IPlayer {
 
 export type SkillTier = 1 | 2 | 3
 
+export type BuffType =
+  | 'xp_domain_pct'     // +% ao XP do domínio em missões desse domínio
+  | 'xp_general_pct'    // +% ao XP Geral em qualquer missão
+  | 'loot_rarity_shift' // % de chance de cada item ser promovido uma raridade
+  | 'loot_extra_chance' // % de chance de receber 1 item extra no saque
+
+export interface ISkillBuff {
+  type:  BuffType
+  value: number   // e.g. 5 = 5%
+  label: string   // pt-BR, exibido no SkillNode
+}
+
+export interface ActiveBuffs {
+  xpDomainPct:     Partial<Record<Domain, number>>
+  xpGeneralPct:    number
+  lootRarityShift: number
+  lootExtraChance: number
+}
+
 export interface ISkill {
-  id:           string
-  name:         string
-  description:  string
-  domain:       Domain
-  tier:         SkillTier
-  xpCost:       number   // domain XP required to unlock
-  isUnlocked:   boolean
+  id:              string
+  name:            string
+  description:     string
+  domain:          Domain
+  tier:            SkillTier
+  xpCost:          number   // domain XP required to unlock
+  isUnlocked:      boolean
   prerequisiteIds: string[]
+  buff:            ISkillBuff
 }
 
 // ── Item / Inventory ─────────────────────────────────────────────────────────
