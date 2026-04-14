@@ -21,34 +21,15 @@ const DOMAIN_COLOR_MAP: Record<string, string> = {
 
 const CITADEL_COLOR = '#D4A843'
 
+// Parchment-style label halo — no rectangular background
 const LABEL_SHADOW = `
-  0 0 4px rgba(232,213,160,0.98),
-  0 0 8px rgba(232,213,160,0.85),
-  1px 1px 0 rgba(232,213,160,0.90),
-  -1px -1px 0 rgba(232,213,160,0.90),
-  1px -1px 0 rgba(232,213,160,0.90),
-  -1px  1px 0 rgba(232,213,160,0.90)
+  0 0 5px rgba(232,213,160,1),
+  0 0 10px rgba(232,213,160,0.90),
+  1px 1px 0 rgba(232,213,160,0.95),
+  -1px -1px 0 rgba(232,213,160,0.95),
+  1px -1px 0 rgba(232,213,160,0.95),
+  -1px  1px 0 rgba(232,213,160,0.95)
 `
-
-function POIImage({ src, size }: { src: string; size: number }) {
-  return (
-    <img
-      src={src}
-      alt=""
-      draggable={false}
-      style={{
-        width:  size,
-        height: size,
-        borderRadius: '50%',
-        objectFit: 'cover',
-        objectPosition: 'center',
-        display: 'block',
-        pointerEvents: 'none',
-        userSelect: 'none',
-      }}
-    />
-  )
-}
 
 export function POIMarker({ poi, isRevealed, isVisited, isInvaded, isLocked, onTap, onResetDrag }: POIMarkerProps) {
   if (!isRevealed) return null
@@ -56,18 +37,17 @@ export function POIMarker({ poi, isRevealed, isVisited, isInvaded, isLocked, onT
   const x = (poi.x / 100) * MAP_W
   const y = (poi.y / 100) * MAP_H
 
-  const domainColor = DOMAIN_COLOR_MAP[poi.domain] ?? '#888'
-
   const isCitadel   = poi.type === 'citadel'
   const isChallenge = poi.type === 'challenge'
+  const domainColor = DOMAIN_COLOR_MAP[poi.domain] ?? '#888'
 
-  // Marker sizes — larger to fit the 3000×2000 map
-  const size     = isCitadel ? 72 : isChallenge ? 44 : 60
-  const iconSize = isCitadel ? 28 : isChallenge ? 18 : 22
-  const zIndex   = isCitadel ? 10 : isChallenge ? 4 : 5
+  const zIndex = isCitadel ? 10 : isChallenge ? 4 : 5
 
-  // ── Invaded ────────────────────────────────────────────────────────────────
-  if (isInvaded) {
+  // Structure sizes on the 3000×2000 map
+  const imgSize = isCitadel ? 160 : 100
+
+  // ── Challenge zone — pin-style (no illustration) ───────────────────────────
+  if (isChallenge) {
     return (
       <div
         className="absolute flex flex-col items-center"
@@ -76,141 +56,139 @@ export function POIMarker({ poi, isRevealed, isVisited, isInvaded, isLocked, onT
         <button
           onClick={() => onTap(poi)}
           onPointerDown={(e) => { onResetDrag(); e.stopPropagation() }}
-          className={`relative flex items-center justify-center rounded-full
+          className={`flex items-center justify-center rounded-full
                      transition-transform duration-150 active:scale-90 hover:scale-110
                      ${styles.invasionPulse}`}
           style={{
-            width: size, height: size,
-            background: 'rgba(20,10,30,0.85)',
-            border: '3px solid #8B7332',
-            boxShadow: '0 0 0 3px rgba(61,43,90,0.5), 0 0 18px rgba(61,43,90,0.5)',
-            filter: 'grayscale(0.7) brightness(0.75)',
-            overflow: 'hidden',
+            width: 44, height: 44,
+            background: 'rgba(30,10,10,0.78)',
+            border: '2.5px dashed #C2675A',
+            boxShadow: '0 0 10px rgba(194,103,90,0.45), 0 3px 8px rgba(0,0,0,0.5)',
           }}
-          title={`${poi.name} — Invadido por Nyxos`}
+          title={poi.name}
         >
-          {poi.image
-            ? <POIImage src={poi.image} size={size} />
-            : <span style={{ fontSize: iconSize, lineHeight: 1, opacity: 0.5 }}>{poi.icon}</span>
-          }
-          {/* Dark overlay + skull */}
-          <div
-            className="absolute inset-0 flex items-center justify-center"
-            style={{ background: 'rgba(20,10,30,0.55)', borderRadius: '50%' }}
-          >
-            <span style={{ fontSize: iconSize * 0.7, lineHeight: 1, opacity: 0.9 }}>💀</span>
-          </div>
+          <span style={{ fontSize: 20, lineHeight: 1 }}>⚠️</span>
         </button>
-        <span
-          className="mt-1 font-heading italic text-center pointer-events-none select-none"
-          style={{
-            fontSize: isCitadel ? '12px' : '10px',
-            color: '#8B7332',
-            textShadow: LABEL_SHADOW,
-            letterSpacing: '0.02em',
-            maxWidth: '88px',
-            lineHeight: 1.2,
-            textAlign: 'center',
-          }}
-        >
-          {poi.name}
-        </span>
       </div>
     )
   }
 
-  // ── Normal ─────────────────────────────────────────────────────────────────
-  const borderColor = isCitadel
+  // ── POIs with illustration ─────────────────────────────────────────────────
+  const dropShadow = isCitadel
+    ? `drop-shadow(0 6px 12px rgba(42,33,24,0.65)) drop-shadow(0 2px 4px rgba(212,168,67,0.30))`
+    : `drop-shadow(0 5px 8px rgba(42,33,24,0.55)) drop-shadow(0 2px 3px rgba(42,33,24,0.35))`
+
+  let imageFilter = dropShadow
+  if (isInvaded)   imageFilter = `grayscale(1) brightness(0.55) ${dropShadow} drop-shadow(0 0 10px rgba(61,43,90,0.7))`
+  if (isLocked)    imageFilter = `grayscale(0.6) brightness(0.55) ${dropShadow}`
+  if (isVisited && !isInvaded && !isLocked) imageFilter = `${dropShadow} opacity(0.75)`
+
+  const labelColor = isCitadel
     ? CITADEL_COLOR
-    : isChallenge
-      ? '#C2675A'
+    : isInvaded
+      ? '#8B7332'
       : domainColor
-
-  const boxShadow = isCitadel
-    ? `0 0 0 4px ${CITADEL_COLOR}55, 0 0 18px rgba(212,168,67,0.55), 0 4px 14px rgba(42,33,24,0.5)`
-    : isChallenge
-      ? '0 0 10px rgba(194,103,90,0.40), 0 3px 10px rgba(42,33,24,0.5)'
-      : `0 0 0 2px ${domainColor}44, 0 3px 10px rgba(42,33,24,0.45)`
-
-  const labelColor = isCitadel ? CITADEL_COLOR : '#2A2118'
 
   return (
     <div
       className="absolute flex flex-col items-center"
       style={{
         left: x, top: y,
-        transform: 'translate(-50%, -50%)',
+        // Anchor near the base of the structure (bottom ~85% sits at the coordinate)
+        transform: `translate(-50%, -82%)`,
         zIndex,
-        opacity: isLocked ? 0.45 : isVisited ? 0.82 : 1,
+        cursor: 'pointer',
       }}
     >
       <button
         onClick={() => onTap(poi)}
         onPointerDown={(e) => { onResetDrag(); e.stopPropagation() }}
-        className="relative flex items-center justify-center rounded-full
-                   transition-transform duration-150 active:scale-90 hover:scale-110"
+        className={`relative transition-transform duration-150 active:scale-95 hover:scale-105
+                   ${isInvaded ? styles.invasionPulse : ''}`}
         style={{
-          width:  size,
-          height: size,
-          overflow: 'hidden',
-          border: isChallenge
-            ? `3px dashed ${borderColor}`
-            : `3px solid ${borderColor}`,
-          boxShadow,
-          background: poi.image
-            ? 'transparent'
-            : isCitadel
-              ? CITADEL_COLOR
-              : isChallenge
-                ? 'rgba(30,18,12,0.72)'
-                : `${domainColor}CC`,
+          background: 'none',
+          border: 'none',
+          padding: 0,
+          width: imgSize,
+          height: imgSize,
         }}
-        title={isLocked ? `${poi.name} — Bloqueado` : poi.name}
+        title={isInvaded ? `${poi.name} — Invadido por Nyxos` : isLocked ? `${poi.name} — Bloqueado` : poi.name}
       >
-        {/* Image or emoji content */}
-        {poi.image && !isChallenge
-          ? <POIImage src={poi.image} size={size} />
-          : <span style={{ fontSize: iconSize, lineHeight: 1 }}>{poi.icon}</span>
-        }
-
-        {/* Locked overlay */}
-        {isLocked && (
+        {poi.image ? (
+          <>
+            <img
+              src={poi.image}
+              alt={poi.name}
+              draggable={false}
+              style={{
+                width: imgSize,
+                height: imgSize,
+                display: 'block',
+                // multiply makes the white/bege background disappear — the illustration
+                // appears painted directly onto the map terrain beneath it
+                mixBlendMode: 'multiply',
+                filter: imageFilter,
+                userSelect: 'none',
+                pointerEvents: 'none',
+              }}
+            />
+            {/* Invaded skull badge */}
+            {isInvaded && (
+              <div
+                className="absolute inset-0 flex items-end justify-center pb-2 pointer-events-none"
+              >
+                <span style={{
+                  fontSize: imgSize * 0.28,
+                  lineHeight: 1,
+                  filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.8))',
+                }}>💀</span>
+              </div>
+            )}
+            {/* Locked badge */}
+            {isLocked && (
+              <div
+                className="absolute inset-0 flex items-end justify-center pb-2 pointer-events-none"
+              >
+                <span style={{
+                  fontSize: imgSize * 0.28,
+                  lineHeight: 1,
+                  filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.8))',
+                }}>🔒</span>
+              </div>
+            )}
+          </>
+        ) : (
+          /* Emoji fallback (no image available) */
           <div
-            className="absolute inset-0 flex items-center justify-center"
-            style={{ background: 'rgba(0,0,0,0.42)', borderRadius: '50%' }}
+            className="w-full h-full flex items-center justify-center rounded-xl"
+            style={{
+              background: `${domainColor}CC`,
+              boxShadow: `0 4px 12px rgba(42,33,24,0.5)`,
+            }}
           >
-            <span style={{ fontSize: iconSize * 0.75, lineHeight: 1 }}>🔒</span>
+            <span style={{ fontSize: imgSize * 0.45, lineHeight: 1 }}>{poi.icon}</span>
           </div>
-        )}
-
-        {/* Citadel glow ring */}
-        {isCitadel && (
-          <div
-            className="absolute inset-0 rounded-full pointer-events-none"
-            style={{ boxShadow: `inset 0 0 12px rgba(212,168,67,0.40)` }}
-          />
         )}
       </button>
 
-      {/* Label — hidden for challenge zones */}
-      {!isChallenge && (
-        <span
-          className="mt-1.5 font-heading italic text-center pointer-events-none select-none"
-          style={{
-            fontSize: isCitadel ? '12px' : '10px',
-            color: labelColor,
-            opacity: isVisited ? 0.65 : 0.9,
-            textShadow: LABEL_SHADOW,
-            letterSpacing: isCitadel ? '0.05em' : '0.02em',
-            maxWidth: isCitadel ? '100px' : '80px',
-            lineHeight: 1.2,
-            whiteSpace: isCitadel ? 'nowrap' : 'normal',
-            textAlign: 'center',
-          }}
-        >
-          {poi.name}
-        </span>
-      )}
+      {/* Name label — sits just below the structure base */}
+      <span
+        className="font-heading italic text-center pointer-events-none select-none"
+        style={{
+          marginTop: '3px',
+          fontSize: isCitadel ? '13px' : '11px',
+          fontWeight: 600,
+          color: labelColor,
+          opacity: isVisited && !isInvaded ? 0.6 : 0.92,
+          textShadow: LABEL_SHADOW,
+          letterSpacing: isCitadel ? '0.06em' : '0.02em',
+          maxWidth: isCitadel ? '120px' : '96px',
+          lineHeight: 1.2,
+          textAlign: 'center',
+        }}
+      >
+        {poi.name}
+      </span>
     </div>
   )
 }

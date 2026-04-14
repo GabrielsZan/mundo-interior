@@ -473,6 +473,16 @@ SetupScreen (nome) → initPlayer() → OnboardingFlow → Dashboard (com missõ
 
 **Nota sobre assets:** As imagens de POI são 1–1.5MB cada (~25MB total). Lazy loading é feito automaticamente pelo browser. Para APK Android considerar converter para WebP no futuro.
 
+### POI Markers — Estruturas no Mapa ✅ (2026-04-14)
+
+- `POIMarker.tsx` redesenhado: imagens exibidas como estruturas soltas no mapa (sem bolinha)
+- `mix-blend-mode: multiply` faz o fundo claro das ilustrações desaparecer, deixando apenas a estrutura desenhada "pintada" sobre o terreno
+- `filter: drop-shadow(...)` dá profundidade à estrutura
+- Âncora ajustada para `translate(-50%, -82%)` — a base da estrutura assenta no ponto do POI
+- Tamanhos: 100px regular, 160px cidadela
+- Challenge zones mantêm pin de ⚠️ (sem imagem)
+- Estados: invadido (grayscale + 💀), bloqueado (escurecido + 🔒), visitado (leve transparência)
+
 ### Próximos Passos
 
 - [ ] Ajustar coordenadas dos POIs visualmente (as posições são estimativas; abrir o mapa no app e refinar x%/y% em mapData.ts)
