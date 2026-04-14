@@ -485,6 +485,7 @@ SetupScreen (nome) → initPlayer() → OnboardingFlow → Dashboard (com missõ
 
 ### Próximos Passos
 
+- [ ] **POI images com fundo transparente** — remover o fundo bege/branco das 20 imagens em `src/assets/pois/` e substituir pelos PNGs transparentes. Depois disso: remover `mixBlendMode: 'multiply'` do `POIMarker.tsx` (linha ~60). As estruturas vão aparecer pintadas no mapa sem retângulo. Coordenadas dos POIs também precisam ser ajustadas visualmente após essa troca.
 - [ ] Ajustar coordenadas dos POIs visualmente (as posições são estimativas; abrir o mapa no app e refinar x%/y% em mapData.ts)
 - [ ] Criar a página real da Cidadela Interior (acessível pelo POI no mapa)
 - [ ] Notificações PWA para missões diárias
