@@ -1,3 +1,25 @@
+// POI images
+import alma1Img    from '@/assets/pois/alma-1_jardim_da_gratidao.png'
+import alma2Img    from '@/assets/pois/alma-2_templo_de_meditacao.png'
+import alma3Img    from '@/assets/pois/alma-3_praca_social.png'
+import alma4Img    from '@/assets/pois/alma-4_santuario_da_empatia.png'
+import alma5Img    from '@/assets/pois/alma-5_santuario_do_silencio.png'
+import corpo1Img   from '@/assets/pois/corpo-1_campo_de_treino.png'
+import corpo2Img   from '@/assets/pois/corpo-2_jardim_nutricional.png'
+import corpo3Img   from '@/assets/pois/corpo-3_santuario_do_descanso.png'
+import corpo4Img   from '@/assets/pois/corpo-4_santuario_da_postura.png'
+import corpo5Img   from '@/assets/pois/corpo-5_fonte_de_cura.png'
+import criacao1Img from '@/assets/pois/criacao-1_guilda_dos_escritores.png'
+import criacao2Img from '@/assets/pois/criacao-2_estudio_de_arte.png'
+import criacao3Img from '@/assets/pois/criacao-3_salao_de_musica.png'
+import criacao4Img from '@/assets/pois/criacao-4_oficina_de_criacao.png'
+import criacao5Img from '@/assets/pois/criacao-5_laboratorio_de_inovacao.png'
+import mente1Img   from '@/assets/pois/mente-1_grande_biblioteca.png'
+import mente2Img   from '@/assets/pois/mente-2_torre_do_foco.png'
+import mente3Img   from '@/assets/pois/mente-3_observatorio_celestial.png'
+import mente4Img   from '@/assets/pois/mente-4_templo_de_estudo.png'
+import mente5Img   from '@/assets/pois/mente-5_arquivo_da_memoria.png'
+
 export type MapDomain = 'mente' | 'corpo' | 'alma' | 'criacao'
 export type POIType = 'regular' | 'challenge' | 'citadel'
 
@@ -7,17 +29,18 @@ export interface POI {
   domain: MapDomain
   type: POIType
   description: string
-  icon: string
-  x: number        // percentage 0-100 of MAP_W
-  y: number        // percentage 0-100 of MAP_H
-  revealXP: number // domainXP needed to reveal (0 = always visible)
+  icon: string       // emoji fallback (always present)
+  image?: string     // custom illustration URL
+  x: number          // percentage 0-100 of MAP_W
+  y: number          // percentage 0-100 of MAP_H
+  revealXP: number   // domainXP needed to reveal (0 = always visible)
 }
 
-export const MAP_W = 1536
-export const MAP_H = 1024
+export const MAP_W = 3000
+export const MAP_H = 2000
 
 export const mapPOIs: POI[] = [
-  // === CIDADELA (Centro) ===
+  // === CIDADELA (Centro — ruínas) ===
   {
     id: 'citadel',
     name: 'Cidadela Interior',
@@ -26,11 +49,11 @@ export const mapPOIs: POI[] = [
     description: 'O núcleo do seu mundo interior. Reconstrua-a conforme evolui.',
     icon: '🏰',
     x: 50.0,
-    y: 36.1,
+    y: 47.0,
     revealXP: 0,
   },
 
-  // === MENTE (Norte) — 5 POIs ===
+  // === MENTE (Norte — montanhas nevadas e pinheiros) ===
   {
     id: 'mente-1',
     name: 'Grande Biblioteca',
@@ -38,8 +61,9 @@ export const mapPOIs: POI[] = [
     type: 'regular',
     description: 'Centro de aprendizado e aquisição de conhecimento.',
     icon: '📚',
-    x: 24.7,
-    y: 19.0,
+    image: mente1Img,
+    x: 22.0,
+    y: 14.0,
     revealXP: 0,
   },
   {
@@ -49,8 +73,9 @@ export const mapPOIs: POI[] = [
     type: 'regular',
     description: 'Concentração profunda e produtividade.',
     icon: '🗼',
-    x: 40.4,
-    y: 15.1,
+    image: mente2Img,
+    x: 38.0,
+    y: 9.5,
     revealXP: 50,
   },
   {
@@ -60,8 +85,9 @@ export const mapPOIs: POI[] = [
     type: 'regular',
     description: 'Visão de longo prazo, planejamento e metas.',
     icon: '🔭',
-    x: 61.8,
-    y: 12.7,
+    image: mente3Img,
+    x: 55.0,
+    y: 13.5,
     revealXP: 100,
   },
   {
@@ -71,8 +97,9 @@ export const mapPOIs: POI[] = [
     type: 'regular',
     description: 'Disciplina intelectual e prática constante.',
     icon: '🎓',
-    x: 35.2,
-    y: 28.3,
+    image: mente4Img,
+    x: 30.0,
+    y: 27.0,
     revealXP: 150,
   },
   {
@@ -82,12 +109,13 @@ export const mapPOIs: POI[] = [
     type: 'regular',
     description: 'Retenção, revisão e memorização.',
     icon: '🧠',
-    x: 20.2,
-    y: 33.2,
+    image: mente5Img,
+    x: 14.0,
+    y: 30.0,
     revealXP: 200,
   },
 
-  // === ALMA (Leste) — 5 POIs ===
+  // === ALMA (Nordeste — cerejeiras e rio) ===
   {
     id: 'alma-1',
     name: 'Jardim da Gratidão',
@@ -95,8 +123,9 @@ export const mapPOIs: POI[] = [
     type: 'regular',
     description: 'Cultive emoções positivas e gratidão.',
     icon: '🌸',
-    x: 78.1,
-    y: 19.5,
+    image: alma1Img,
+    x: 73.0,
+    y: 12.0,
     revealXP: 0,
   },
   {
@@ -106,8 +135,9 @@ export const mapPOIs: POI[] = [
     type: 'regular',
     description: 'Consciência plena e meditação.',
     icon: '🧘',
-    x: 87.9,
-    y: 31.3,
+    image: alma2Img,
+    x: 85.5,
+    y: 21.0,
     revealXP: 50,
   },
   {
@@ -117,8 +147,9 @@ export const mapPOIs: POI[] = [
     type: 'regular',
     description: 'Conexões sociais e interação.',
     icon: '🤝',
-    x: 71.6,
-    y: 39.1,
+    image: alma3Img,
+    x: 78.0,
+    y: 34.0,
     revealXP: 100,
   },
   {
@@ -128,8 +159,9 @@ export const mapPOIs: POI[] = [
     type: 'regular',
     description: 'Escuta ativa e relações humanas.',
     icon: '💙',
-    x: 84.6,
-    y: 48.8,
+    image: alma4Img,
+    x: 88.5,
+    y: 44.0,
     revealXP: 150,
   },
   {
@@ -139,12 +171,13 @@ export const mapPOIs: POI[] = [
     type: 'regular',
     description: 'Introspecção e solitude reflexiva.',
     icon: '🕊️',
-    x: 93.1,
-    y: 60.5,
+    image: alma5Img,
+    x: 65.0,
+    y: 39.0,
     revealXP: 200,
   },
 
-  // === CORPO (Sul) — 5 POIs ===
+  // === CORPO (Sul — planícies abertas) ===
   {
     id: 'corpo-1',
     name: 'Campo de Treino',
@@ -152,8 +185,9 @@ export const mapPOIs: POI[] = [
     type: 'regular',
     description: 'Exercícios físicos e atividade.',
     icon: '💪',
-    x: 37.8,
-    y: 66.4,
+    image: corpo1Img,
+    x: 40.0,
+    y: 65.0,
     revealXP: 0,
   },
   {
@@ -163,8 +197,9 @@ export const mapPOIs: POI[] = [
     type: 'regular',
     description: 'Alimentação saudável e dieta.',
     icon: '🥗',
-    x: 54.0,
-    y: 70.3,
+    image: corpo2Img,
+    x: 55.0,
+    y: 70.5,
     revealXP: 50,
   },
   {
@@ -174,8 +209,9 @@ export const mapPOIs: POI[] = [
     type: 'regular',
     description: 'Recuperação, sono e pausas.',
     icon: '😴',
-    x: 26.0,
-    y: 73.2,
+    image: corpo3Img,
+    x: 28.0,
+    y: 73.5,
     revealXP: 100,
   },
   {
@@ -185,8 +221,9 @@ export const mapPOIs: POI[] = [
     type: 'regular',
     description: 'Consciência corporal e alongamento.',
     icon: '🧍',
-    x: 68.4,
-    y: 75.2,
+    image: corpo4Img,
+    x: 68.0,
+    y: 73.0,
     revealXP: 150,
   },
   {
@@ -196,12 +233,13 @@ export const mapPOIs: POI[] = [
     type: 'regular',
     description: 'Hidratação e regeneração.',
     icon: '⛲',
-    x: 45.6,
-    y: 83.0,
+    image: corpo5Img,
+    x: 48.0,
+    y: 84.5,
     revealXP: 200,
   },
 
-  // === CRIAÇÃO (Oeste) — 5 POIs ===
+  // === CRIAÇÃO (Oeste — floresta de outono) ===
   {
     id: 'criacao-1',
     name: 'Guilda dos Escritores',
@@ -209,8 +247,9 @@ export const mapPOIs: POI[] = [
     type: 'regular',
     description: 'Escrita criativa e journaling.',
     icon: '✍️',
-    x: 11.1,
-    y: 38.1,
+    image: criacao1Img,
+    x: 10.0,
+    y: 42.0,
     revealXP: 0,
   },
   {
@@ -220,8 +259,9 @@ export const mapPOIs: POI[] = [
     type: 'regular',
     description: 'Expressão visual e desenho.',
     icon: '🎨',
-    x: 16.3,
-    y: 52.7,
+    image: criacao2Img,
+    x: 17.5,
+    y: 53.0,
     revealXP: 50,
   },
   {
@@ -231,8 +271,9 @@ export const mapPOIs: POI[] = [
     type: 'regular',
     description: 'Prática musical e expressão sonora.',
     icon: '🎵',
-    x: 7.8,
-    y: 66.4,
+    image: criacao3Img,
+    x: 7.5,
+    y: 64.0,
     revealXP: 100,
   },
   {
@@ -242,8 +283,9 @@ export const mapPOIs: POI[] = [
     type: 'regular',
     description: 'Produção prática — construir e criar.',
     icon: '🔨',
-    x: 22.8,
-    y: 60.5,
+    image: criacao4Img,
+    x: 22.0,
+    y: 62.0,
     revealXP: 150,
   },
   {
@@ -253,12 +295,13 @@ export const mapPOIs: POI[] = [
     type: 'regular',
     description: 'Brainstorming e experimentação.',
     icon: '💡',
-    x: 31.3,
-    y: 46.9,
+    image: criacao5Img,
+    x: 14.5,
+    y: 73.5,
     revealXP: 200,
   },
 
-  // === CHALLENGE ZONES (4, uma por região) ===
+  // === CHALLENGE ZONES ===
   {
     id: 'challenge-mente',
     name: 'Vale da Procrastinação',
@@ -266,19 +309,8 @@ export const mapPOIs: POI[] = [
     type: 'challenge',
     description: 'Névoa densa que representa a dificuldade em começar tarefas.',
     icon: '⚠️',
-    x: 48.8,
-    y: 23.4,
-    revealXP: 50,
-  },
-  {
-    id: 'challenge-corpo',
-    name: 'Deserto do Burnout',
-    domain: 'corpo',
-    type: 'challenge',
-    description: 'Ambiente seco e vazio que representa exaustão.',
-    icon: '⚠️',
-    x: 78.1,
-    y: 66.4,
+    x: 42.0,
+    y: 22.0,
     revealXP: 50,
   },
   {
@@ -288,8 +320,19 @@ export const mapPOIs: POI[] = [
     type: 'challenge',
     description: 'Visibilidade reduzida que representa insegurança.',
     icon: '⚠️',
-    x: 64.5,
-    y: 51.8,
+    x: 72.5,
+    y: 28.0,
+    revealXP: 50,
+  },
+  {
+    id: 'challenge-corpo',
+    name: 'Deserto do Burnout',
+    domain: 'corpo',
+    type: 'challenge',
+    description: 'Ambiente seco e vazio que representa exaustão.',
+    icon: '⚠️',
+    x: 60.0,
+    y: 59.0,
     revealXP: 50,
   },
   {
@@ -299,8 +342,8 @@ export const mapPOIs: POI[] = [
     type: 'challenge',
     description: 'Floresta densa e difícil que representa bloqueio criativo.',
     icon: '⚠️',
-    x: 13.0,
-    y: 80.1,
+    x: 10.0,
+    y: 78.0,
     revealXP: 50,
   },
 ]

@@ -8,8 +8,8 @@ import { POISheet } from './POISheet'
 import { NyxosInvasionModal } from './NyxosInvasionModal'
 import mapBg from '@/assets/map-background.png'
 
-const FOG_RADIUS_REGULAR = 175
-const FOG_RADIUS_CITADEL = 260
+const FOG_RADIUS_REGULAR = 340
+const FOG_RADIUS_CITADEL = 510
 
 const DOMAIN_COLORS: Record<string, string> = {
   mente:   '#5B8C5A',

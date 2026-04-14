@@ -64,52 +64,91 @@ export function POISheet({ poi, onClose }: POISheetProps) {
           className="max-w-lg mx-auto bg-white rounded-2xl shadow-2xl overflow-hidden flex flex-col"
           style={{ maxHeight: 'calc(100vh - 7rem)' }}
         >
-          {/* Color bar — fixed at top */}
-          <div className="h-1 shrink-0" style={{ background: invaded ? '#8B7332' : color }} />
-
-          <div className="p-5 overflow-y-auto">
-            {/* Header */}
-            <div className="flex items-start gap-3">
-              {/* Icon */}
-              <div
-                className="w-12 h-12 rounded-full flex items-center justify-center text-2xl shrink-0"
-                style={{
-                  background: invaded ? 'rgba(139,115,50,0.12)' : `${color}22`,
-                  border: `2px solid ${invaded ? '#8B7332' : color}44`,
-                  filter: invaded ? 'grayscale(0.6)' : 'none',
-                }}
+          {/* ── POI image banner (if available) ── */}
+          {poi.image && poi.type !== 'challenge' ? (
+            <div className="relative shrink-0 h-40 overflow-hidden">
+              <img
+                src={poi.image}
+                alt={poi.name}
+                className="w-full h-full object-cover object-center"
+                style={{ filter: invaded ? 'grayscale(0.5) brightness(0.75)' : 'none' }}
+              />
+              {/* Gradient overlay so text is readable */}
+              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent" />
+              {/* Close button */}
+              <button
+                onClick={onClose}
+                className="absolute top-2.5 right-3 w-7 h-7 rounded-full flex items-center justify-center text-white/80 hover:text-white text-xl leading-none"
+                style={{ background: 'rgba(0,0,0,0.35)' }}
               >
-                {poi.icon}
-              </div>
-
-              {/* Title */}
-              <div className="flex-1 min-w-0">
-                <h2 className="font-heading font-bold text-lg italic text-ink leading-tight">
+                ×
+              </button>
+              {/* Title over banner */}
+              <div className="absolute bottom-0 inset-x-0 px-4 pb-3">
+                <h2 className="font-heading font-bold text-lg italic text-white leading-tight drop-shadow">
                   {poi.name}
                 </h2>
-                <span className="text-xs font-semibold" style={{ color: invaded ? '#8B7332' : color }}>
+                <span className="text-xs font-semibold drop-shadow" style={{ color: invaded ? '#E8C96A' : 'rgba(255,255,255,0.80)' }}>
                   {invaded
                     ? '⚔️ Invadido por Nyxos'
                     : locked
                       ? '🔒 Bloqueado por Nyxos'
-                      : poi.type === 'challenge'
-                        ? '⚠️ Zona de Desafio'
-                        : label}
+                      : label}
                 </span>
               </div>
-
-              {/* Close */}
-              <button
-                onClick={onClose}
-                className="text-ink/30 hover:text-ink text-2xl leading-none mt-0.5"
-              >
-                ×
-              </button>
+              {/* Domain color accent line */}
+              <div className="absolute top-0 inset-x-0 h-1" style={{ background: invaded ? '#8B7332' : color }} />
             </div>
+          ) : (
+            /* No image — classic color bar + text header */
+            <>
+              <div className="h-1 shrink-0" style={{ background: invaded ? '#8B7332' : color }} />
+              <div className="px-5 pt-4 pb-0 flex items-start gap-3">
+                <div
+                  className="w-12 h-12 rounded-full flex items-center justify-center text-2xl shrink-0"
+                  style={{
+                    background: invaded ? 'rgba(139,115,50,0.12)' : `${color}22`,
+                    border: `2px solid ${invaded ? '#8B7332' : color}44`,
+                  }}
+                >
+                  {poi.icon}
+                </div>
+                <div className="flex-1 min-w-0">
+                  <h2 className="font-heading font-bold text-lg italic text-ink leading-tight">
+                    {poi.name}
+                  </h2>
+                  <span className="text-xs font-semibold" style={{ color: invaded ? '#8B7332' : color }}>
+                    {invaded
+                      ? '⚔️ Invadido por Nyxos'
+                      : locked
+                        ? '🔒 Bloqueado por Nyxos'
+                        : poi.type === 'challenge'
+                          ? '⚠️ Zona de Desafio'
+                          : label}
+                  </span>
+                </div>
+                <button
+                  onClick={onClose}
+                  className="text-ink/30 hover:text-ink text-2xl leading-none mt-0.5"
+                >
+                  ×
+                </button>
+              </div>
+            </>
+          )}
 
-            <p className="mt-3 text-sm text-ink/60 font-body leading-relaxed">
-              {poi.description}
-            </p>
+          <div className="p-5 overflow-y-auto">
+            {/* Description (only shown when no image banner, otherwise description is below) */}
+            {(!poi.image || poi.type === 'challenge') && (
+              <p className="mt-3 text-sm text-ink/60 font-body leading-relaxed">
+                {poi.description}
+              </p>
+            )}
+            {poi.image && poi.type !== 'challenge' && (
+              <p className="text-sm text-ink/60 font-body leading-relaxed">
+                {poi.description}
+              </p>
+            )}
 
             {/* ── Invaded state ─────────────────────────────────────────────── */}
             {invaded && tentacao && (

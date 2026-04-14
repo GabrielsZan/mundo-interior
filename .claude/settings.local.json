@@ -6,7 +6,13 @@
       "Skill(update-config)",
       "Bash(npm run:*)",
       "Bash(taskkill:*)",
-      "Bash(npx cap:*)"
+      "Bash(npx cap:*)",
+      "Bash(python3 -c ':*)",
+      "Bash(python -c ':*)",
+      "Bash(identify \"fantasy_world_map_final_combined_upscayl_6x_remacri-4x.png\")",
+      "Bash(mkdir -p \"C:/Users/gabri/Desktop/AppRpg Claude/src/assets/pois\")",
+      "Bash(cp \"C:/Users/gabri/Desktop/AppRpg Claude/Manus pois upscaled/\"* \"C:/Users/gabri/Desktop/AppRpg Claude/src/assets/pois/\")",
+      "Bash(cp \"C:/Users/gabri/Desktop/AppRpg Claude/fantasy_world_map_final_combined_upscayl_6x_remacri-4x.png\" \"C:/Users/gabri/Desktop/AppRpg Claude/src/assets/map-background.png\")"
     ]
   },
   "hooks": {

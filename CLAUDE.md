@@ -460,8 +460,22 @@ SetupScreen (nome) → initPlayer() → OnboardingFlow → Dashboard (com missõ
 
 **Arquitetura:** Buffs são computados em tempo real a partir do array `skills[]` persistido — sem novas colunas no Supabase. Stacking aditivo entre habilidades do mesmo tipo.
 
+### Redesign Visual do Mapa ✅ (2026-04-14)
+
+**O que foi implementado:**
+
+- `fantasy_world_map_final_combined_upscayl_6x_remacri-4x.png` redimensionado para 3000×2000px → `src/assets/map-background.png`
+- 20 imagens de POI (2048×2048px) copiadas para `src/assets/pois/`
+- `mapData.ts` — `MAP_W=3000`, `MAP_H=2000`; campo `image?: string` adicionado à interface `POI`; 20 imports estáticos das imagens; coordenadas recalibradas para o novo mapa (mente=norte/montanhas, alma=nordeste/cerejeiras, corpo=sul/planícies, criação=oeste/floresta de outono)
+- `POIMarker.tsx` — suporte a imagem circular (`<img>` com `object-cover` + `border-radius: 50%` + borda colorida); marcadores maiores (60px regular, 72px cidadela) para o mapa 3000px; overlay de 💀 no estado invadido
+- `POISheet.tsx` — banner de imagem (h-40, `object-cover`) com gradiente overlay + título inline quando POI tem imagem; fallback para layout com emoji quando não tem
+- `MapPage.tsx` — `FOG_RADIUS_REGULAR=340`, `FOG_RADIUS_CITADEL=510` (proporcional ao mapa 2× maior)
+
+**Nota sobre assets:** As imagens de POI são 1–1.5MB cada (~25MB total). Lazy loading é feito automaticamente pelo browser. Para APK Android considerar converter para WebP no futuro.
+
 ### Próximos Passos
 
+- [ ] Ajustar coordenadas dos POIs visualmente (as posições são estimativas; abrir o mapa no app e refinar x%/y% em mapData.ts)
 - [ ] Criar a página real da Cidadela Interior (acessível pelo POI no mapa)
 - [ ] Notificações PWA para missões diárias
 - [ ] Sistema de conquistas/achievements
