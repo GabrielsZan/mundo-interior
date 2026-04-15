@@ -124,9 +124,6 @@ export function POIMarker({ poi, isRevealed, isVisited, isInvaded, isLocked, onT
                 width: imgSize,
                 height: imgSize,
                 display: 'block',
-                // multiply makes the white/bege background disappear — the illustration
-                // appears painted directly onto the map terrain beneath it
-                mixBlendMode: 'multiply',
                 filter: imageFilter,
                 userSelect: 'none',
                 pointerEvents: 'none',
