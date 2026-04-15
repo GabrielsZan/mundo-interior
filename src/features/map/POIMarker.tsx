@@ -44,7 +44,7 @@ export function POIMarker({ poi, isRevealed, isVisited, isInvaded, isLocked, onT
   const zIndex = isCitadel ? 10 : isChallenge ? 4 : 5
 
   // Structure sizes on the 3000×2000 map
-  const imgSize = isCitadel ? 320 : 200
+  const imgSize = 200
 
   // ── Challenge zone — pin-style (no illustration) ───────────────────────────
   if (isChallenge) {
