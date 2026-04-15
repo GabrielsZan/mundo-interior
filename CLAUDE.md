@@ -485,7 +485,7 @@ SetupScreen (nome) → initPlayer() → OnboardingFlow → Dashboard (com missõ
 
 ### Fix — POI Markers com fundo transparente ✅ (2026-04-15)
 
-- Imagens de POI em `src/assets/pois/` substituídas por versões com fundo transparente (PNG)
+- Imagens de POI em `src/assets/pois/` substituídas por versões "Editado" com fundo transparente (PNG sem background)
 - `POIMarker.tsx` — `mixBlendMode: 'multiply'` removido; estruturas aparecem pintadas no mapa sem retângulo
 
 ### Próximos Passos
