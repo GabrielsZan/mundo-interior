@@ -50,8 +50,8 @@ export const mapPOIs: POI[] = [
     description: 'O núcleo do seu mundo interior. Reconstrua-a conforme evolui.',
     icon: '🏰',
     image: citadelImg,
-    x: 50.0,
-    y: 60.0,
+    x: 53.0,
+    y: 63.0,
     revealXP: 0,
   },
 
