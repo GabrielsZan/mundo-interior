@@ -19,6 +19,7 @@ import mente2Img   from '@/assets/pois/mente-2_torre_do_foco.png'
 import mente3Img   from '@/assets/pois/mente-3_observatorio_celestial.png'
 import mente4Img   from '@/assets/pois/mente-4_templo_de_estudo.png'
 import mente5Img   from '@/assets/pois/mente-5_arquivo_da_memoria.png'
+import citadelImg  from '@/assets/pois/citadel.png'
 
 export type MapDomain = 'mente' | 'corpo' | 'alma' | 'criacao'
 export type POIType = 'regular' | 'challenge' | 'citadel'
@@ -48,6 +49,7 @@ export const mapPOIs: POI[] = [
     type: 'citadel',
     description: 'O núcleo do seu mundo interior. Reconstrua-a conforme evolui.',
     icon: '🏰',
+    image: citadelImg,
     x: 50.0,
     y: 60.0,
     revealXP: 0,
