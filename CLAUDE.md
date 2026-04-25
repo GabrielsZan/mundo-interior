@@ -488,9 +488,12 @@ SetupScreen (nome) → initPlayer() → OnboardingFlow → Dashboard (com missõ
 - Imagens de POI em `src/assets/pois/` substituídas por versões "Editado" com fundo transparente (PNG sem background)
 - `POIMarker.tsx` — `mixBlendMode: 'multiply'` removido; estruturas aparecem pintadas no mapa sem retângulo
 
+### Fix — POIs movidos para baixo +4% ✅ (2026-04-25)
+- `mapData.ts` — todos os POIs (exceto Cidadela) tiveram `y` incrementado em +4 pontos percentuais
+
 ### Próximos Passos
 
-- [ ] Ajustar coordenadas dos POIs visualmente (as posições são estimativas; abrir o mapa no app e refinar x%/y% em mapData.ts)
+- [ ] Continuar ajustando coordenadas dos POIs conforme necessário
 - [ ] Criar a página real da Cidadela Interior (acessível pelo POI no mapa)
 - [ ] Notificações PWA para missões diárias
 - [ ] Sistema de conquistas/achievements

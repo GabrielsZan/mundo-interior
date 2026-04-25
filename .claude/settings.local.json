@@ -14,7 +14,10 @@
       "Bash(cp \"C:/Users/gabri/Desktop/AppRpg Claude/Manus pois upscaled/\"* \"C:/Users/gabri/Desktop/AppRpg Claude/src/assets/pois/\")",
       "Bash(cp \"C:/Users/gabri/Desktop/AppRpg Claude/fantasy_world_map_final_combined_upscayl_6x_remacri-4x.png\" \"C:/Users/gabri/Desktop/AppRpg Claude/src/assets/map-background.png\")",
       "Bash(echo \"fantasy_world_map_final_combined_upscayl_6x_remacri-4x.png\")",
-      "Bash(echo \"Manus pois upscaled/\")"
+      "Bash(echo \"Manus pois upscaled/\")",
+      "Bash(git add *)",
+      "Bash(git commit *)",
+      "Bash(git push *)"
     ]
   },
   "hooks": {
