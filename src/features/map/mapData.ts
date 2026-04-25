@@ -65,7 +65,7 @@ export const mapPOIs: POI[] = [
     icon: '📚',
     image: mente1Img,
     x: 22.0,
-    y: 18.0,
+    y: 20.0,
     revealXP: 0,
   },
   {
@@ -77,7 +77,7 @@ export const mapPOIs: POI[] = [
     icon: '🗼',
     image: mente2Img,
     x: 38.0,
-    y: 13.5,
+    y: 15.5,
     revealXP: 50,
   },
   {
@@ -89,7 +89,7 @@ export const mapPOIs: POI[] = [
     icon: '🔭',
     image: mente3Img,
     x: 55.0,
-    y: 17.5,
+    y: 19.5,
     revealXP: 100,
   },
   {
@@ -101,7 +101,7 @@ export const mapPOIs: POI[] = [
     icon: '🎓',
     image: mente4Img,
     x: 30.0,
-    y: 31.0,
+    y: 33.0,
     revealXP: 150,
   },
   {
@@ -113,7 +113,7 @@ export const mapPOIs: POI[] = [
     icon: '🧠',
     image: mente5Img,
     x: 14.0,
-    y: 34.0,
+    y: 36.0,
     revealXP: 200,
   },
 
@@ -127,7 +127,7 @@ export const mapPOIs: POI[] = [
     icon: '🌸',
     image: alma1Img,
     x: 73.0,
-    y: 16.0,
+    y: 18.0,
     revealXP: 0,
   },
   {
@@ -139,7 +139,7 @@ export const mapPOIs: POI[] = [
     icon: '🧘',
     image: alma2Img,
     x: 85.5,
-    y: 25.0,
+    y: 27.0,
     revealXP: 50,
   },
   {
@@ -151,7 +151,7 @@ export const mapPOIs: POI[] = [
     icon: '🤝',
     image: alma3Img,
     x: 78.0,
-    y: 38.0,
+    y: 40.0,
     revealXP: 100,
   },
   {
@@ -163,7 +163,7 @@ export const mapPOIs: POI[] = [
     icon: '💙',
     image: alma4Img,
     x: 88.5,
-    y: 48.0,
+    y: 50.0,
     revealXP: 150,
   },
   {
@@ -175,7 +175,7 @@ export const mapPOIs: POI[] = [
     icon: '🕊️',
     image: alma5Img,
     x: 65.0,
-    y: 43.0,
+    y: 45.0,
     revealXP: 200,
   },
 
@@ -189,7 +189,7 @@ export const mapPOIs: POI[] = [
     icon: '💪',
     image: corpo1Img,
     x: 40.0,
-    y: 69.0,
+    y: 71.0,
     revealXP: 0,
   },
   {
@@ -201,7 +201,7 @@ export const mapPOIs: POI[] = [
     icon: '🥗',
     image: corpo2Img,
     x: 55.0,
-    y: 74.5,
+    y: 76.5,
     revealXP: 50,
   },
   {
@@ -213,7 +213,7 @@ export const mapPOIs: POI[] = [
     icon: '😴',
     image: corpo3Img,
     x: 28.0,
-    y: 77.5,
+    y: 79.5,
     revealXP: 100,
   },
   {
@@ -225,7 +225,7 @@ export const mapPOIs: POI[] = [
     icon: '🧍',
     image: corpo4Img,
     x: 68.0,
-    y: 77.0,
+    y: 79.0,
     revealXP: 150,
   },
   {
@@ -237,7 +237,7 @@ export const mapPOIs: POI[] = [
     icon: '⛲',
     image: corpo5Img,
     x: 48.0,
-    y: 88.5,
+    y: 90.5,
     revealXP: 200,
   },
 
@@ -251,7 +251,7 @@ export const mapPOIs: POI[] = [
     icon: '✍️',
     image: criacao1Img,
     x: 10.0,
-    y: 46.0,
+    y: 48.0,
     revealXP: 0,
   },
   {
@@ -263,7 +263,7 @@ export const mapPOIs: POI[] = [
     icon: '🎨',
     image: criacao2Img,
     x: 17.5,
-    y: 57.0,
+    y: 59.0,
     revealXP: 50,
   },
   {
@@ -275,7 +275,7 @@ export const mapPOIs: POI[] = [
     icon: '🎵',
     image: criacao3Img,
     x: 7.5,
-    y: 68.0,
+    y: 70.0,
     revealXP: 100,
   },
   {
@@ -287,7 +287,7 @@ export const mapPOIs: POI[] = [
     icon: '🔨',
     image: criacao4Img,
     x: 22.0,
-    y: 66.0,
+    y: 68.0,
     revealXP: 150,
   },
   {
@@ -299,7 +299,7 @@ export const mapPOIs: POI[] = [
     icon: '💡',
     image: criacao5Img,
     x: 14.5,
-    y: 77.5,
+    y: 79.5,
     revealXP: 200,
   },
 
@@ -312,7 +312,7 @@ export const mapPOIs: POI[] = [
     description: 'Névoa densa que representa a dificuldade em começar tarefas.',
     icon: '⚠️',
     x: 42.0,
-    y: 26.0,
+    y: 28.0,
     revealXP: 50,
   },
   {
@@ -323,7 +323,7 @@ export const mapPOIs: POI[] = [
     description: 'Visibilidade reduzida que representa insegurança.',
     icon: '⚠️',
     x: 72.5,
-    y: 32.0,
+    y: 34.0,
     revealXP: 50,
   },
   {
@@ -334,7 +334,7 @@ export const mapPOIs: POI[] = [
     description: 'Ambiente seco e vazio que representa exaustão.',
     icon: '⚠️',
     x: 60.0,
-    y: 63.0,
+    y: 65.0,
     revealXP: 50,
   },
   {
@@ -345,7 +345,7 @@ export const mapPOIs: POI[] = [
     description: 'Floresta densa e difícil que representa bloqueio criativo.',
     icon: '⚠️',
     x: 10.0,
-    y: 82.0,
+    y: 84.0,
     revealXP: 50,
   },
 ]

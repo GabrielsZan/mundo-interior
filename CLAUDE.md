@@ -488,8 +488,8 @@ SetupScreen (nome) → initPlayer() → OnboardingFlow → Dashboard (com missõ
 - Imagens de POI em `src/assets/pois/` substituídas por versões "Editado" com fundo transparente (PNG sem background)
 - `POIMarker.tsx` — `mixBlendMode: 'multiply'` removido; estruturas aparecem pintadas no mapa sem retângulo
 
-### Fix — POIs movidos para baixo +4% ✅ (2026-04-25)
-- `mapData.ts` — todos os POIs (exceto Cidadela) tiveram `y` incrementado em +4 pontos percentuais
+### Fix — POIs movidos para baixo +6% ✅ (2026-04-25)
+- `mapData.ts` — todos os POIs (exceto Cidadela) tiveram `y` incrementado em +6 pontos percentuais (dois ajustes de +4% e +2%)
 
 ### Próximos Passos
 
