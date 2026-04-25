@@ -491,6 +491,9 @@ SetupScreen (nome) → initPlayer() → OnboardingFlow → Dashboard (com missõ
 ### Fix — POIs movidos para baixo +6% ✅ (2026-04-25)
 - `mapData.ts` — todos os POIs (exceto Cidadela) tiveram `y` incrementado em +6 pontos percentuais (dois ajustes de +4% e +2%)
 
+### Fix — Coordenadas dos POIs reposicionadas pelo usuário ✅ (2026-04-25)
+- `mapData.ts` — x e y de todos os 24 POIs (exceto Cidadela) substituídos pelas coordenadas definidas manualmente pelo usuário via `coordenadas-ajustadas.ts`
+
 ### Próximos Passos
 
 - [ ] Continuar ajustando coordenadas dos POIs conforme necessário
